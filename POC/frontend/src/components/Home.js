@@ -4,9 +4,10 @@ import { useAuth } from '../AuthContext';
 import HeaderComponent from './Header';
 import backgroundImage from '../img/BgTop.png';
 import Button from '@mui/material/Button';
+import ScrollButton from './ScrollButton';
 
 const Home = () => {
-    const { isAuthenticated, verifyToken, logout } = useAuth();
+    const { verifyToken, logout } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -62,7 +63,7 @@ const Home = () => {
                             HarmonieWeb
                         </h1>
                         <p style={{ fontSize: '1.6rem', fontWeight: 400, marginBottom: '2rem', textShadow: '0px 4px 4px rgba(0, 0, 0, 0.85)', color: '#fff' }}>
-                            HarmonieWeb est une plateforme en ligne et mobile.<br />Elle vous permet de connecter et harmoniser vos actions en ligne de manière simple et sécurisée !
+                            HarmonieWeb is an online and mobile platform.<br />It allows you to connect and harmonize your online actions in a simple and secure way !
                         </p>
 
                         <Button
@@ -102,8 +103,9 @@ const Home = () => {
                     />
                 </div>
             </div>
-            <h2>Page d'Accueil</h2>
-            <button onClick={handleLogout}>Se Déconnecter</button>
+            {/* <h2>Page d'Accueil</h2> */}
+            {/* <ScrollButton />
+            <button onClick={handleLogout}>Se Déconnecter</button> */}
         </div>
     );
 };
