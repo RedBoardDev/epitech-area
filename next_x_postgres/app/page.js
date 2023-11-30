@@ -15,6 +15,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <h1 className="text-4xl font-bold">Next.js + PostgreSQL</h1>
+      <h3 className="text-2xl">Users:</h3>
       <div className="flex flex-wrap justify-center">
         {users.map(user => (
           <div key={user.id} className="flex flex-col items-center justify-center w-64 h-64 m-4 bg-white rounded-lg shadow-lg">
@@ -23,6 +24,7 @@ export default function Home() {
           </div>
         ))}
       </div>
+      <h3 className="text-2xl">Services:</h3>
       <div className="flex flex-wrap justify-center">
         <div className="flex flex-col items-center justify-center w-64 h-64 m-4 bg-white rounded-lg shadow-lg">
           <Image
