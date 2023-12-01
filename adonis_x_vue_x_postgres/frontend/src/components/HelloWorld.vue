@@ -39,10 +39,9 @@ export default {
   methods: {
     async fetchUsers() {
       try {
-        // const response = await fetch('http://127.0.0.1/user')
-        // const data = await response.json()
-        // this.users = data
-        this.users = [{id: 1,email: 'martin.d-herouville@epitech.eu',password: 'oui',created_at: '2020-03-30 16:00:00',}]
+        const response = await fetch('http://127.0.0.1:3333/users')
+        const data = await response.json()
+        this.users = data
       } catch (error) {
         console.error(error)
       }

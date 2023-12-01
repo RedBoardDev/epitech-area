@@ -2,4 +2,4 @@
 
 const Route = use('Route')
 
-Route.get('/user', 'UserController.index')
+Route.get('/users', 'UsersController.index')
