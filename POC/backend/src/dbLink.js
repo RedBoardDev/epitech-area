@@ -27,11 +27,9 @@ class DbManager {
         console.log('Disconnecting from the MySQL database');
     }
 
-    getAllUsers(withPassword = false) {
-        const query = `SELECT ${withPassword ? '*' : 'id, email, created_at'} FROM user;`;
-
+    executeQuery(query, values) {
         return new Promise((resolve, reject) => {
-            this.con.query(query, (err, rows) => {
+            this.con.query(query, values, (err, rows) => {
                 if (err) {
                     reject(err);
                 } else {
@@ -39,96 +37,96 @@ class DbManager {
                 }
             });
         });
+    }
+
+    getAllUsers(withPassword = false) {
+        const query = `SELECT ${withPassword ? '*' : 'id, email, created_at'} FROM user;`;
+        const values = [];
+        return this.executeQuery(query, values);
     }
 
     getUserById(id, withPassword = false) {
         const query = `SELECT ${withPassword ? '*' : 'id, email, created_at'} FROM user WHERE id = ?;`;
         const values = [id];
-
-        return new Promise((resolve, reject) => {
-            this.con.query(query, values, (err, rows) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(rows);
-                }
-            });
-        });
+        return this.executeQuery(query, values);
     }
 
     getUserByEmail(email, withPassword = false) {
         const query = `SELECT ${withPassword ? '*' : 'id, email, created_at'} FROM user WHERE email = ?;`;
         const values = [email];
-
-        return new Promise((resolve, reject) => {
-            this.con.query(query, values, (err, rows) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(rows);
-                }
-            });
-        });
+        return this.executeQuery(query, values);
     }
 
     getUserByEmailOrId(str, withPassword = false) {
         const query = `SELECT ${withPassword ? '*' : 'id, email, created_at'} FROM user WHERE id = ? OR email = ?;`;
         const values = [str, str];
-
-        return new Promise((resolve, reject) => {
-            this.con.query(query, values, (err, rows) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(rows);
-                }
-            });
-        });
+        return this.executeQuery(query, values);
     }
 
     insertUser(email, passwordHash) {
         const query = 'INSERT INTO user(email, password) VALUES (?, ?)';
         const values = [email, passwordHash];
-
-        return new Promise((resolve, reject) => {
-            this.con.query(query, values, (err, result) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(result);
-                }
-            });
-        });
+        return this.executeQuery(query, values);
     }
 
     updateUser(id, updateQueryString) {
-        const query = `UPDATE user SET ? WHERE id = ?;`;
-        const values = [updateQueryString, id];
-
-        return new Promise((resolve, reject) => {
-            this.con.query(query, values, (err, result) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(result);
-                }
-            });
-        });
+        const query = `UPDATE user SET ${updateQueryString} WHERE id = ?;`;
+        const values = [id];
+        return this.executeQuery(query, values);
     }
 
     deleteUser(id) {
         const query = `DELETE FROM user WHERE id = ?;`;
         const values = [id];
+        return this.executeQuery(query, values);
+    }
 
-        return new Promise((resolve, reject) => {
-            this.con.query(query, values, (err, result) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(result);
-                }
-            });
-        });
+    getAutomations(userId) {
+        const query = `SELECT * FROM automation WHERE user_id = ?;`;
+        const values = [userId];
+        return this.executeQuery(query, values);
+    }
+
+    insertAutomation(userId, triggerServiceId, triggerId, triggerParams, reactionServiceId, reactionId, reactionParams) {
+        const query = `INSERT INTO automation(user_id, trigger_service_id, trigger_id, trigger_params, reaction_service_id, reaction_id, reaction_params) VALUES (?, ?, ?, ?, ?, ?, ?);`;
+        const values = [userId, triggerServiceId, triggerId, triggerParams, reactionServiceId, reactionId, reactionParams];
+        return this.executeQuery(query, values);
+    }
+
+    updateAutomation(userId, automationId, updateQueryString) {
+        const query = `UPDATE automation SET ${updateQueryString} WHERE user_id = ? AND id = ?;`;
+        const values = [userId, automationId];
+        return this.executeQuery(query, values);
+    }
+
+    deleteAutomation(userId, automationId) {
+        const query = `DELETE FROM automation WHERE user_id = ? AND id = ?;`;
+        const values = [userId, automationId];
+        return this.executeQuery(query, values);
+    }
+
+    getServiceOauth(userId, serviceId) {
+        const query = `SELECT * FROM service_oauth WHERE user_id = ? AND service_id = ?;`;
+        const values = [userId, serviceId];
+        return this.executeQuery(query, values);
+    }
+
+    insertServiceOauth(userId, serviceId, token) {
+        const query = `INSERT INTO service_oauth(user_id, service_id, token) VALUES (?, ?, ?);`;
+        const values = [userId, serviceId, token];
+        return this.executeQuery(query, values);
+    }
+
+    updateServiceOauth(userId, serviceId, token) {
+        const query = `UPDATE service_oauth SET token = ? WHERE user_id = ? AND service_id = ?;`;
+        const values = [token, userId, serviceId];
+        return this.executeQuery(query, values);
+    }
+
+    deleteServiceOauth(userId, serviceId) {
+        const query = `DELETE FROM service_oauth WHERE user_id = ? AND service_id = ?;`;
+        const values = [userId, serviceId];
+        return this.executeQuery(query, values);
     }
 }
 
