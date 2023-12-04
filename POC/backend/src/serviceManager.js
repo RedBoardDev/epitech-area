@@ -1,4 +1,5 @@
 import fs from 'fs';
+import servicesRouter from './routes/service.js';
 import automationsRouter from './routes/automations.js';
 
 import { db } from './global.js';
@@ -7,6 +8,7 @@ class ServiceManager {
     constructor(app) {
         this.app = app;
 
+        this.app.use('/service', servicesRouter);
         this.app.use('/automations', automationsRouter);
 
         this.services = {};
