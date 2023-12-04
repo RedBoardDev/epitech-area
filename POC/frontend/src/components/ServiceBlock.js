@@ -1,0 +1,57 @@
+import React from 'react';
+import { Box, Typography, Paper } from '@mui/material';
+
+const ServiceBlock = ({ imageSrc, title, backgroundColor }) => {
+  return (
+    <Paper
+      elevation={3}
+      sx={{
+        position: 'relative',
+        overflow: 'hidden',
+        width: '200px',
+        height: '200px',
+        borderRadius: '8%',
+        backgroundColor: backgroundColor,
+        '&:hover': {
+          '& .overlay': {
+            opacity: 0.2,
+          },
+        },
+      }}
+    >
+      <Box
+        sx={{
+          position: 'absolute',
+          top: '10%',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          textAlign: 'center',
+        }}
+      >
+        <img
+          src={imageSrc}
+          alt={title}
+          style={{ width: '100px', height: 'auto', borderRadius: '50%' }}
+        />
+        <Typography variant="h6" sx={{ color: '#fff', marginTop: '4px' }}>
+          {title}
+        </Typography>
+      </Box>
+      <Box
+        className="overlay"
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          backgroundColor: '#000',
+          opacity: 0,
+          transition: 'opacity 0.3s',
+        }}
+      ></Box>
+    </Paper>
+  );
+};
+
+export default ServiceBlock;

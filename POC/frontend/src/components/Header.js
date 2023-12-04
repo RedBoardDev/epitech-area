@@ -32,6 +32,34 @@ function HeaderComponent({ showButton }) {
                     <Typography variant="h4" component="div" sx={{ flexGrow: 1, color: '#fff' }}>
                         {/* HarmonieWeb */}
                     </Typography>
+                    <Typography
+                        component={Link}
+                        to="/"
+                        variant="h6"
+                        color="primary"
+                        sx={{
+                            marginRight: '46px',
+                            textDecoration: 'none',
+                            color: '#fff',
+                        }}
+                    >
+                        Accueil
+                    </Typography>
+                    {isAuthenticated && (
+                        <Typography
+                            component={Link}
+                            to="/services"
+                            variant="h6"
+                            color="primary"
+                            sx={{
+                                marginRight: '46px',
+                                textDecoration: 'none',
+                                color: '#fff',
+                            }}
+                        >
+                            Services
+                        </Typography>
+                    )}
                     {isAuthenticated ? (
                         <Button
                             onClick={handleLogout}
