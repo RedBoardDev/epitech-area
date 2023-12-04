@@ -1,35 +1,10 @@
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../AuthContext';
+import React from 'react';
 import HeaderComponent from './Header';
 import backgroundImage from '../img/BgTop.png';
 import Button from '@mui/material/Button';
-import ScrollButton from './ScrollButton';
 
 const Home = () => {
-    const { verifyToken, logout } = useAuth();
-    const navigate = useNavigate();
 
-    useEffect(() => {
-        // const checkAuthentication = async () => {
-        //     try {
-        //         const isAuthenticated = await verifyToken();
-        //         if (!isAuthenticated) {
-        //             navigate('/login');
-        //         }
-        //     } catch (error) {
-        //         console.error('Error checking authentication:', error);
-        //         navigate('/login');
-        //     }
-        // };
-
-        // checkAuthentication();
-    }, [verifyToken, navigate]);
-
-    const handleLogout = () => {
-        logout();
-        navigate('/login');
-    };
     return (
         <div>
             <HeaderComponent isLoggedIn={false} />
@@ -91,10 +66,7 @@ const Home = () => {
                         >
                             En savoir plus
                         </Button>
-
-
                     </div>
-
                     <div
                         style={{
                             width: '50%',
@@ -103,13 +75,8 @@ const Home = () => {
                     />
                 </div>
             </div>
-            {/* <h2>Page d'Accueil</h2> */}
-            {/* <ScrollButton />
-            <button onClick={handleLogout}>Se Déconnecter</button> */}
         </div>
     );
 };
 
 export default Home;
-{/* {isAuthenticated && ( */ }
-// )}

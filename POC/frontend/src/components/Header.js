@@ -10,17 +10,16 @@ import Button from '@mui/material/Button';
 import Logo from '../img/logo.png';
 
 function HeaderComponent({ showButton }) {
-    const { isAuthenticated, login, logout } = useAuth();
+    const { isAuthenticated, logout } = useAuth();
     const navigate = useNavigate();
 
     const handleLogin = () => {
-        // login();
         navigate('/login');
     };
 
     const handleLogout = () => {
         logout();
-        // navigate('/');
+        navigate('/');
     };
 
     return (
