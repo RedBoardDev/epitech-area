@@ -1,15 +1,24 @@
-import dotenv from "dotenv";
 import express from "express";
+import bodyParser from "body-parser";
+import cors from 'cors';
+import dotenv from "dotenv";
 import mysql from "mysql2";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import DbManager from "./dbLink.js";
+import ServiceManager from "./serviceManager.js";
 
 dotenv.config();
 
 export const db = new DbManager();
-
 export const app = express();
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(express.json());
+app.use(cors());
+app.use(express.static('public'));
+export const serviceManager = new ServiceManager(app);
+
 const algorithm = 'aes-256-cbc';
 
 export function encryptString(text) {
@@ -52,7 +61,7 @@ export function verifyToken(req, res, next) {
             else
                 res.status(403).json({ msg: "Token is not valid" });
         }).catch((err) => {
-            res.status(500).json({ msg: "Internal server error" });
+            res.status(500).json({ msg: "Internal server error", error: err });
             console.error(err);
         });
     } catch (err) {

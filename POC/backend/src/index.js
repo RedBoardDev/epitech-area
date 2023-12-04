@@ -1,15 +1,6 @@
-import express from "express";
-import bodyParser from "body-parser";
-import cors from 'cors';
-
 import { app, db } from "./global.js";
 import authRouter from "./routes/auth.js";
 import userRouter from "./routes/user.js";
-
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-app.use(express.json());
-app.use(cors());
 
 app.use("/auth", authRouter);
 app.use("/user", userRouter);

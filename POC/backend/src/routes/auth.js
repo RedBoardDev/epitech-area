@@ -33,7 +33,7 @@ router.post("/login", (req, res) => {
             res.status(400).json({ msg: "Invalid Credentials" });
         }
     }).catch((err) => {
-        res.status(500).json({ msg: "Internal server error" });
+        res.status(500).json({ msg: "Internal server error", error: err });
         console.error(err);
     });
 });
@@ -56,11 +56,11 @@ router.post("/register", (req, res) => {
             let token = jwt.sign({ id: `${rows.insertId}` }, process.env.SECRET, { expiresIn: '40w' });
             res.status(201).json({ token: token, id: rows.insertId });
         }).catch((err) => {
-            res.status(500).json({ msg: "Internal server error" });
+            res.status(500).json({ msg: "Internal server error", error: err });
             console.error(err);
         });
     }).catch((err) => {
-        res.status(500).json({ msg: "Internal server error" });
+        res.status(500).json({ msg: "Internal server error", error: err });
         console.error(err);
     });
 });

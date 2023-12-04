@@ -7,7 +7,7 @@ router.get("/", verifyToken, (req, res) => {
     db.getAllUsers().then((rows) => {
         res.json(rows);
     }).catch((err) => {
-        res.status(500).json({ msg: "Internal server error" });
+        res.status(500).json({ msg: "Internal server error", error: err });
         console.error(err);
     });
 });
@@ -19,7 +19,7 @@ router.get("/:id", verifyToken, (req, res) => {
         else
             res.status(404).json({ msg: "User not found" });
     }).catch((err) => {
-        res.status(500).json({ msg: "Internal server error" });
+        res.status(500).json({ msg: "Internal server error", error: err });
         console.error(err);
     });
 });
