@@ -14,23 +14,27 @@ const Services = () => {
         },
         {
             imageSrc: Logo,
-            title: 'Service 1',
+            title: 'Service 2',
             backgroundColor: '#4B4E6D',
-        }, {
+        },
+        {
             imageSrc: Logo,
-            title: 'Service 1',
+            title: 'Service 2',
             backgroundColor: '#4B4E6D',
-        }, {
+        },
+        {
             imageSrc: Logo,
-            title: 'Service 1',
+            title: 'Service 3',
             backgroundColor: '#4B4E6D',
-        }, {
+        },
+        {
             imageSrc: Logo,
-            title: 'Service 1',
+            title: 'Service 4',
             backgroundColor: '#4B4E6D',
-        }, {
+        },
+        {
             imageSrc: Logo,
-            title: 'Service 1',
+            title: 'Service 5',
             backgroundColor: '#4B4E6D',
         },
     ];

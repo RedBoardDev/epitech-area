@@ -45,21 +45,19 @@ function HeaderComponent({ showButton }) {
                     >
                         Accueil
                     </Typography>
-                    {isAuthenticated && (
-                        <Typography
-                            component={Link}
-                            to="/services"
-                            variant="h6"
-                            color="primary"
-                            sx={{
-                                marginRight: '46px',
-                                textDecoration: 'none',
-                                color: '#fff',
-                            }}
-                        >
-                            Services
-                        </Typography>
-                    )}
+                    <Typography
+                        component={Link}
+                        to="/services"
+                        variant="h6"
+                        color="primary"
+                        sx={{
+                            marginRight: '46px',
+                            textDecoration: 'none',
+                            color: '#fff',
+                        }}
+                    >
+                        Services
+                    </Typography>
                     {isAuthenticated ? (
                         <Button
                             onClick={handleLogout}

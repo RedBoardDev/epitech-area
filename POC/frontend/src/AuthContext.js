@@ -1,5 +1,3 @@
-// AuthContext.js
-
 import { createContext, useContext, useState, useEffect } from 'react';
 import { callApi } from './ApiCaller';
 
@@ -52,7 +50,7 @@ export const AuthProvider = ({ children }) => {
             return response;
         } catch (error) {
             if (error.response && error.response.status === 403) {
-                logout(); // Déconnectez l'utilisateur en cas d'erreur 403
+                logout();
             }
             throw error;
         }
