@@ -1,10 +1,13 @@
 import fs from 'fs';
+import automationsRouter from './routes/automations.js';
 
 import { db } from './global.js';
 
 class ServiceManager {
     constructor(app) {
         this.app = app;
+
+        this.app.use('/automations', automationsRouter);
 
         this.services = {};
         this.importServices();
