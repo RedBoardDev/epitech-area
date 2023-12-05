@@ -1,58 +1,70 @@
 <script>
-    export let title = 'Welcome to AREA';
-    export let subtitle = 'Ratio';
-    import logopropal2Artboard_1 from '../../../public/Assets/logopropal2Artboard_1.png';
+  export let title = 'HarmonieWeb';
+  export let subtitle = 'Connecter et harmoniser vos actions de façon simple et sécurisé.';
+  import logopropal2Artboard_1 from '../../../public/Assets/logopropal2Artboard_1.png';
 </script>
 
 <header>
-    <img src={logopropal2Artboard_1} alt="Logo">
-    <h1>{title} !</h1>
-    <p>{subtitle}</p>
+  <div class="header-content">
+      <img src={logopropal2Artboard_1} alt="Logo">
+      <div class="text-content">
+          <h1>{title} !</h1>
+          <p>{subtitle}</p>
+      </div>
+  </div>
 
-    <nav>
-        <a href="#Home">Home</a>
-        <a href="#About">About</a>
-        <a href="#Contact">Contact</a>
-    </nav>
+  <nav>
+      <a href="#Home">Home</a>
+      <a href="#About">About</a>
+      <a href="#Contact">Contact</a>
+  </nav>
 </header>
 
 <style>
-    img {
-        display: flex;
-        justify-content: flex-start;
-        width: 10%;
-        height: 10%;
-    }
+  .header-content {
+      display: flex; 
+      align-items: center;
+  }
 
-    header {
+  img {
+    width: 15%;
+    height: auto;
+    padding-top: 40px;
+  }
+
+  .text-content {
+      display: flex;
+      text-size-adjust: 1px;
+      flex-direction: column;
+      margin-left: 10px;
+  }
+
+  header {
       background-color: #333;
       color: white;
-      /* padding: 1em; */
       text-align: center;
       border-radius: 16px;
-      /* opacity: 0.3; */
-    }
-  
-    h1, p {
-      display: flex;
-      /* margin: 10; */
-      margin-left: 200px;
-      text-align: flex-start;
-    }
-  
-    nav {
+      margin-bottom: 10px;
+  }
+
+  h1, p {
+      margin: 0;
+      text-align: left;
+  }
+
+  nav {
       display: flex;
       justify-content: flex-end;
       padding: 0.5em;
-    }
-  
-    a {
+  }
+
+  a {
       color: white;
       text-decoration: none;
       padding: 0.5em 1em;
-    }
-  
-    a:hover {
+  }
+
+  a:hover {
       background-color: #777;
-    }
+  }
 </style>
