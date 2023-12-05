@@ -17,10 +17,15 @@ struct ContentView: View {
         NavigationStack {
             ZStack{
                 Rectangle().fill(LinearGradient(colors: [.background, .black], startPoint: .top, endPoint: .bottom)).ignoresSafeArea()
+                Image("BgTop").resizable()
+                    .frame(width: 800, height: 1000)
+                    .offset(x: 140)
+                
                 ZStack{
                     VStack(alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/) {
                         Image("logopropal2Artboard_1")
                             .resizable()
+                            .frame(width: 300, height: 300)
                             .scaledToFit()
                         TextField("username..", text: $username)
                             .foregroundColor(/*@START_MENU_TOKEN@*/.blue/*@END_MENU_TOKEN@*/)

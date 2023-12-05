@@ -27,7 +27,7 @@ struct MainPage: View {
                                     Text("HOME")
                                 }
                                 .tag(1)
-                            testView()
+                            OptionView()
                                 .tabItem {
                                     Image(systemName: "gearshape.fill")
                                     Text("OPTION")

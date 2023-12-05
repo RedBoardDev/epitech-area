@@ -1,6 +1,6 @@
 <script>
-  export let title = 'Welcome to AREA';
-  export let subtitle = 'Ratio';
+  export let title = 'HarmonieWeb';
+  export let subtitle = 'Connecter et harmoniser vos actions de façon simple et sécurisé.';
   import logopropal2Artboard_1 from '../../../public/Assets/logopropal2Artboard_1.png';
 </script>
 
@@ -23,12 +23,10 @@
 <style>
   .header-content {
       display: flex; 
-      align-items: center; /*Align items vertically */
+      align-items: center;
   }
 
   img {
-    /* display: flex;
-    justify-content: flex-start; */
     width: 15%;
     height: auto;
     padding-top: 40px;
@@ -36,8 +34,9 @@
 
   .text-content {
       display: flex;
+      text-size-adjust: 1px;
       flex-direction: column;
-      margin-left: 10px; /* Adjust margin as needed */
+      margin-left: 10px;
   }
 
   header {
@@ -49,7 +48,7 @@
   }
 
   h1, p {
-      margin: 0; /* Remove default margins */
+      margin: 0;
       text-align: left;
   }
 
