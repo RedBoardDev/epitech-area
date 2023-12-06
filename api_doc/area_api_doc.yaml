@@ -1,0 +1,640 @@
+swagger: "2.0"
+info:
+  title: "Area API"
+  description: "Area API"
+  version: "1.0.0"
+  termsOfService: ""
+  contact:
+    email: ""
+  license:
+    name: "MIT"
+    url: "https://opensource.org/license/mit/"
+host: "127.0.0.1:3632"
+basePath: ""
+tags:
+- name: "auth"
+  description: "Operations about auth to your Area account"
+- name: "user"
+  description: "Operations about users"
+- name: "service"
+  description: "Operations about services and oauth tokens"
+- name: "automations"
+  description: "Operations about automations associated to the current user"
+schemes:
+# - "https"
+- "http"
+paths:
+  /auth/login:
+    post:
+      tags:
+      - "auth"
+      summary: "Login to your Area account"
+      description: "Login to your Area account"
+      operationId: "login"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Login credentials"
+        required: true
+        schema:
+          $ref: "#/definitions/loginParams"
+      responses:
+        201:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/loginResponse"
+        400:
+          description: "Invalid username/password supplied"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+
+  /auth/register:
+    post:
+      tags:
+      - "auth"
+      summary: "Register to an Area account"
+      description: "Register to an Area account"
+      operationId: "register"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Register credentials"
+        required: true
+        schema:
+          $ref: "#/definitions/loginParams"
+      responses:
+        201:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/loginResponse"
+        400:
+          description: "Invalid username/password supplied"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+
+  /user:
+    get:
+      tags:
+      - "user"
+      summary: "Get all users"
+      description: "Get all users"
+      operationId: "getAllUsers"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/user"
+        400:
+          description: "Invalid username supplied"
+        404:
+          description: "User not found"
+        403:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/unauthorized"
+      security:
+      - bearerAuth: []
+
+  /user/{id}:
+    get:
+      tags:
+      - "user"
+      summary: "Get user by id"
+      description: "Get user by id"
+      operationId: "getUserById"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "The id that needs to be fetched."
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/user"
+        404:
+          description: "User not found"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+        403:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/unauthorized"
+      security:
+      - bearerAuth: []
+
+  /service:
+    get:
+      tags:
+      - "service"
+      summary: "Get all services"
+      description: "Get all services"
+      operationId: "getAllServices"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/service"
+        403:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/unauthorized"
+      security:
+      - bearerAuth: []
+
+  /service/{id}:
+    get:
+      tags:
+      - "service"
+      summary: "Get service by id"
+      description: "Get service by id"
+      operationId: "getServiceById"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "The id that needs to be fetched."
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/service"
+        404:
+          description: "Service not found"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+        403:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/unauthorized"
+      security:
+      - bearerAuth: []
+
+  /service/oauth/{id}:
+    get:
+      tags:
+      - "service"
+      summary: "Get oauth service token for the current user"
+      description: "Get oauth service token for the current user"
+      operationId: "getOauthToken"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "The id that needs to be fetched."
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/serviceOauth"
+        404:
+          description: "You are not authenticated to this service"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+        403:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/unauthorized"
+      security:
+      - bearerAuth: []
+
+    post:
+      tags:
+      - "service"
+      summary: "Add or update oauth service token for the current user"
+      description: "Add or update oauth service token for the current user"
+      operationId: "addOauthToken"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "The id that needs to be fetched."
+        required: true
+        type: "string"
+      - name: "body"
+        in: "body"
+        description: "Oauth token"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            token:
+              type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+        400:
+          description: "No token provided"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+        404:
+          description: "Service not found"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+        403:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/unauthorized"
+      security:
+      - bearerAuth: []
+
+  /automations:
+    get:
+      tags:
+      - "automations"
+      summary: "Get all automations associated to the current user"
+      description: "Get all automations associated to the current user"
+      operationId: "getAllAutomations"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/automation"
+        403:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/unauthorized"
+      security:
+      - bearerAuth: []
+
+    post:
+      tags:
+      - "automations"
+      summary: "Add an automation"
+      description: "Add an automation"
+      operationId: "addAutomation"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "body"
+        in: "body"
+        description: "Automation"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            trigger_service_id:
+              type: "string"
+            trigger_id:
+              type: "integer"
+              format: "int64"
+            trigger_params:
+              type: "string"
+              example: "{}"
+              description: "JSON string"
+            reaction_service_id:
+              type: "string"
+            reaction_id:
+              type: "integer"
+              format: "int64"
+            reaction_params:
+              type: "string"
+              example: "{}"
+              description: "JSON string"
+      responses:
+        201:
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+        400:
+          description: "Bad parameters"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+        403:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/unauthorized"
+      security:
+      - bearerAuth: []
+
+    put:
+      tags:
+      - "automations"
+      summary: "Update an automation"
+      description: "Update an automation"
+      operationId: "updateAutomation"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "body"
+        in: "body"
+        description: "Automation"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            id:
+              type: "integer"
+              format: "int64"
+            trigger_service_id:
+              type: "string"
+            trigger_id:
+              type: "integer"
+              format: "int64"
+            trigger_params:
+              type: "string"
+              example: "{}"
+              description: "JSON string"
+            reaction_service_id:
+              type: "string"
+            reaction_id:
+              type: "integer"
+              format: "int64"
+            reaction_params:
+              type: "string"
+              example: "{}"
+              description: "JSON string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+        400:
+          description: "Bad parameters"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+        403:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/unauthorized"
+      security:
+      - bearerAuth: []
+
+    delete:
+      tags:
+      - "automations"
+      summary: "Delete an automation"
+      description: "Delete an automation"
+      operationId: "deleteAutomation"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "body"
+        in: "body"
+        description: "Automation"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            id:
+              type: "integer"
+              format: "int64"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+        400:
+          description: "Bad parameters"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+        403:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/unauthorized"
+      security:
+      - bearerAuth: []
+
+securityDefinitions:
+  bearerAuth:
+    type: "apiKey"
+    name: "Authorization"
+    in: "header"
+    description: "Bearer token"
+definitions:
+  unauthorized:
+    type: "object"
+    properties:
+      msg:
+        type: "string"
+
+  loginParams:
+    type: "object"
+    properties:
+      email:
+        type: "string"
+      password:
+        type: "string"
+
+  loginResponse:
+    type: "object"
+    properties:
+      token:
+        type: "string"
+      id:
+        type: "integer"
+
+  user:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      email:
+        type: "string"
+      created_at:
+        type: "string"
+        format: "date-time"
+    xml:
+      name: "User"
+
+  service:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        example: ""
+      name:
+        type: "string"
+        example: ""
+      description:
+        type: "string"
+        example: ""
+      color:
+        type: "string"
+        example: ""
+      icon:
+        type: "string"
+        example: ""
+      triggers:
+        type: "array"
+        items:
+          type: "object"
+          properties:
+            name:
+              type: "string"
+              example: ""
+            description:
+              type: "string"
+              example: ""
+            fields:
+              type: "array"
+              items:
+                type: "object"
+                properties:
+                  name:
+                    type: "string"
+                    example: ""
+                  description:
+                    type: "string"
+                    example: ""
+                  type:
+                    type: "string"
+                    example: "text"
+        xml:
+          name: "Service"
+      reactions:
+        type: "array"
+        items:
+          type: "object"
+          properties:
+            name:
+              type: "string"
+              example: ""
+            description:
+              type: "string"
+              example: ""
+            fields:
+              type: "array"
+              items:
+                type: "object"
+                properties:
+                  name:
+                    type: "string"
+                    example: ""
+                  description:
+                    type: "string"
+                    example: ""
+                  type:
+                    type: "string"
+                    example: "text"
+    xml:
+      name: "Service"
+
+  serviceOauth:
+    type: "object"
+    properties:
+      user_id:
+        type: "integer"
+        format: "int64"
+      service_id:
+        type: "string"
+      token:
+        type: "string"
+    xml:
+      name: "ServiceOauth"
+
+  automation:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      user_id:
+        type: "integer"
+        format: "int64"
+      trigger_service_id:
+        type: "string"
+      trigger_id:
+        type: "integer"
+        format: "int64"
+      trigger_params:
+        type: "string"
+        example: "{}"
+        description: "JSON string"
+      reaction_service_id:
+        type: "string"
+      reaction_id:
+        type: "integer"
+        format: "int64"
+      reaction_params:
+        type: "string"
+        example: "{}"
+        description: "JSON string"
+    xml:
+      name: "Automation"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
