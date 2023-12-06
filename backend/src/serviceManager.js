@@ -11,7 +11,7 @@ class ServiceManager {
         this.app.use('/service', servicesRouter);
         this.app.use('/automations', automationsRouter);
 
-        this.services = {};
+        this.services = [];
         this.importServices();
 
         // this.intervalId = setInterval(() => this.checkTriggers(), 10000);
@@ -29,7 +29,7 @@ class ServiceManager {
     }
 
     registerService(service) {
-        this.services[service.id] = service;
+        this.services.push(service);
         this.app.use(`/service/${service.id}`, service.router);
     }
 
@@ -38,7 +38,15 @@ class ServiceManager {
     }
 
     getService(id) {
-        return this.services[id];
+        return this.services.find((service) => service.id === id);
+    }
+
+    getTrigger(serviceId, id) {
+        return this.getService(serviceId).triggers.find((trigger) => trigger.id === id);
+    }
+
+    getReaction(serviceId, id) {
+        return this.getService(serviceId).reactions.find((reaction) => reaction.id === id);
     }
 
     async checkTriggers() {
@@ -48,12 +56,10 @@ class ServiceManager {
                 const automations = await db.getAutomations(user.id);
                 automations.forEach(async (automation) => {
                     const triggerServiceToken = (await db.getServiceOauth(user.id, automation.trigger_service_id))[0].token;
-                    const reactionServiceToken = (await db.getServiceOauth(user.id, automation.reaction_service_id))[0].token;
-                    const triggerService = this.getService(automation.trigger_service_id);
-                    const reactionService = this.getService(automation.reaction_service_id);
-                    const triggerServiceData = await triggerService.triggers[automation.trigger_id].check(user, JSON.parse(automation.trigger_params), triggerServiceToken);
+                    const triggerServiceData = await this.getTrigger(automation.trigger_service_id, automation.trigger_id).check(user, JSON.parse(automation.trigger_params), triggerServiceToken);
                     if (triggerServiceData) {
-                        await reactionService.reactions[automation.reaction_id].execute(user, JSON.parse(automation.reaction_params), reactionServiceToken, triggerServiceData);
+                        const reactionServiceToken = (await db.getServiceOauth(user.id, automation.reaction_service_id))[0].token;
+                        await this.getReaction(automation.reaction_service_id, automation.reaction_id).execute(user, JSON.parse(automation.reaction_params), reactionServiceToken, triggerServiceData);
                     }
                 });
             });

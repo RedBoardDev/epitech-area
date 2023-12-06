@@ -61,7 +61,9 @@ router.post('/oauth/:id', verifyToken, async (req, res) => {
                 res.status(500).json({ msg: 'Internal server error', error: err });
             });
         }
-    })
+    }).catch((err) => {
+        res.status(500).json({ msg: 'Internal server error', error: err });
+    });
 });
 
 export default router;

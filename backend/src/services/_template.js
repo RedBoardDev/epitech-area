@@ -7,8 +7,9 @@ export const description = '';
 export const color = '#000000';
 export const icon = '/serviceIcon.svg';
 
-export const triggers = {
-    1: {
+export const triggers = [
+    {
+        id: 1,
         name: '',
         description: '',
         fields: [
@@ -22,10 +23,11 @@ export const triggers = {
             return null;
         }
     }
-};
+];
 
-export const reactions = {
-    1: {
+export const reactions = [
+    {
+        id: 1,
         name: '',
         description: '',
         fields: [
@@ -38,6 +40,6 @@ export const reactions = {
         execute: async (userData, params, token, triggerData) => {
         }
     }
-};
+];
 
 export const router = Router();

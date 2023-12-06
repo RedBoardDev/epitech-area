@@ -17,8 +17,9 @@ export const description = 'Github service';
 export const color = '#6e5494';
 export const icon = '/github.svg';
 
-export const triggers = {
-    1: {
+export const triggers = [
+    {
+        id: 1,
         name: 'New commit',
         description: 'Triggers when a new commit is pushed to a repository',
         fields: [
@@ -36,7 +37,8 @@ export const triggers = {
             return null;
         }
     },
-    2: {
+    {
+        id: 2,
         name: 'New issue',
         description: 'Triggers when a new issue is created',
         fields: [
@@ -54,7 +56,8 @@ export const triggers = {
             return null;
         }
     },
-    3: {
+    {
+        id: 3,
         name: 'New pull request',
         description: 'Triggers when a new pull request is created',
         fields: [
@@ -72,10 +75,11 @@ export const triggers = {
             return null;
         }
     }
-};
+];
 
-export const reactions = {
-    1: {
+export const reactions = [
+    {
+        id: 1,
         name: 'Create issue',
         description: 'Creates a new issue',
         fields: [
@@ -103,7 +107,8 @@ export const reactions = {
             console.log('triggerData:', triggerData);
         }
     },
-    2: {
+    {
+        id: 2,
         name: 'Create pull request',
         description: 'Creates a new pull request',
         fields: [
@@ -131,4 +136,4 @@ export const reactions = {
             console.log('triggerData:', triggerData);
         }
     }
-};
+];
