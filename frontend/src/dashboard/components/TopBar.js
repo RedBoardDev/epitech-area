@@ -20,8 +20,8 @@ export default function TopBar() {
     }, []);
 
     return (
-      <AppBar position="fixed" style={{ right: 0, width: 'calc(100% - 15%)' }}>
-        <Toolbar style={{ background: '#222222' }}>
+      <AppBar position="fixed" style={{ right: 0, width: 'calc(100%)', zIndex: -1 }}>
+        <Toolbar style={{ background: '#222222'}} sx={{ boxShadow: 3 }}>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginRight: 'auto', fontWeight: '100', fontSize: '18px' }}>
               {time}
             </Typography>
