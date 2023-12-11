@@ -6,11 +6,12 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Logo from './assets/logo.png';
+import SideBar from './components/SideBar';
 
 import { useAuth } from '../AuthContext';
 
 export default function Dashboard() {
     return (
-        <h1>Dashboard</h1>
+        <SideBar />
     );
 }
