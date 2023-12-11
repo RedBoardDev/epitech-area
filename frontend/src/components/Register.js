@@ -7,6 +7,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import HeaderComponent from './Header';
 import backgroundImage from '../img/BgTop.png';
+
 const Register = () => {
     const [username, setUsername] = useState('test@thomasott.com');
     const [password, setPassword] = useState('test123/');
