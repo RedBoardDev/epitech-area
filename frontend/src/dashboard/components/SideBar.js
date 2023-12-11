@@ -37,7 +37,7 @@ export default function SideBar() {
                     </IconButton>
                 </Toolbar>
             </AppBar>
-            <Slide direction="left" in={isSidebarOpen} mountOnEnter unmountOnExit>
+            <Slide direction="right" in={isSidebarOpen} mountOnEnter unmountOnExit>
                 <Box sx={{ marginTop: '2rem', marginLeft: '2.2rem' }}>
                     <Typography variant="h6" component="div">
                         <Link to="/dashboard" style={activeStyle}>
