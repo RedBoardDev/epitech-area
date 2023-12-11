@@ -64,7 +64,7 @@ const Home = () => {
                                 },
                             }}
                         >
-                            En savoir plus
+                            Learn More
                         </Button>
                     </div>
                     <div

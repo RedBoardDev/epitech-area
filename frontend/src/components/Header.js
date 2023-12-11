@@ -43,7 +43,7 @@ function HeaderComponent({ showButton }) {
                             color: '#fff',
                         }}
                     >
-                        Accueil
+                        Home
                     </Typography>
                     <Typography
                         component={Link}
