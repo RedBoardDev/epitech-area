@@ -29,7 +29,7 @@ export default function SideBar() {
                     <Link to="/dashboard" style={{ textDecoration: 'none', color: '#fff' }}>
                         {isSidebarOpen ? <img src={Logo} alt="Logo" style={{ width: '80%', height: 'auto' }} /> : ''}
                     </Link>
-                    <Typography variant="h6" component="div" sx={{ flexGrow: 1, marginLeft: '1rem' }}>
+                    <Typography variant="h6" component="div" sx={{ flexGrow: 1, marginRight: '20px' }}>
                         {isSidebarOpen ? 'HarmonieWeb' : ''}
                     </Typography>
                     <IconButton edge="start" color="inherit" aria-label="menu" onClick={handleSidebarToggle}>
