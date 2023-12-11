@@ -5,6 +5,7 @@ import Home from './components/Home';
 import Services from './components/Services';
 import Lost from './components/Lost';
 import { AuthProvider } from './AuthContext';
+import Dashboard from './dashboard/index';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/services" element={<Services />} />
           <Route path="*" element={<Lost />} />
+          <Route path="/dashboard/*" element={<Dashboard />} />
         </Routes>
       </Router>
     </AuthProvider>
