@@ -37,7 +37,7 @@ export default function SideBar() {
                     </IconButton>
                 </Toolbar>
             </AppBar>
-            <Slide direction="left" in={isSidebarOpen} mountOnEnter unmountOnExit>
+            {isSidebarOpen && (
                 <Box sx={{ marginTop: '2rem', marginLeft: '2.2rem' }}>
                     <Typography variant="h6" component="div">
                         <Link to="/dashboard" style={location.pathname === '/dashboard' ? activeStyle : inactiveStyle}>
@@ -49,8 +49,13 @@ export default function SideBar() {
                             Services
                         </Link>
                     </Typography>
+                    <Typography variant="h6" component="div" sx={{ marginTop: '1rem' }}>
+                        <Link to="/dashboard/clients" style={location.pathname === '/dashboard/addservice' ? activeStyle : inactiveStyle}>
+                            Create Service
+                        </Link>
+                    </Typography>
                 </Box>
-            </Slide>
+            )}
         </Box>
     );
 }
