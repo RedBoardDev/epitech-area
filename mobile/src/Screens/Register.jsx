@@ -35,11 +35,10 @@ function RegisterScreen() {
 
   const [email, setEmail] = useState({ value: 'test@gmail.com', error: '' })
   const [password, setPassword] = useState({ value: '12345678', error: '' })
-  const [token, setToken] = useState("DEFAULT")
   const [error, setError] = useState("")
 
 
-  const onLoginPressed = async () => {
+  const onRegisterPressed = async () => {
     const emailError = validateEmail(email.value)
     const passwordError = validatePassword(password.value)
     if (!emailError || !passwordError) {
@@ -50,7 +49,7 @@ function RegisterScreen() {
       return
     }
     try {
-      setToken(await RegisterEmailPass(email.value, password.value));
+      const token = await RegisterEmailPass(email.value, password.value);
       if (token.length > 10) {
         await AsyncStorage.setItem('jwtToken', token);
         navigation.reset({
@@ -92,7 +91,7 @@ function RegisterScreen() {
         errorText={password.error}
         secureTextEntry
       />
-      <Button mode="contained" onPress={onLoginPressed} title="Register">
+      <Button mode="contained" onPress={onRegisterPressed} title="Register">
         Register
       </Button>
       <View style={styles.row}>

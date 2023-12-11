@@ -24,28 +24,51 @@ import Logo from '../Components/Logo'
 import TextInput from '../Components/TextInput'
 import Button from '../Components/Button'
 
+import { validateEmail, validatePassword } from '../Tests/Validators'
+
+import { LoginEmailPass } from '../Core/ServerCalls'
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 function LoginScreen() {
   const navigation = useNavigation();
 
   const [email, setEmail] = useState({ value: 'test@gmail.com', error: '' })
   const [password, setPassword] = useState({ value: '12345678', error: '' })
+  const [error, setError] = useState("")
 
-  const onLoginPressed = () => {
-    // const emailError = emailValidator(email.value)
-    // const passwordError = passwordValidator(password.value)
-    // if (emailError || passwordError) {
-    //   setEmail({ ...email, error: emailError })
-    //   setPassword({ ...password, error: passwordError })
-    //   return
-    // }
+  const onLoginPressed = async () => {
+    const emailError = validateEmail(email.value)
+    const passwordError = validatePassword(password.value)
+    if (!emailError || !passwordError) {
+      setEmail({ ...email, error: emailError })
+      setPassword({ ...password, error: passwordError })
+      console.log(passwordError)
 
-    console.log("Login")
+      return
+    }
+    try {
+      const token = await LoginEmailPass(email.value, password.value);
+      if (token.length > 10) {
+        await AsyncStorage.setItem('jwtToken', token);
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'NavBar' }],
+        });
+      } else {
+        setError("Unknown error, please try again. ")
+      }
+    } catch (err) {
+      setError(err.message)
+      setEmail({ ...email, error: true })
+    }
   }
   return (
-<Background>
+    <Background>
       {/* <BackButton goBack={navigation.goBack} /> */}
       <Logo />
       <Text style={styles.header}>Nice to see you again !</Text>
+      {error && <Text style={{ color: 'red' }}>{error}</Text>}
       <TextInput
         label="Email"
         returnKeyType="next"
