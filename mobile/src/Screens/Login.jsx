@@ -28,27 +28,28 @@ import Logo from '../Components/Logo'
 function LoginScreen() {
   const navigation = useNavigation();
 
-  // const [email, setEmail] = useState({ value: '', error: '' })
-  // const [password, setPassword] = useState({ value: '', error: '' })
+  const [email, setEmail] = useState({ value: '', error: '' })
+  const [password, setPassword] = useState({ value: '', error: '' })
 
-  // const onLoginPressed = () => {
-  //   const emailError = emailValidator(email.value)
-  //   const passwordError = passwordValidator(password.value)
-  //   if (emailError || passwordError) {
-  //     setEmail({ ...email, error: emailError })
-  //     setPassword({ ...password, error: passwordError })
-  //     return
-  //   }
-  //   navigation.reset({
-  //     index: 0,
-  //     routes: [{ name: 'Dashboard' }],
-  //   })
-  // }
+  const onLoginPressed = () => {
+    // const emailError = emailValidator(email.value)
+    // const passwordError = passwordValidator(password.value)
+    // if (emailError || passwordError) {
+    //   setEmail({ ...email, error: emailError })
+    //   setPassword({ ...password, error: passwordError })
+    //   return
+    // }
+    // navigation.reset({
+    //   index: 0,
+    //   routes: [{ name: 'Dashboard' }],
+    // })
+    console.log("Login")
+  }
   return (
 <Background>
       {/* <BackButton goBack={navigation.goBack} /> */}
       <Logo />
-      <Header>Welcome back.</Header>
+      <Text style={styles.header}>Hello !</Text>
       <TextInput
         label="Email"
         returnKeyType="next"
@@ -77,9 +78,7 @@ function LoginScreen() {
           <Text style={styles.forgot}>Forgot your password?</Text>
         </TouchableOpacity>
       </View>
-      <Button mode="contained" onPress={onLoginPressed}>
-        Login
-      </Button>
+      <Button mode="contained" onPress={onLoginPressed} title="Login"></Button>
       <View style={styles.row}>
         <Text>Don’t have an account? </Text>
         <TouchableOpacity onPress={() => navigation.replace('RegisterScreen')}>
@@ -107,6 +106,12 @@ const styles = StyleSheet.create({
   link: {
     fontWeight: 'bold',
     color: theme.colors.primary,
+  },
+  header: {
+    fontSize: 21,
+    color: theme.colors.primary,
+    fontWeight: 'bold',
+    paddingVertical: 12,
   },
 })
 
