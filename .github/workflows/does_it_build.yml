@@ -8,7 +8,7 @@ jobs:
     - name: Use Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '14'
+        node-version: '20'
     - name: Go to frontend directory and install dependencies
       run: cd frontend && npm ci
       continue-on-error: true
