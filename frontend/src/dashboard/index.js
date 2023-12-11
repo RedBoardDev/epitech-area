@@ -10,7 +10,7 @@ export default function Dashboard() {
     const [isSidebarOpen] = React.useState(true);
 
     return (
-        <Grid container>
+        <Grid container style={{overflow: 'hidden'}}>
             <Grid item xs={1.8}>
                 {isSidebarOpen ? <SideBar /> : null}
             </Grid>

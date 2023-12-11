@@ -9,7 +9,6 @@ import Automations from './components/Automations';
 import Dashboard from './dashboard';
 import ServicesDash from './dashboard/services';
 import { AuthProvider } from './AuthContext';
-import Dashboard from './dashboard/index';
 
 function App() {
   return (
@@ -24,7 +23,6 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/dashboard/services" element={<ServicesDash />} />
           <Route path="*" element={<Lost />} />
-          <Route path="/dashboard/*" element={<Dashboard />} />
         </Routes>
       </Router>
     </AuthProvider>
