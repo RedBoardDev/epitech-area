@@ -16,7 +16,7 @@ export default function ServicesDash() {
                         <TopBar />
                     </Grid>
                     <Grid item xs={12} style={{overflow: 'hidden'}}>
-                        <div style={{backgroundColor: 'grey', height: '93.5%', top: '6.5%', left: '15%', position: 'absolute', width: '85%', zIndex: '-1', overflow: 'auto', padding: '2%'}}>
+                        <div style={{backgroundColor: 'white', height: '93.5%', top: '6.5%', left: '15%', position: 'absolute', width: '85%', zIndex: '-1', overflow: 'auto', padding: '2%'}}>
                             <ServicesList />
                         </div>
                     </Grid>
