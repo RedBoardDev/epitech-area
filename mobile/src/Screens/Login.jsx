@@ -27,8 +27,8 @@ import Button from '../Components/Button'
 function LoginScreen() {
   const navigation = useNavigation();
 
-  const [email, setEmail] = useState({ value: '', error: '' })
-  const [password, setPassword] = useState({ value: '', error: '' })
+  const [email, setEmail] = useState({ value: 'test@gmail.com', error: '' })
+  const [password, setPassword] = useState({ value: '12345678', error: '' })
 
   const onLoginPressed = () => {
     // const emailError = emailValidator(email.value)

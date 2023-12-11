@@ -24,36 +24,58 @@ import Logo from '../Components/Logo'
 import TextInput from '../Components/TextInput'
 import Button from '../Components/Button'
 
+import { validateEmail, validatePassword } from '../Tests/Validators'
+
+import { RegisterEmailPass } from '../Core/ServerCalls'
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 function RegisterScreen() {
   const navigation = useNavigation();
 
-  const [email, setEmail] = useState({ value: '', error: '' })
-  const [password, setPassword] = useState({ value: '', error: '' })
+  const [email, setEmail] = useState({ value: 'test@gmail.com', error: '' })
+  const [password, setPassword] = useState({ value: '12345678', error: '' })
+  const [token, setToken] = useState("DEFAULT")
+  const [error, setError] = useState("")
 
-  const onLoginPressed = () => {
-    // const emailError = emailValidator(email.value)
-    // const passwordError = passwordValidator(password.value)
-    // if (emailError || passwordError) {
-    //   setEmail({ ...email, error: emailError })
-    //   setPassword({ ...password, error: passwordError })
-    //   return
-    // }
-    // navigation.reset({
-    //   index: 0,
-    //   routes: [{ name: 'Dashboard' }],
-    // })
-    console.log("Login")
+
+  const onLoginPressed = async () => {
+    const emailError = validateEmail(email.value)
+    const passwordError = validatePassword(password.value)
+    if (!emailError || !passwordError) {
+      setEmail({ ...email, error: emailError })
+      setPassword({ ...password, error: passwordError })
+      console.log(passwordError)
+
+      return
+    }
+    try {
+      setToken(await RegisterEmailPass(email.value, password.value));
+      if (token.length > 10) {
+        await AsyncStorage.setItem('jwtToken', token);
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'NavBar' }],
+        });
+      } else {
+        setError("Unknown error, please try again.")
+      }
+    } catch (err) {
+      setError(err.message)
+      setEmail({ ...email, error: true })
+    }
   }
   return (
 <Background>
       {/* <BackButton goBack={navigation.goBack} /> */}
       <Logo />
       <Text style={styles.header}>Welcome to HarmonieWeb</Text>
+      {error && <Text style={{ color: 'red' }}>{error}</Text>}
       <TextInput
         label="Email"
         returnKeyType="next"
         value={email.value}
-        onChangeText={(text) => setEmail({ value: text, error: '' })}
+        onChangeText={(text) => setEmail({ value: text, error: '' }) & setError('')}
         error={!!email.error}
         errorText={email.error}
         autoCapitalize="none"
