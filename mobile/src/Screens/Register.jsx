@@ -24,7 +24,7 @@ import Logo from '../Components/Logo'
 import TextInput from '../Components/TextInput'
 import Button from '../Components/Button'
 
-function LoginScreen() {
+function RegisterScreen() {
   const navigation = useNavigation();
 
   const [email, setEmail] = useState({ value: '', error: '' })
@@ -38,14 +38,17 @@ function LoginScreen() {
     //   setPassword({ ...password, error: passwordError })
     //   return
     // }
-
+    // navigation.reset({
+    //   index: 0,
+    //   routes: [{ name: 'Dashboard' }],
+    // })
     console.log("Login")
   }
   return (
 <Background>
       {/* <BackButton goBack={navigation.goBack} /> */}
       <Logo />
-      <Text style={styles.header}>Nice to see you again !</Text>
+      <Text style={styles.header}>Welcome to HarmonieWeb</Text>
       <TextInput
         label="Email"
         returnKeyType="next"
@@ -67,20 +70,13 @@ function LoginScreen() {
         errorText={password.error}
         secureTextEntry
       />
-      <View style={styles.forgotPassword}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('ResetPasswordScreen')}
-        >
-          <Text style={styles.forgot}>Forgot your password ?</Text>
-        </TouchableOpacity>
-      </View>
-      <Button mode="contained" onPress={onLoginPressed} title="Login">
-        Login
+      <Button mode="contained" onPress={onLoginPressed} title="Register">
+        Register
       </Button>
       <View style={styles.row}>
-        <Text>Don’t have an account ? </Text>
-        <TouchableOpacity onPress={() => navigation.navigate('RegisterScreen')}>
-          <Text style={styles.link}>Sign up</Text>
+        <Text>Already have an account ? </Text>
+        <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')}>
+          <Text style={styles.link}>Login</Text>
         </TouchableOpacity>
       </View>
     </Background>
@@ -113,4 +109,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default LoginScreen;
+export default RegisterScreen;

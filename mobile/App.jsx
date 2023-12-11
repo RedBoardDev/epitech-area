@@ -15,6 +15,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import LoginScreen from './src/Screens/Login';
+import RegisterScreen from './src/Screens/Register';
 import NavBar from './src/Screens/NavBar';
 
 import Help from './src/Help';
@@ -38,6 +39,7 @@ function App() {
     <NavigationContainer theme={getColorTheme() === "dark" ? Dark : Light}>
       <Stack.Navigator>
         <Stack.Screen name="LoginScreen" component={LoginScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="RegisterScreen" component={RegisterScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Help" component={Help} options={{ headerShown: false }} />
         <Stack.Screen name="NavBar" component={NavBar} options={{ headerShown: false }} />
       </Stack.Navigator>
