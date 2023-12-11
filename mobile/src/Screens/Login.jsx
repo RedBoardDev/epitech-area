@@ -7,12 +7,10 @@ import React, {
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   StyleSheet,
   Image,
   Alert,
-  Button,
   SafeAreaView,
 } from 'react-native';
 
@@ -21,9 +19,10 @@ import {
 } from '@react-navigation/native';
 
 import { theme } from '../Components/Theme'
-
 import Background from '../Components/Background'
 import Logo from '../Components/Logo'
+import TextInput from '../Components/TextInput'
+import Button from '../Components/Button'
 
 function LoginScreen() {
   const navigation = useNavigation();
@@ -49,7 +48,7 @@ function LoginScreen() {
 <Background>
       {/* <BackButton goBack={navigation.goBack} /> */}
       <Logo />
-      <Text style={styles.header}>Hello !</Text>
+      <Text style={styles.header}>Nice to see you again !</Text>
       <TextInput
         label="Email"
         returnKeyType="next"
@@ -75,12 +74,14 @@ function LoginScreen() {
         <TouchableOpacity
           onPress={() => navigation.navigate('ResetPasswordScreen')}
         >
-          <Text style={styles.forgot}>Forgot your password?</Text>
+          <Text style={styles.forgot}>Forgot your password ?</Text>
         </TouchableOpacity>
       </View>
-      <Button mode="contained" onPress={onLoginPressed} title="Login"></Button>
+      <Button mode="contained" onPress={onLoginPressed} title="Login">
+        Login
+      </Button>
       <View style={styles.row}>
-        <Text>Don’t have an account? </Text>
+        <Text>Don’t have an account ?</Text>
         <TouchableOpacity onPress={() => navigation.replace('RegisterScreen')}>
           <Text style={styles.link}>Sign up</Text>
         </TouchableOpacity>
