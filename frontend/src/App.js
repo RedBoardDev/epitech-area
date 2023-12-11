@@ -5,6 +5,7 @@ import Register from './components/Register';
 import Home from './components/Home';
 import Services from './components/Services';
 import Lost from './components/Lost';
+import Automations from './components/Automations';
 import { AuthProvider } from './AuthContext';
 import Dashboard from './dashboard/index';
 
@@ -17,6 +18,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/services" element={<Services />} />
+          <Route path="/automations" element={<Automations />} />
           <Route path="*" element={<Lost />} />
           <Route path="/dashboard/*" element={<Dashboard />} />
         </Routes>

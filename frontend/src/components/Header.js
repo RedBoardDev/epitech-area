@@ -58,6 +58,19 @@ function HeaderComponent({ showButton }) {
                     >
                         Services
                     </Typography>
+                    <Typography
+                        component={Link}
+                        to="/Automations"
+                        variant="h6"
+                        color="primary"
+                        sx={{
+                            marginRight: '46px',
+                            textDecoration: 'none',
+                            color: '#fff',
+                        }}
+                    >
+                        Automations
+                    </Typography>
                     {isAuthenticated ? (
                         <Button
                             onClick={handleLogout}
