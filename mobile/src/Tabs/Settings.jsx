@@ -8,6 +8,7 @@ import {
   Image,
   Alert,
   Button,
+  SafeAreaView
 } from "react-native";
 
 import {
@@ -31,11 +32,11 @@ export default function Settings() {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Text style={{ color: colors.text }}>Settings</Text>
       <Button title="Help" onPress={() => navigation.navigate("Help")} />
       <Button title="Logout" onPress={handleLogoutPress} />
-    </View>
+    </SafeAreaView>
   );
 }
 

@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Image,
   Alert,
+  SafeAreaView,
 } from "react-native";
 
 import {
@@ -30,9 +31,9 @@ export default function Home() {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Text style={{ color: colors.text }}>Home</Text>
-    </View>
+    </SafeAreaView>
   );
 }
 

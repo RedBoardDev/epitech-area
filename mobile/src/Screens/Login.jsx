@@ -13,6 +13,7 @@ import {
   Image,
   Alert,
   Button,
+  SafeAreaView,
 } from 'react-native';
 
 import {
@@ -34,9 +35,9 @@ function LoginScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Button title="Login" onPress={handleLoginPress} />
-    </View>
+    </SafeAreaView>
   );
 };
 
