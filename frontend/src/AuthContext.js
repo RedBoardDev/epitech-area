@@ -110,8 +110,20 @@ export const AuthProvider = ({ children }) => {
         setIsAuthenticated(false);
     };
 
+    const getAutomations = async () => {
+        try {
+            const response = await callApiWithToken('GET', `/automations`);
+            setIsAuthenticated(true);
+            return response;
+        } catch (error) {
+            console.error('Automations error:', error);
+            setIsAuthenticated(false);
+            throw error;
+        }
+    }
+
     return (
-        <AuthContext.Provider value={{ isAuthenticated, register, login, logout, verifyToken }}>
+        <AuthContext.Provider value={{ isAuthenticated, register, login, logout, verifyToken, getAutomations }}>
             {children}
         </AuthContext.Provider>
     );
