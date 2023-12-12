@@ -5,6 +5,39 @@ import path from 'path';
 
 const router = express.Router();
 
+/**
+ * @swagger
+ * /user:
+ *   get:
+ *     tags:
+ *       - user
+ *     summary: Get all users
+ *     description: Get all users
+ *     operationId: getAllUsers
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       '200':
+ *         description: Successful operation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: "#/components/schemas/user"
+ *       '400':
+ *         description: Invalid username supplied
+ *       '404':
+ *         description: User not found
+ *       '403':
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/unauthorized"
+ *     security:
+ *       - bearerAuth: []
+ */
 router.get("/", verifyToken, (req, res) => {
     db.getAllUsers().then((rows) => {
         res.json(rows);
@@ -14,6 +47,49 @@ router.get("/", verifyToken, (req, res) => {
     });
 });
 
+/**
+ * @swagger
+ * /user/{id}:
+ *   get:
+ *     tags:
+ *       - "user"
+ *     summary: "Get user by id"
+ *     description: "Get user by id"
+ *     operationId: "getUserById"
+ *     produces:
+ *       - "application/json"
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: The id that needs to be fetched.
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: Successful operation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/user"
+ *       '404':
+ *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *       '403':
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/unauthorized"
+ *     security:
+ *       - bearerAuth: []
+ */
 router.get("/:id", verifyToken, (req, res) => {
     db.getUserById(req.params.id).then((rows) => {
         if (rows[0])
@@ -26,6 +102,53 @@ router.get("/:id", verifyToken, (req, res) => {
     });
 });
 
+/**
+ * @swagger
+ * /user/profile/{id}:
+ *   post:
+ *     tags:
+ *       - "user"
+ *     summary: "Update user profile image"
+ *     description: "Update user profile image by id"
+ *     operationId: "updateUserProfile"
+ *     consumes:
+ *       - "multipart/form-data"
+ *     produces:
+ *       - "application/json"
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: The id of the user.
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - name: profileImage
+ *         in: formData
+ *         description: The profile image to upload.
+ *         required: true
+ *         type: file
+ *     responses:
+ *       '200':
+ *         description: User updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *       '400':
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *     security:
+ *       - bearerAuth: []
+ */
 router.post('/profile/:id', verifyToken, (req, res) => {
     upload.single('profileImage')(req, res, function (err) {
         if (err instanceof multer.MulterError) {
@@ -53,6 +176,39 @@ router.post('/profile/:id', verifyToken, (req, res) => {
     });
 });
 
+/**
+ * @swagger
+ * /user/profile/{id}:
+ *   get:
+ *     tags:
+ *       - "user"
+ *     summary: "Get user profile image"
+ *     description: "Get user profile image by id"
+ *     operationId: "getUserProfile"
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: The id of the user.
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: User profile image retrieved successfully
+ *         content:
+ *           image/*:
+ *             schema:
+ *               type: file
+ *       '404':
+ *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ */
 router.get("/profile/:id", (req, res) => {
     db.getUserById(req.params.id).then((rows) => {
         if (rows[0]) {

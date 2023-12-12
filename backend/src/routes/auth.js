@@ -14,6 +14,44 @@ function checkPassword(password) {
 
 const router = express.Router();
 
+/**
+ * @swagger
+ * /auth/login:
+ *   post:
+ *     tags:
+ *       - auth
+ *     summary: "Login to your Area account"
+ *     description: "Login to your Area account"
+ *     operationId: "login"
+ *     security: []
+ *     consumes:
+ *       - "application/json"
+ *     produces:
+ *       - "application/json"
+ *     requestBody:
+ *       description: "Login credentials"
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: "#/components/schemas/loginParams"
+ *     responses:
+ *       '201':
+ *         description: "Successful operation"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/loginResponse"
+ *       '400':
+ *         description: "Invalid username/password supplied"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ */
 router.post("/login", (req, res) => {
     if (!req.body.email || !req.body.password) {
         res.status(400).json({ msg: "Bad parameter" });
@@ -38,6 +76,44 @@ router.post("/login", (req, res) => {
     });
 });
 
+/**
+ * @swagger
+ * /auth/register:
+ *   post:
+ *     tags:
+ *       - auth
+ *     summary: "Register to an Area account"
+ *     description: "Register to an Area account"
+ *     operationId: "register"
+ *     security: []
+ *     consumes:
+ *       - "application/json"
+ *     produces:
+ *       - "application/json"
+ *     requestBody:
+ *       description: Register credentials
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: "#/components/schemas/loginParams"
+ *     responses:
+ *       '201':
+ *         description: Successful operation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/loginResponse"
+ *       '400':
+ *         description: Invalid username/password supplied
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ */
 router.post("/register", (req, res) => {
     if (!req.body.email || !req.body.password || !checkEmail(req.body.email) || !checkPassword(req.body.password)) {
         res.status(400).json({ msg: "Bad parameter" });
