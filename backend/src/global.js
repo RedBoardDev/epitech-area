@@ -11,6 +11,7 @@ import swaggerUi from "swagger-ui-express";
 import swaggerJsdoc from "swagger-jsdoc";
 import multer from 'multer';
 import fs from 'fs';
+import { options_SwaggerJsdoc, options_SwaggerUI } from "./swaggerConfig.js";
 
 dotenv.config();
 
@@ -29,7 +30,6 @@ const storage = multer.diskStorage({
     },
 });
 
-// export const upload = multer({ storage });
 export const upload = multer({
     storage: storage,
     fileFilter: (req, file, cb) => {
@@ -44,67 +44,9 @@ export const upload = multer({
 
 export const db = new DbManager();
 export const app = express();
-const options = {
-    definition: {
-        openapi: '3.0.0',
-        info: {
-            title: 'AREA API',
-            version: '1.0.0',
-            description: 'Documentation for AREA API',
-        },
-        servers: [
-            {
-                url: '{protocol}://{environment}', variables: {
-                    protocol: {
-                        default: 'https',
-                        enum: ['https', 'http'],
-                    },
-                    environment: {
-                        default: 'epitechmoulibot.thomasott.fr/api',
-                        enum: ['epitechmoulibot.thomasott.fr/api', '127.0.0.1:3500'],
-                    },
-                },
-            },
 
-        ],
-        tags: [
-            {
-                name: 'auth',
-                description: 'Endpoints for authentication',
-            },
-            {
-                name: 'user',
-                description: 'Endpoints for user management',
-            },
-            {
-                name: 'service',
-                description: 'Endpoints for service management',
-            },
-            {
-                name: 'automations',
-                description: 'Endpoints for automation management',
-            }
-        ],
-        components: {
-            securitySchemes: {
-                BearerAuth: {
-                    type: 'http',
-                    scheme: 'bearer',
-                    bearerFormat: 'JWT',
-                },
-            },
-        },
-        security: [
-            {
-                BearerAuth: ['read', 'write'],
-            },
-        ],
-    },
-    apis: ['./src/routes/**/*.js'],
-};
-
-const specs = swaggerJsdoc(options);
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(specs));
+const specs = swaggerJsdoc(options_SwaggerJsdoc);
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(specs, options_SwaggerUI));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
