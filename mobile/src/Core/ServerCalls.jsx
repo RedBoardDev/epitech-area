@@ -49,3 +49,17 @@ export const WorkingToken = async (token) => {
     });
     return response.ok;
 };
+
+export const getAutos = async (token) => {
+    if (!token) {
+        return false;
+    }
+    const response = await fetch(`${config.API_BASE_URL}/user/`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+        },
+    });
+    return response.ok;
+};
