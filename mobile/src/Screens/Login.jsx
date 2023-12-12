@@ -108,6 +108,10 @@ function LoginScreen() {
           <Text style={styles.link}>Sign up</Text>
         </TouchableOpacity>
       </View>
+      <TouchableOpacity style={styles.button_log_with} onPress={() => console.log("github login")}>
+        <Image source={require("../../assets/github_logo.png")} style={styles.logo} />
+        <Text style={styles.text}>Login with GitHub</Text>
+      </TouchableOpacity>
     </Background>
   );
 };
@@ -135,6 +139,24 @@ const styles = StyleSheet.create({
     color: theme.colors.primary,
     fontWeight: 'bold',
     paddingVertical: 12,
+  },
+  button_log_with: {
+    marginTop: 30,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    padding: 10,
+    borderRadius: 5,
+    borderColor: '#000',
+    borderWidth: 1,
+  },
+  text: {
+    color: '#000',
+    marginLeft: 10,
+  },
+  logo: {
+    width: 20,
+    height: 20,
   },
 })
 
