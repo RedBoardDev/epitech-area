@@ -63,9 +63,9 @@ class DbManager {
         return this.executeQuery(query, values);
     }
 
-    insertUser(email, passwordHash) {
-        const query = 'INSERT INTO user(email, password) VALUES (?, ?)';
-        const values = [email, passwordHash];
+    insertUser(email, passwordHash, lastname, firstname) {
+        const query = 'INSERT INTO user(email, password, lastname, firstname) VALUES (?, ?, ?, ?)';
+        const values = [email, passwordHash, lastname, firstname];
         return this.executeQuery(query, values);
     }
 

@@ -79,9 +79,9 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const register = async (email, password) => {
+    const register = async (email, password, lastname, firstname) => {
         try {
-            const response = await callApi('POST', '/auth/register', { email, password });
+            const response = await callApi('POST', '/auth/register', { email, password, lastname, firstname });
             saveData(response.token, response.id);
             setIsAuthenticated(true);
             return response;
