@@ -44,8 +44,6 @@ function RegisterScreen() {
     if (!emailError || !passwordError) {
       setEmail({ ...email, error: emailError })
       setPassword({ ...password, error: passwordError })
-      console.log(passwordError)
-
       return
     }
     try {

@@ -16,6 +16,8 @@ import {
   useTheme
 } from "@react-navigation/native";
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 export default function Settings() {
   const navigation = useNavigation();
   const { colors } = useTheme();
@@ -28,6 +30,7 @@ export default function Settings() {
   };
 
   const handleLogoutPress = () => {
+    AsyncStorage.removeItem('jwtToken');
     navigateToLogin();
   };
 

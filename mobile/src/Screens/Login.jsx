@@ -26,7 +26,7 @@ import Button from '../Components/Button'
 
 import { validateEmail, validatePassword } from '../Tests/Validators'
 
-import { LoginEmailPass } from '../Core/ServerCalls'
+import { LoginEmailPass, GetUser } from '../Core/ServerCalls'
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -37,13 +37,15 @@ function LoginScreen() {
   const [password, setPassword] = useState({ value: '12345678', error: '' })
   const [error, setError] = useState("")
 
+  useEffect(() => {
+  }, []);
+
   const onLoginPressed = async () => {
     const emailError = validateEmail(email.value)
     const passwordError = validatePassword(password.value)
     if (!emailError || !passwordError) {
       setEmail({ ...email, error: emailError })
       setPassword({ ...password, error: passwordError })
-      console.log(passwordError)
 
       return
     }
@@ -90,13 +92,13 @@ function LoginScreen() {
         errorText={password.error}
         secureTextEntry
       />
-      <View style={styles.forgotPassword}>
+      {/* <View style={styles.forgotPassword}>
         <TouchableOpacity
           onPress={() => navigation.navigate('ResetPasswordScreen')}
         >
           <Text style={styles.forgot}>Forgot your password ?</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
       <Button mode="contained" onPress={onLoginPressed} title="Login">
         Login
       </Button>

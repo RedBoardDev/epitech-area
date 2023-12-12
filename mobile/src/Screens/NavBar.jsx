@@ -1,17 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Image } from 'react-native';
-import { useTheme } from '@react-navigation/native';
+import { useTheme, useNavigation } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import Home from '../Tabs/Home';
 import Settings from '../Tabs/Settings';
 import Icon from '../Components/Icon';
 
+import { WorkingToken } from '../Core/ServerCalls';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 export default function NavBar() {
   const Tab = createBottomTabNavigator();
   const { colors } = useTheme();
 
   useEffect(() => {
+
   }, []);
 
   return (

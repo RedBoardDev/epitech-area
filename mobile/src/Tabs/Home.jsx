@@ -15,17 +15,11 @@ import {
   useTheme
 } from "@react-navigation/native";
 
+import { getUser } from "../Core/ServerCalls";
+
 export default function Home() {
-  const navigation = useNavigation();
   const { colors } = useTheme();
-
-  const navigateToLogin = () => {
-    navigation.reset({
-      index: 0,
-      routes: [{ name: "LoginScreen" }],
-    });
-  };
-
+  
   const handleLogoutPress = () => {
     navigateToLogin();
   };
