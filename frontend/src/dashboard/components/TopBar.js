@@ -5,9 +5,13 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { ArrowDownwardTwoTone } from '@mui/icons-material';
+import SettingsIcon from '@mui/icons-material/Settings';
+import LogoutIcon from '@mui/icons-material/Logout';
+import SettingsUserModal from './SettingsModal';
 
 export default function TopBar() {
     const [time, setTime] = useState(new Date().toLocaleTimeString());
+    const [openSettingsModal, setOpenSettingsModal] = useState(false);
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -32,8 +36,12 @@ export default function TopBar() {
               <Avatar alt="User Avatar" src="https://image.shutterstock.com/image-vector/dotted-spiral-vortex-royaltyfree-images-600w-2227567913.jpg" />
             </IconButton>
             <IconButton color="inherit" sx={{ marginLeft: '10px' }}>
-                <ArrowDownwardTwoTone />
+                <SettingsIcon onClick={() => setOpenSettingsModal(true)} />
             </IconButton>
+            <IconButton color="inherit" sx={{ marginLeft: '10px' }}>
+                <LogoutIcon onClick={() => console.log("Logout clicked")} />
+            </IconButton>
+            {openSettingsModal && <SettingsUserModal setOpen={setOpenSettingsModal} />}
         </Toolbar>
       </AppBar>
     );
