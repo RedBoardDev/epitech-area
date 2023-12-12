@@ -51,15 +51,31 @@ export const WorkingToken = async (token) => {
 };
 
 export const getAutos = async (token) => {
-    if (!token) {
-        return false;
-    }
-    const response = await fetch(`${config.API_BASE_URL}/user/`, {
+    const response = await fetch(`${config.API_BASE_URL}/automations/`, {
         method: "GET",
         headers: {
             "Authorization": `Bearer ${token}`,
             "Content-Type": "application/json"
         },
     });
-    return response.ok;
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.msg);
+    }
+    return data;
 };
+
+export const getSvgByServiceId = async (token, service_id) => {
+    const response = await fetch(`${config.API_BASE_URL}/service/${service_id}/`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+        },
+    });
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.msg);
+    }
+    return data;
+}

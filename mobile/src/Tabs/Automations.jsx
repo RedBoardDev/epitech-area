@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 import {
   View,
@@ -16,8 +16,23 @@ import {
 } from "@react-navigation/native";
 import { ScrollView } from "react-native-gesture-handler";
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import { getAutos } from '../Core/ServerCalls'
+
 export default function Automations() {
   const { colors } = useTheme();
+  const [autos, setAutos] = useState([]);
+
+  useEffect(() => {
+    const fetchAutos = async () => {
+      const data = await getAutos(await AsyncStorage.getItem('jwtToken'));
+      console.log(data);
+      setAutos(data);
+    };
+
+    fetchAutos();
+  }, []);
 
   const handleLogoutPress = () => {
     navigateToLogin();
@@ -27,12 +42,14 @@ export default function Automations() {
     <SafeAreaView style={styles.container}>
       <ScrollView>
         <TouchableOpacity>
-          <View style={styles.card}>
+          {autos && autos.map(auto => (
+          <View style={styles.card} key={auto.id}>
             <View style={styles.header}>
-              <Text style={styles.title}>automation 1</Text>
+              <Text style={styles.title}>Automation {auto.id}</Text>
             </View>
-            <Text style={styles.content}>Test</Text>
+            <Text style={styles.content}>{auto.trigger_service_id} -> {auto.reaction_service_id}</Text>
           </View>
+          ))}
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
@@ -42,7 +59,7 @@ export default function Automations() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    
+
   },
   card: {
     backgroundColor: '#fff',
