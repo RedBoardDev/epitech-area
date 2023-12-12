@@ -8,10 +8,20 @@ import { ArrowDownwardTwoTone } from '@mui/icons-material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import SettingsUserModal from './SettingsModal';
+import { useAuth } from '../../AuthContext';
+import { useNavigate } from 'react-router-dom';
+
 
 export default function TopBar() {
     const [time, setTime] = useState(new Date().toLocaleTimeString());
     const [openSettingsModal, setOpenSettingsModal] = useState(false);
+    const { logout } = useAuth();
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+      logout();
+      navigate('/');
+    };
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -35,11 +45,11 @@ export default function TopBar() {
             <IconButton color="inherit" sx={{ marginLeft: '10px' }}>
               <Avatar alt="User Avatar" src="https://image.shutterstock.com/image-vector/dotted-spiral-vortex-royaltyfree-images-600w-2227567913.jpg" />
             </IconButton>
-            <IconButton color="inherit" sx={{ marginLeft: '10px' }}>
-                <SettingsIcon onClick={() => setOpenSettingsModal(true)} />
+            <IconButton color="inherit" sx={{ marginLeft: '10px' }} onClick={() => setOpenSettingsModal(true)}>
+                <SettingsIcon />
             </IconButton>
-            <IconButton color="inherit" sx={{ marginLeft: '10px' }}>
-                <LogoutIcon onClick={() => console.log("Logout clicked")} />
+            <IconButton color="inherit" sx={{ marginLeft: '10px' }} onClick={handleLogout}>
+                <LogoutIcon />
             </IconButton>
             {openSettingsModal && <SettingsUserModal setOpen={setOpenSettingsModal} />}
         </Toolbar>
