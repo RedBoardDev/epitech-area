@@ -40,7 +40,7 @@ export default function TopBar() {
               navigate('/login');
           } else {
               try {
-                  const result = await getUserById(3);
+                  const result = await getUserById();
                   setUser(result);
                   console.log(result);
               } catch (error) {

@@ -146,9 +146,10 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
-    const getUserById = async (id) => {
+    const getUserById = async () => {
+        const userID = localStorage.getItem('userID');
         try {
-            const response = await callApiWithToken('GET', `/user/${id}`);
+            const response = await callApiWithToken('GET', `/user/${userID}`);
             setIsAuthenticated(true);
             return response;
         } catch (error) {
