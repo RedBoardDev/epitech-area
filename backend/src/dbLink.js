@@ -46,19 +46,19 @@ class DbManager {
     }
 
     getUserById(id, withPassword = false) {
-        const query = `SELECT ${withPassword ? '*' : 'id, email, created_at'} FROM user WHERE id = ?;`;
+        const query = `SELECT ${withPassword ? '*' : 'id, email, created_at, lastname, firstname'} FROM user WHERE id = ?;`;
         const values = [id];
         return this.executeQuery(query, values);
     }
 
     getUserByEmail(email, withPassword = false) {
-        const query = `SELECT ${withPassword ? '*' : 'id, email, created_at'} FROM user WHERE email = ?;`;
+        const query = `SELECT ${withPassword ? '*' : 'id, email, created_at, lastname, firstname'} FROM user WHERE email = ?;`;
         const values = [email];
         return this.executeQuery(query, values);
     }
 
     getUserByEmailOrId(str, withPassword = false) {
-        const query = `SELECT ${withPassword ? '*' : 'id, email, created_at'} FROM user WHERE id = ? OR email = ?;`;
+        const query = `SELECT ${withPassword ? '*' : 'id, email, created_at, lastname, firstname'} FROM user WHERE id = ? OR email = ?;`;
         const values = [str, str];
         return this.executeQuery(query, values);
     }
@@ -69,8 +69,8 @@ class DbManager {
         return this.executeQuery(query, values);
     }
 
-    updateUser(id, updateQueryString) {
-        const query = `UPDATE user SET ${updateQueryString} WHERE id = ?;`;
+    updateUser(id, lastname, firstname) {
+        const query = `UPDATE user SET lastname = '${lastname}', firstname = '${firstname}' WHERE id = ${id};`;
         const values = [id];
         return this.executeQuery(query, values);
     }

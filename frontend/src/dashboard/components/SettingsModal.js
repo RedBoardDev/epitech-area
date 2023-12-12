@@ -1,18 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../AuthContext';
 
-export default function SettingsUserModal() {
+export default function SettingsUserModal({ user, onUpdateUser }) {
     const [open, setOpen] = useState(true);
-    const [firstName, setFirstName] = useState("Léo");
-    const [lastName, setLastName] = useState("BALDACHINO");
-    const [email, setEmail] = useState("leo.baldachino@epitech.eu");
+    const [firstName, setFirstName] = useState(user.firstname);
+    const [lastName, setLastName] = useState(user.lastname);
+    const [email, setEmail] = useState(user.email);
     const [password, setPassword] = useState("********");
     const [confirmPassword, setConfirmPassword] = useState("********");
+    const { updtaeUserById, verifyToken } = useAuth();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const checkToken = async () => {
+            if (!await verifyToken()) {
+                navigate('/');
+            }
+        };
+        checkToken();
+    }, [verifyToken, navigate]);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -22,10 +35,18 @@ export default function SettingsUserModal() {
         setOpen(false);
     };
 
-    const handleSave = () => {
+
+    const handleSave = async () => {
+        try {
+            await updtaeUserById(3, lastName, firstName);
+            onUpdateUser({ ...user, firstname: firstName, lastname: lastName });
+        } catch (error) {
+            console.error('Update user failed:', error);
+        }
         // Sauvegardez les informations de l'utilisateur ici...
         setOpen(false);
     };
+
 
     return (
         <div>

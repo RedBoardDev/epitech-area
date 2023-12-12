@@ -24,4 +24,13 @@ router.get("/:id", verifyToken, (req, res) => {
     });
 });
 
+router.put("/:id", verifyToken, (req, res) => {
+    db.updateUser(req.params.id, req.body.lastname, req.body.firstname).then((result) => {
+        res.status(200).json({ msg: 'User updated' });
+    }).catch((err) => {
+        res.status(500).json({ msg: "Internal server error", error: err });
+        console.error(err);
+    })
+})
+
 export default router;

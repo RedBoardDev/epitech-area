@@ -15,7 +15,8 @@ import { useNavigate } from 'react-router-dom';
 export default function TopBar() {
     const [time, setTime] = useState(new Date().toLocaleTimeString());
     const [openSettingsModal, setOpenSettingsModal] = useState(false);
-    const { logout } = useAuth();
+    const [user, setUser] = useState();
+    const { logout, getUserById, verifyToken } = useAuth();
     const navigate = useNavigate();
 
     const handleLogout = () => {
@@ -33,6 +34,27 @@ export default function TopBar() {
         };
     }, []);
 
+    useEffect(() => {
+      const getUser = async () => {
+          if (!(await verifyToken())) {
+              navigate('/login');
+          } else {
+              try {
+                  const result = await getUserById(3);
+                  setUser(result);
+                  console.log(result);
+              } catch (error) {
+                  console.error('Error fetching automations:', error);
+              }
+          }
+      };
+      getUser();
+  }, [verifyToken, navigate, getUserById]);
+
+  const updateUser = (updatedUserData) => {
+    setUser(updatedUserData);
+  };
+
     return (
       <AppBar position="fixed" style={{ right: 0, width: 'calc(100%)', zIndex: -1 }}>
         <Toolbar style={{ background: '#222222'}} sx={{ boxShadow: 3 }}>
@@ -40,7 +62,7 @@ export default function TopBar() {
               {time}
             </Typography>
             <Typography variant="h6" component="div" sx={{ marginLeft: 'auto' }}>
-                    Léo BALDACHINO
+                    {user ? user.firstname + ' ' + user.lastname : ""}
             </Typography>
             <IconButton color="inherit" sx={{ marginLeft: '10px' }}>
               <Avatar alt="User Avatar" src="https://image.shutterstock.com/image-vector/dotted-spiral-vortex-royaltyfree-images-600w-2227567913.jpg" />
@@ -51,7 +73,7 @@ export default function TopBar() {
             <IconButton color="inherit" sx={{ marginLeft: '10px' }} onClick={handleLogout}>
                 <LogoutIcon />
             </IconButton>
-            {openSettingsModal && <SettingsUserModal setOpen={setOpenSettingsModal} />}
+            {openSettingsModal && <SettingsUserModal user={user} setOpen={setOpenSettingsModal} onUpdateUser={updateUser} />}
         </Toolbar>
       </AppBar>
     );

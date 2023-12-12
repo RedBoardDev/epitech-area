@@ -141,11 +141,38 @@ export const AuthProvider = ({ children }) => {
             return response;
         } catch (error) {
             console.error('Automation delete error:', error);
+            setIsAuthenticated(false);
+            throw error;
+        }
+    }
+
+    const getUserById = async (id) => {
+        try {
+            const response = await callApiWithToken('GET', `/user/${id}`);
+            setIsAuthenticated(true);
+            return response;
+        } catch (error) {
+            console.error('Service error:', error);
+            setIsAuthenticated(false);
+            throw error;
+        }
+    }
+
+    const updtaeUserById = async (id, lastname, firstname) => {
+        try {
+
+            const response = await callApiWithToken('PUT', `/user/${id}`, { lastname, firstname });
+            setIsAuthenticated(true);
+            return response;
+        } catch (error) {
+            console.error('Service error:', error);
+            setIsAuthenticated(false);
+            throw error;
         }
     }
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, register, login, logout, verifyToken, getAutomations, getAllServices, deleteAutomation }}>
+        <AuthContext.Provider value={{ isAuthenticated, register, login, logout, verifyToken, getAutomations, getAllServices, deleteAutomation, getUserById, updtaeUserById }}>
             {children}
         </AuthContext.Provider>
     );
