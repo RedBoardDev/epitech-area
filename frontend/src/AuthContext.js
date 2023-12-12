@@ -122,8 +122,30 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
+    const getAllServices = async () => {
+        try {
+            const response = await callApiWithToken('GET', `/service`);
+            setIsAuthenticated(true);
+            return response;
+        } catch (error) {
+            console.error('Service error:', error);
+            setIsAuthenticated(false);
+            throw error;
+        }
+    }
+
+    const deleteAutomation = async (id) => {
+        try {
+            const response = await callApiWithToken('DELETE', `/automations`, { id });
+            setIsAuthenticated(true);
+            return response;
+        } catch (error) {
+            console.error('Automation delete error:', error);
+        }
+    }
+
     return (
-        <AuthContext.Provider value={{ isAuthenticated, register, login, logout, verifyToken, getAutomations }}>
+        <AuthContext.Provider value={{ isAuthenticated, register, login, logout, verifyToken, getAutomations, getAllServices, deleteAutomation }}>
             {children}
         </AuthContext.Provider>
     );

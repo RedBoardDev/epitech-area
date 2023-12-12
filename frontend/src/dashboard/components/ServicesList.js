@@ -10,6 +10,8 @@ import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import { PauseCircleOutline } from '@mui/icons-material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useAuth } from '../../AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 function createData(id, name, type, status) {
     return { id, name, type, status };
@@ -33,12 +35,80 @@ const rows = [
 
 export default function ServicesDash() {
     const [tableData, setTableData] = useState(rows);
+    const [automations, setAutomations] = useState();
+    const navigate = useNavigate();
+    const { verifyToken, getAllServices, getAutomations, deleteAutomation } = useAuth();
 
     useEffect(() => {
-        // Ici, nous allons mettre à jour le tableau avec les données de l'API
-        // Mettons à jour les données de la table ici
-        // setTableData(newData);
-    }, []);
+        const getServices = async () => {
+            if (!(await verifyToken())) {
+                navigate('/login');
+            } else {
+                try {
+                    const result = await getAllServices();
+                    const userAutomations = await getAutomations();
+
+                    const newData = result.flatMap(service => {
+                        const serviceAutomations = userAutomations.filter(
+                            automation => automation.reaction_service_id === service.id || automation.trigger_service_id === service.id
+                        );
+
+                        if (serviceAutomations.length > 0) {
+                            const reactionIds = serviceAutomations.map(automation => automation.reaction_id);
+                            const triggerIds = serviceAutomations.map(automation => automation.trigger_id);
+                            const automationsIds = serviceAutomations.map(automation => automation.id);
+
+                            const ids = automationsIds;
+
+                            const names = [
+                                ...service.reactions.filter(reaction => reactionIds.includes(reaction.id)).map(reaction => reaction.name),
+                                ...service.triggers.filter(trigger => triggerIds.includes(trigger.id)).map(trigger => trigger.name),
+                            ];
+                            const type = service.name;
+
+                            return ids.map((id, index) => createData(id, names[index], type, 'Status'));
+                        }
+
+                        return [];
+                    });
+                    setTableData(newData);
+                } catch (error) {
+                    console.error('Error fetching automations:', error);
+                }
+            }
+        };
+        getServices();
+    }, [verifyToken, navigate, getAllServices]);
+
+    useEffect(() => {
+        const checkToken = async () => {
+            if (!(await verifyToken())) {
+                navigate('/login');
+            } else {
+                const getAllAutomations = async () => {
+                    try {
+                        const result = await getAutomations();
+                        setAutomations(result);
+                    } catch (error) {
+                        console.error('Error fetching automations:', error);
+                    }
+                };
+                getAllAutomations();
+            }
+        };
+        checkToken();
+    }, [verifyToken, navigate, getAutomations]);
+
+    const handleDeleteAutomation = async (id) => {
+        console.log(id);
+        try {
+            await deleteAutomation(id);
+            const updatedTableData = tableData.filter(row => row.id !== id);
+            setTableData(updatedTableData);
+        } catch (error) {
+            console.error('delete automation failed:', error);
+        }
+    };
 
     TableCell.defaultProps = {
         style: { fontSize: '1.2rem', color: '#4B4E6D' }
@@ -74,7 +144,7 @@ export default function ServicesDash() {
                                 <IconButton style={{ color: TableCell.defaultProps.style.color }} aria-label="edit">
                                     <EditIcon />
                                 </IconButton>
-                                <IconButton style={{ color: TableCell.defaultProps.style.color }} aria-label="delete">
+                                <IconButton onClick={() => handleDeleteAutomation(row.id)} style={{ color: TableCell.defaultProps.style.color }} aria-label="delete">
                                     <DeleteIcon />
                                 </IconButton>
                             </TableCell>
