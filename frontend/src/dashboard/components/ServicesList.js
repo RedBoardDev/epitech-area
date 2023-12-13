@@ -13,8 +13,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useAuth } from '../../AuthContext';
 import { useNavigate } from 'react-router-dom';
 
-function createData(id, name, type, status) {
-    return { id, name, type, status };
+function createData(id, trigger, reaction, type, status) {
+    return { id, trigger, reaction, type, status };
 }
 
 const rows = [
@@ -54,23 +54,28 @@ export default function ServicesDash() {
                         );
 
                         if (serviceAutomations.length > 0) {
-                            const reactionIds = serviceAutomations.map(automation => automation.reaction_id);
-                            const triggerIds = serviceAutomations.map(automation => automation.trigger_id);
-                            const automationsIds = serviceAutomations.map(automation => automation.id);
+                            const automationPairs = {};
 
-                            const ids = automationsIds;
+                            serviceAutomations.forEach(automation => {
+                                const trigger = service.triggers.find(trigger => trigger.id === automation.trigger_id);
+                                const reaction = service.reactions.find(reaction => reaction.id === automation.reaction_id);
 
-                            const names = [
-                                ...service.reactions.filter(reaction => reactionIds.includes(reaction.id)).map(reaction => reaction.name),
-                                ...service.triggers.filter(trigger => triggerIds.includes(trigger.id)).map(trigger => trigger.name),
-                            ];
-                            const type = service.name;
-
-                            return ids.map((id, index) => createData(id, names[index], type, 'Status'));
+                                if (trigger && reaction) {
+                                    automationPairs[automation.id] = {
+                                        triggerName: trigger.name,
+                                        reactionName: reaction.name,
+                                    };
+                                }
+                            });
+                            const automationsData = Object.keys(automationPairs).map(automationId => {
+                                const { triggerName, reactionName } = automationPairs[automationId];
+                                return createData(automationId, triggerName, reactionName, 'Automation', 'Status');
+                            });
+                            return automationsData;
                         }
-
                         return [];
                     });
+
                     setTableData(newData);
                 } catch (error) {
                     console.error('Error fetching automations:', error);
@@ -124,8 +129,8 @@ export default function ServicesDash() {
                 <TableHead>
                     <TableRow>
                         <TableCell>ID</TableCell>
-                        <TableCell>Name</TableCell>
-                        <TableCell>Type</TableCell>
+                        <TableCell>Triggers</TableCell>
+                        <TableCell>Reactions</TableCell>
                         <TableCell>Status</TableCell>
                         <TableCell>Actions</TableCell>
                     </TableRow>
@@ -134,8 +139,8 @@ export default function ServicesDash() {
                     {tableData.map((row) => (
                         <TableRow key={row.id}>
                             <TableCell {...TableCellChildrends}>{row.id}</TableCell>
-                            <TableCell {...TableCellChildrends}>{row.name}</TableCell>
-                            <TableCell {...TableCellChildrends}>{row.type}</TableCell>
+                            <TableCell {...TableCellChildrends}>{row.trigger}</TableCell>
+                            <TableCell {...TableCellChildrends}>{row.reaction}</TableCell>
                             <TableCell {...TableCellChildrends}>{row.status}</TableCell>
                             <TableCell {...TableCellChildrends}>
                                 <IconButton style={{ color: TableCell.defaultProps.style.color }} aria-label="play">

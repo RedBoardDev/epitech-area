@@ -70,8 +70,8 @@ class DbManager {
     }
 
     updateUser(id, lastname, firstname) {
-        const query = `UPDATE user SET lastname = '${lastname}', firstname = '${firstname}' WHERE id = ${id};`;
-        const values = [id];
+        const query = `UPDATE user SET lastname = ?, firstname = ? WHERE id = ?;`;
+        const values = [lastname, firstname, id];
         return this.executeQuery(query, values);
     }
 

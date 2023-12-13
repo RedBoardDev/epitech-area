@@ -159,10 +159,10 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
-    const updtaeUserById = async (id, lastname, firstname) => {
+    const updateUserById = async (lastname, firstname) => {
+        const userID = localStorage.getItem('userID');
         try {
-
-            const response = await callApiWithToken('PUT', `/user/${id}`, { lastname, firstname });
+            const response = await callApiWithToken('PUT', `/user/${userID}`, { lastname, firstname });
             setIsAuthenticated(true);
             return response;
         } catch (error) {
@@ -173,7 +173,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, register, login, logout, verifyToken, getAutomations, getAllServices, deleteAutomation, getUserById, updtaeUserById }}>
+        <AuthContext.Provider value={{ isAuthenticated, register, login, logout, verifyToken, getAutomations, getAllServices, deleteAutomation, getUserById, updateUserById }}>
             {children}
         </AuthContext.Provider>
     );

@@ -42,7 +42,6 @@ export default function TopBar() {
               try {
                   const result = await getUserById();
                   setUser(result);
-                  console.log(result);
               } catch (error) {
                   console.error('Error fetching automations:', error);
               }
