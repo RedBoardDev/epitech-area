@@ -17,11 +17,6 @@ function HeaderComponent({ showButton }) {
         navigate('/login');
     };
 
-    const handleLogout = () => {
-        logout();
-        navigate('/');
-    };
-
     return (
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="fixed" style={{ top: 0, backgroundColor: '#000' }}>
@@ -60,7 +55,7 @@ function HeaderComponent({ showButton }) {
                     </Typography>
                     <Typography
                         component={Link}
-                        to="/Automations"
+                        to="/automations"
                         variant="h6"
                         color="primary"
                         sx={{
@@ -73,7 +68,6 @@ function HeaderComponent({ showButton }) {
                     </Typography>
                     {isAuthenticated ? (
                         <Button
-                            onClick={handleLogout}
                             variant="contained"
                             color="primary"
                             sx={{
@@ -95,8 +89,10 @@ function HeaderComponent({ showButton }) {
                                     backgroundImage: 'linear-gradient(315deg, #8130a2 0%, #dd067f 74%)',
                                 },
                             }}
+                            component={Link}
+                            to="/dashboard"
                         >
-                            Sign Out
+                            Dashboard
                         </Button>
                     ) : (
                         <Button

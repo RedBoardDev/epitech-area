@@ -11,6 +11,8 @@ import backgroundImage from '../img/BgTop.png';
 const Register = () => {
     const [username, setUsername] = useState('test@thomasott.com');
     const [password, setPassword] = useState('test123/');
+    const [lastname, setLastname] = useState('Binder');
+    const [firstname, setFirstname] = useState('Lucas');
     const { register, logout, verifyToken } = useAuth();
     const navigate = useNavigate();
     useEffect(() => {
@@ -23,13 +25,12 @@ const Register = () => {
     }, [verifyToken, navigate]);
     const handleRegister = async () => {
         try {
-            await register(username, password);
+            await register(username, password, lastname, firstname);
             navigate('/');
             console.log('registered!')
         } catch (error) {
             logout();
             console.error('Register failed:', error);
-            
         }
     };
     return (
@@ -72,6 +73,24 @@ const Register = () => {
                         fullWidth
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
+                        sx={{ marginBottom: '1rem' }}
+                    />
+                    <TextField
+                        label="Lastname"
+                        variant="outlined"
+                        margin="normal"
+                        fullWidth
+                        value={lastname}
+                        onChange={(e) => setLastname(e.target.value)}
+                        sx={{ marginBottom: '1rem' }}
+                    />
+                    <TextField
+                        label="Firstname"
+                        variant="outlined"
+                        margin="normal"
+                        fullWidth
+                        value={firstname}
+                        onChange={(e) => setFirstname(e.target.value)}
                         sx={{ marginBottom: '1rem' }}
                     />
                     <TextField

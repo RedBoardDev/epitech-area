@@ -10,9 +10,11 @@ import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import { PauseCircleOutline } from '@mui/icons-material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useAuth } from '../../AuthContext';
+import { useNavigate } from 'react-router-dom';
 
-function createData(id, name, type, status) {
-    return { id, name, type, status };
+function createData(id, serviceName, trigger, reaction, type, status) {
+    return { id, serviceName, trigger, reaction, type, status };
 }
 
 const rows = [
@@ -33,12 +35,65 @@ const rows = [
 
 export default function ServicesDash() {
     const [tableData, setTableData] = useState(rows);
+    const navigate = useNavigate();
+    const { verifyToken, getAllServices, getAutomations, deleteAutomation } = useAuth();
 
     useEffect(() => {
-        // Ici, nous allons mettre à jour le tableau avec les données de l'API
-        // Mettons à jour les données de la table ici
-        // setTableData(newData);
-    }, []);
+        const getServices = async () => {
+            if (!(await verifyToken())) {
+                navigate('/login');
+            } else {
+                try {
+                    const result = await getAllServices();
+                    const userAutomations = await getAutomations();
+
+                    const newData = result.flatMap(service => {
+                        const serviceAutomations = userAutomations.filter(
+                            automation => automation.reaction_service_id === service.id || automation.trigger_service_id === service.id
+                        );
+
+                        if (serviceAutomations.length > 0) {
+                            const automationPairs = {};
+
+                            serviceAutomations.forEach(automation => {
+                                const trigger = service.triggers.find(trigger => trigger.id === automation.trigger_id);
+                                const reaction = service.reactions.find(reaction => reaction.id === automation.reaction_id);
+
+                                if (trigger && reaction) {
+                                    automationPairs[automation.id] = {
+                                        triggerName: trigger.name,
+                                        reactionName: reaction.name,
+                                    };
+                                }
+                            });
+                            const automationsData = Object.keys(automationPairs).map(automationId => {
+                                const { triggerName, reactionName } = automationPairs[automationId];
+                                return createData(automationId, service.name, triggerName, reactionName, 'Automation', 'Status');
+                            });
+                            return automationsData;
+                        }
+                        return [];
+                    });
+
+                    setTableData(newData);
+                } catch (error) {
+                    console.error('Error fetching automations:', error);
+                }
+            }
+        };
+        getServices();
+    }, [verifyToken, navigate, getAllServices]);
+
+    const handleDeleteAutomation = async (id) => {
+        console.log(id);
+        try {
+            await deleteAutomation(id);
+            const updatedTableData = tableData.filter(row => row.id !== id);
+            setTableData(updatedTableData);
+        } catch (error) {
+            console.error('delete automation failed:', error);
+        }
+    };
 
     TableCell.defaultProps = {
         style: { fontSize: '1.2rem', color: '#4B4E6D' }
@@ -54,8 +109,9 @@ export default function ServicesDash() {
                 <TableHead>
                     <TableRow>
                         <TableCell>ID</TableCell>
-                        <TableCell>Name</TableCell>
-                        <TableCell>Type</TableCell>
+                        <TableCell>Services name</TableCell>
+                        <TableCell>Triggers</TableCell>
+                        <TableCell>Reactions</TableCell>
                         <TableCell>Status</TableCell>
                         <TableCell>Actions</TableCell>
                     </TableRow>
@@ -64,8 +120,17 @@ export default function ServicesDash() {
                     {tableData.map((row) => (
                         <TableRow key={row.id}>
                             <TableCell {...TableCellChildrends}>{row.id}</TableCell>
-                            <TableCell {...TableCellChildrends}>{row.name}</TableCell>
-                            <TableCell {...TableCellChildrends}>{row.type}</TableCell>
+                            <TableCell {...TableCellChildrends}>
+                                <img
+                                  src="http://127.0.0.1:3632/github.png"
+                                  alt="GitHub Logo"
+                                  height="32"
+                                  width="32"
+                                />
+                                {row.serviceName}
+                            </TableCell>
+                            <TableCell {...TableCellChildrends}>{row.trigger}</TableCell>
+                            <TableCell {...TableCellChildrends}>{row.reaction}</TableCell>
                             <TableCell {...TableCellChildrends}>{row.status}</TableCell>
                             <TableCell {...TableCellChildrends}>
                                 <IconButton style={{ color: TableCell.defaultProps.style.color }} aria-label="play">
@@ -74,7 +139,7 @@ export default function ServicesDash() {
                                 <IconButton style={{ color: TableCell.defaultProps.style.color }} aria-label="edit">
                                     <EditIcon />
                                 </IconButton>
-                                <IconButton style={{ color: TableCell.defaultProps.style.color }} aria-label="delete">
+                                <IconButton onClick={() => handleDeleteAutomation(row.id)} style={{ color: TableCell.defaultProps.style.color }} aria-label="delete">
                                     <DeleteIcon />
                                 </IconButton>
                             </TableCell>
