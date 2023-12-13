@@ -196,6 +196,8 @@ router.post('/', verifyToken, async (req, res) => {
 router.put('/', verifyToken, async (req, res) => {
     const userId = getIdFromToken(req, res); if (userId === -1) return;
     let query = "";
+    if (req.body.active)
+        query += `active = ${req.body.active}, `;
     if (req.body.trigger_service_id)
         query += `trigger_service_id = ${req.body.trigger_service_id}, `;
     if (req.body.trigger_id)

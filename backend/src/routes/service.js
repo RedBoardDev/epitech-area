@@ -211,7 +211,7 @@ router.get('/oauth/:id', verifyToken, async (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: "#/definitions/unauthorized"
+ *               $ref: "#/components/schemas/unauthorized"
  *     security:
  *       - bearerAuth: []
  */

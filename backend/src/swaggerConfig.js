@@ -222,6 +222,9 @@ export const options_SwaggerJsdoc = {
                             type: 'integer',
                             format: 'int64',
                         },
+                        active: {
+                            type: 'boolean',
+                        },
                         trigger_service_id: {
                             type: 'string',
                         },

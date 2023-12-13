@@ -20,6 +20,7 @@ CREATE TABLE `service_oauth` (
 CREATE TABLE `automation` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `user_id` INT UNSIGNED NOT NULL,
+  `active` BOOLEAN NOT NULL DEFAULT TRUE,
   `trigger_service_id` VARCHAR(100) NOT NULL,
   `trigger_id` INT UNSIGNED NOT NULL,
   `trigger_params` TEXT,
