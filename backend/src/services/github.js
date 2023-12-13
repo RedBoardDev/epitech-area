@@ -53,17 +53,36 @@ export const triggers = [
         description: 'Triggers when a new commit is pushed to a repository',
         fields: [
             {
-                name: 'Repository',
+                id: 'repository_name',
+                name: 'Repository name',
                 description: 'The repository to watch',
                 type: 'text'
             }
         ],
-        check: async (userData, params, token) => {
-            console.log(`${name} trigger 1 check`);
-            console.log('userData:', userData);
-            console.log('params:', params);
-            console.log('token:', token);
-            return null;
+        check: async (autoId, userData, params, checkData, token) => {
+            try {
+                console.log(`${name} trigger 1 checking...`);
+                const resp = await axios.get(`https://api.github.com/repos/${params.repository_name}/commits`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        Accept: 'application/vnd.github+json'
+                    }
+                });
+                const commits = resp.data;
+                if (!commits || !commits.length)
+                    return null;
+                const lastCommit = commits[0];
+                if (checkData.lastCommitSha && lastCommit.sha === checkData.lastCommitSha)
+                    return null;
+                db.updateAutomation(userData.id, autoId, `trigger_check_data = '${JSON.stringify({ lastCommitSha: lastCommit.sha })}'`);
+                return {
+                    text: `New commit from ${lastCommit.commit.author.name} in the repository ${params.repository_name}: \`${lastCommit.commit.message}\``,
+                    data: { ...lastCommit.commit, sha: lastCommit.sha }
+                };
+            } catch (error) {
+                console.error(error);
+                return null;
+            }
         }
     },
     {
@@ -72,12 +91,13 @@ export const triggers = [
         description: 'Triggers when a new issue is created',
         fields: [
             {
-                name: 'Repository',
+                id: 'repository_name',
+                name: 'Repository name',
                 description: 'The repository to watch',
                 type: 'text'
             }
         ],
-        check: async (userData, params, token) => {
+        check: async (autoId, userData, params, checkData, token) => {
             console.log(`${name} trigger 2 check`);
             console.log('userData:', userData);
             console.log('params:', params);
@@ -91,12 +111,13 @@ export const triggers = [
         description: 'Triggers when a new pull request is created',
         fields: [
             {
-                name: 'Repository',
+                id: 'repository_name',
+                name: 'Repository name',
                 description: 'The repository to watch',
                 type: 'text'
             }
         ],
-        check: async (userData, params, token) => {
+        check: async (autoId, userData, params, checkData, token) => {
             console.log(`${name} trigger 3 check`);
             console.log('userData:', userData);
             console.log('params:', params);
@@ -113,27 +134,31 @@ export const reactions = [
         description: 'Creates a new issue',
         fields: [
             {
+                id: 'repository_name',
                 name: 'Repository',
                 description: 'The repository to create the issue in',
                 type: 'text'
             },
             {
+                id: 'title',
                 name: 'Title',
                 description: 'The title of the issue',
                 type: 'text'
             },
             {
+                id: 'body',
                 name: 'Body',
                 description: 'The body of the issue',
                 type: 'text'
             }
         ],
         execute: async (userData, params, token, triggerData) => {
-            console.log(`${name} action 1 execute`);
-            console.log('userData:', userData);
-            console.log('params:', params);
-            console.log('token:', token);
-            console.log('triggerData:', triggerData);
+            console.log(triggerData.text);
+            // console.log(`${name} reaction 1 execute`);
+            // console.log('userData:', userData);
+            // console.log('params:', params);
+            // console.log('token:', token);
+            // console.log('triggerData:', triggerData);
         }
     },
     {
@@ -142,56 +167,65 @@ export const reactions = [
         description: 'Creates a new pull request',
         fields: [
             {
+                id: 'repository_name',
                 name: 'Repository',
                 description: 'The repository to create the pull request in',
                 type: 'text'
             },
             {
+                id: 'title',
                 name: 'Title',
                 description: 'The title of the pull request',
                 type: 'text'
             },
             {
+                id: 'body',
                 name: 'Body',
                 description: 'The body of the pull request',
                 type: 'text'
             }
         ],
         execute: async (userData, params, token, triggerData) => {
-            console.log(`${name} action 2 execute`);
-            console.log('userData:', userData);
-            console.log('params:', params);
-            console.log('token:', token);
-            console.log('triggerData:', triggerData);
+            console.log(triggerData.text);
+            // console.log(`${name} reaction 2 execute`);
+            // console.log('userData:', userData);
+            // console.log('params:', params);
+            // console.log('token:', token);
+            // console.log('triggerData:', triggerData);
         }
     },
     {
         id: 3,
-        name: 'TEST',
-        description: 'Creates a new pull request',
+        name: 'Write file',
+        description: 'Creates or update file in a repository',
         fields: [
             {
+                id: 'repository_name',
                 name: 'Repository',
-                description: 'The repository to create the pull request in',
+                description: 'The repository to create the file in',
                 type: 'text'
             },
             {
-                name: 'Title',
-                description: 'The title of the pull request',
+                id: 'commit_msg',
+                name: 'Commit message',
+                description: 'The message of the commit that will create or update the file',
                 type: 'text'
             },
             {
+                id: 'filename',
+                name: 'Filename',
+                description: 'The name of the file',
+                type: 'text'
+            },
+            {
+                id: 'body',
                 name: 'Body',
-                description: 'The body of the pull request',
+                description: 'The content of the file',
                 type: 'text'
             }
         ],
         execute: async (userData, params, token, triggerData) => {
-            console.log(`${name} action 2 execute`);
-            console.log('userData:', userData);
-            console.log('params:', params);
-            console.log('token:', token);
-            console.log('triggerData:', triggerData);
+            console.log(triggerData.text);
         }
     }
 ];
