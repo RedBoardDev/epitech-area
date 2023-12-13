@@ -1,21 +1,61 @@
 import { Router } from 'express';
 import axios from 'axios';
+import { db } from "../global.js";
 
 export const router = Router();
-
-// router.get('/oauth', async (req, res) => {
-//     res.status(200).json({ msg: 'TODO' });
-// });
-
-// router.get('/oauth/callback', async (req, res) => {
-//     res.status(200).json({ msg: 'TODO' });
-// });
 
 export const id = 'github';
 export const name = 'Github';
 export const description = 'Github service';
 export const color = '#6e5494';
 export const icon = '/github.png';
+
+router.get('/connect', async (req, res) => {
+    const { githubClientId, githubClientSecret } = process.env;
+
+    try {
+        const url = 'https://github.com/login/oauth/authorize';
+        const params = {
+            client_id: githubClientId,
+            redirect_uri: `${process.env.PROTOCOLE}://${process.env.HOST_NAME}:${process.env.PORT}/service/oauth/${id}/callback`,
+            scope: 'user repo',
+        };
+        const query = Object.keys(params).map((key) => `${key}=${encodeURIComponent(params[key])}`).join('&');
+        const oauth = {
+            url: `${url}?${query}`,
+            callback: true,
+        };
+        res.status(200).json({ status: "success", oauth: oauth });
+    } catch (error) {
+        res.status(400).json({ status: "error", msg: error });
+    }
+});
+
+router.get('/callback', async (req, res) => {
+    const { code } = req.query;
+    if (!code)
+        return res.status(400).json({ msg: 'Bad parameter' });
+
+    const { githubClientId, githubClientSecret } = process.env;
+    axios.get('https://github.com/login/oauth/access_token', {
+        params: {
+            client_id: githubClientId,
+            client_secret: githubClientSecret,
+            code: code,
+        },
+        headers: {
+            accept: 'application/json',
+        },
+    }).then((response) => {
+        const token = response.data.access_token;
+        if (!token)
+            return res.status(400).json({ status: "error", msg: 'Service token no found' });
+
+        return res.status(200).json({ status: "success", token: token });
+    }).catch((error) => {
+        return res.status(400).json({ status: "error", error: error });
+    });
+});
 
 export const triggers = [
     {

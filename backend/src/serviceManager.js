@@ -30,7 +30,7 @@ class ServiceManager {
 
     registerService(service) {
         this.services.push(service);
-        this.app.use(`/service/${service.id}`, service.router);
+        this.app.use(`/service/oauth/${service.id}`, service.router);
     }
 
     getServices() {
