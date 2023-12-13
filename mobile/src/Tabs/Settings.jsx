@@ -36,9 +36,12 @@ export default function Settings() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={{ color: colors.text }}>Settings</Text>
+      <Text style={{ color: "#fff", textAlign: "center", fontSize: 32, fontWeight: "bold" }}>Settings</Text>
+      <View style={{ flex: 1 }}/>
       <Button title="Help" onPress={() => navigation.navigate("Help")} />
-      <Button title="Logout" onPress={handleLogoutPress} />
+      <TouchableOpacity onPress={() => handleLogoutPress()} style={styles.logoutButton}>
+        <Text style={ styles.textBtn }>Logout</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
@@ -46,6 +49,20 @@ export default function Settings() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: "column",
+  },
+  logoutButton: {
+    backgroundColor: "#EC6041",
+    borderRadius: 10,
+    padding: 10,
+    margin: 10,
+    textAlign: "center",
+  },
+  textBtn: {
+    color: "#fff",
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: 18,
   },
 });
 

@@ -66,6 +66,23 @@ export const getAutos = async (apiLocation) => {
     return data;
 };
 
+export const getNbAutos = async (apiLocation) => {
+    const token = await AsyncStorage.getItem('jwtToken');
+    const response = await fetch(`${apiLocation}/automations/`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+        },
+    });
+    const data = await response.json();
+    if (!response.ok) {
+        console.error(data);
+        throw new Error(data.msg);
+    }
+    return data.length;
+};
+
 export const getServices = async (apiLocation) => {
     const token = await AsyncStorage.getItem('jwtToken');
     const response = await fetch(`${apiLocation}/service/`, {
@@ -80,6 +97,22 @@ export const getServices = async (apiLocation) => {
         throw new Error(data.msg);
     }
     return data;
+};
+
+export const getNbServices = async (apiLocation) => {
+    const token = await AsyncStorage.getItem('jwtToken');
+    const response = await fetch(`${apiLocation}/service/`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+        },
+    });
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.msg);
+    }
+    return data.length;
 };
 
 export const getImgByServiceId = async (apiLocation, service_id) => {

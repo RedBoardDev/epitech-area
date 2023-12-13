@@ -8,6 +8,7 @@ import {
   Image,
   Alert,
   SafeAreaView,
+  ImageBackground,
 } from "react-native";
 
 import {
@@ -100,6 +101,12 @@ export default function Services() {
   }
 
   return (
+    <ImageBackground
+    source={require('../../assets/background_dot.png')}
+    resizeMode="repeat"
+    style={styles.background}
+    imageStyle={{ opacity: 0.3 }}
+    >
     <SafeAreaView style={styles.container}>
       <ScrollView>
         {Array.isArray(services) && services.map(service => (
@@ -123,6 +130,7 @@ export default function Services() {
         ))}
       </ScrollView>
     </SafeAreaView>
+    </ImageBackground>
   );
 }
 
@@ -172,5 +180,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
-  }
+  },
+  background: {
+    flex: 1,
+    width: '100%',
+    backgroundColor: "#000",
+  },
 });

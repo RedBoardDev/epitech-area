@@ -8,6 +8,7 @@ import {
   Image,
   Alert,
   SafeAreaView,
+  ImageBackground,
 } from "react-native";
 
 import {
@@ -23,6 +24,7 @@ import { getAutos, getImgByServiceId, getService } from '../Core/ServerCalls'
 
 import LinearGradient from 'react-native-linear-gradient';
 import SettingsContext from "../Contexts/Settings";
+import Background from '../Components/Background'
 
 const defaultImage = require("../../assets/logo.png");
 
@@ -119,6 +121,12 @@ export default function Automations() {
   }
 
   return (
+    <ImageBackground
+      source={require('../../assets/background_dot.png')}
+      resizeMode="repeat"
+      style={styles.background}
+      imageStyle={{ opacity: 0.3 }}
+    >
     <SafeAreaView style={styles.container}>
       <ScrollView>
         {autos && autos.map(auto => (
@@ -148,12 +156,14 @@ export default function Automations() {
         <Text style={styles.addButtonLabel}>+</Text>
       </TouchableOpacity>
     </SafeAreaView>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    width: '100%',
 
   },
   card: {
@@ -210,5 +220,10 @@ const styles = StyleSheet.create({
   },
   addButtonLabel: {
     fontSize: 30,
-  }
+  },
+  background: {
+    flex: 1,
+    width: '100%',
+    backgroundColor: "#000",
+  },
 });
