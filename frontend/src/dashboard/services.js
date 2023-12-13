@@ -2,7 +2,7 @@ import React from 'react';
 import SideBar from './components/SideBar';
 import TopBar from './components/TopBar';
 import Grid from '@mui/material/Grid';
-import ServicesList from './components/ServicesList';
+import ServicesList from './components/AutomationsList';
 
 export default function ServicesDash() {
     return (

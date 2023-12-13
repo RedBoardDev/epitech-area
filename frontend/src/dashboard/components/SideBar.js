@@ -46,12 +46,12 @@ export default function SideBar() {
                     </Typography>
                     <Typography variant="h6" component="div" sx={{ marginTop: '1rem' }}>
                         <Link to="/dashboard/services" style={location.pathname === '/dashboard/services' ? activeStyle : inactiveStyle}>
-                            Services
+                            Automations
                         </Link>
                     </Typography>
                     <Typography variant="h6" component="div" sx={{ marginTop: '1rem' }}>
                         <Link to="/dashboard/addservice" style={location.pathname === '/dashboard/addservice' ? activeStyle : inactiveStyle}>
-                            Create Service
+                            Create Automation
                         </Link>
                     </Typography>
                 </Box>
