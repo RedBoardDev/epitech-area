@@ -28,8 +28,8 @@ export default function Automations() {
   const { colors } = useTheme();
   const [autos, setAutos] = useState([]);
   const [imageUrls, setImageUrls] = useState({});
-  const [services, setServices] = useState({k:{}});
-  
+  const [services, setServices] = useState({ k: {} });
+
 
   useEffect(() => {
     const fetchAutos = async () => {
@@ -126,9 +126,9 @@ export default function Automations() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
-        <TouchableOpacity>
-          {autos && autos.map(auto => (
-            <LinearGradient colors={getBackgroundGradient(auto.trigger_service_id, auto.reaction_service_id)} style={ styles.card} key={auto.id}>
+        {autos && autos.map(auto => (
+          <TouchableOpacity>
+            <LinearGradient colors={getBackgroundGradient(auto.trigger_service_id, auto.reaction_service_id)} style={styles.card} key={auto.id}>
               <View style={[styles.header]}>
                 <Text style={styles.title}>Automation {auto.id}</Text>
               </View>
@@ -146,8 +146,8 @@ export default function Automations() {
                 </View>
               </View>
             </LinearGradient>
-          ))}
-        </TouchableOpacity>
+          </TouchableOpacity>
+        ))}
       </ScrollView>
     </SafeAreaView>
   );
