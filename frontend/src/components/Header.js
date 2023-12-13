@@ -17,11 +17,6 @@ function HeaderComponent({ showButton }) {
         navigate('/login');
     };
 
-    const handleLogout = () => {
-        logout();
-        navigate('/');
-    };
-
     return (
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="fixed" style={{ top: 0, backgroundColor: '#000' }}>
@@ -43,7 +38,7 @@ function HeaderComponent({ showButton }) {
                             color: '#fff',
                         }}
                     >
-                        Accueil
+                        Home
                     </Typography>
                     <Typography
                         component={Link}
@@ -58,9 +53,21 @@ function HeaderComponent({ showButton }) {
                     >
                         Services
                     </Typography>
+                    <Typography
+                        component={Link}
+                        to="/automations"
+                        variant="h6"
+                        color="primary"
+                        sx={{
+                            marginRight: '46px',
+                            textDecoration: 'none',
+                            color: '#fff',
+                        }}
+                    >
+                        Automations
+                    </Typography>
                     {isAuthenticated ? (
                         <Button
-                            onClick={handleLogout}
                             variant="contained"
                             color="primary"
                             sx={{
@@ -82,8 +89,10 @@ function HeaderComponent({ showButton }) {
                                     backgroundImage: 'linear-gradient(315deg, #8130a2 0%, #dd067f 74%)',
                                 },
                             }}
+                            component={Link}
+                            to="/dashboard"
                         >
-                            Sign Out
+                            Dashboard
                         </Button>
                     ) : (
                         <Button

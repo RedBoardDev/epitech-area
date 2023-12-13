@@ -1,5 +1,3 @@
-// Login.js
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
@@ -10,12 +8,13 @@ import Typography from '@mui/material/Typography';
 import HeaderComponent from './Header';
 import backgroundImage from '../img/BgTop.png';
 
-const Login = () => {
+const Register = () => {
     const [username, setUsername] = useState('test@thomasott.com');
     const [password, setPassword] = useState('test123/');
-    const { login, logout, verifyToken } = useAuth();
+    const [lastname, setLastname] = useState('Binder');
+    const [firstname, setFirstname] = useState('Lucas');
+    const { register, logout, verifyToken } = useAuth();
     const navigate = useNavigate();
-
     useEffect(() => {
         const checkToken = async () => {
             if (await verifyToken()) {
@@ -24,17 +23,16 @@ const Login = () => {
         };
         checkToken();
     }, [verifyToken, navigate]);
-
-    const handleLogin = async () => {
+    const handleRegister = async () => {
         try {
-            await login(username, password);
+            await register(username, password, lastname, firstname);
             navigate('/');
+            console.log('registered!')
         } catch (error) {
             logout();
-            console.error('Login failed:', error);
+            console.error('Register failed:', error);
         }
     };
-
     return (
         <div style={{
             backgroundImage: 'linear-gradient(to right, #f3f3f3, #dcdcdc)',
@@ -66,7 +64,7 @@ const Login = () => {
                     }}
                 >
                     <Typography variant="h4" sx={{ color: '#544d4d', marginBottom: '2rem' }}>
-                        Connexion
+                        S'inscire
                     </Typography>
                     <TextField
                         label="Email"
@@ -75,6 +73,24 @@ const Login = () => {
                         fullWidth
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
+                        sx={{ marginBottom: '1rem' }}
+                    />
+                    <TextField
+                        label="Lastname"
+                        variant="outlined"
+                        margin="normal"
+                        fullWidth
+                        value={lastname}
+                        onChange={(e) => setLastname(e.target.value)}
+                        sx={{ marginBottom: '1rem' }}
+                    />
+                    <TextField
+                        label="Firstname"
+                        variant="outlined"
+                        margin="normal"
+                        fullWidth
+                        value={firstname}
+                        onChange={(e) => setFirstname(e.target.value)}
                         sx={{ marginBottom: '1rem' }}
                     />
                     <TextField
@@ -91,20 +107,21 @@ const Login = () => {
                         variant="contained"
                         color="primary"
                         size="large"
-                        onClick={handleLogin}
+                        onClick={handleRegister}
                         sx={{ width: '200px' }}
                     >
-                        Se Connecter
+                        S'inscire
                     </Button>
+                                                      
                     <Typography
                         component={Link}
-                        to="/register"
+                        to="/login"
                         color="primary"
                         size="large"
                         align='center'
                         sx={{ width: '200px'}}
                     >
-                        Register
+                        Login
                     </Typography>
                 </div>
                 <div
@@ -117,5 +134,4 @@ const Login = () => {
         </div>
     );
 };
-
-export default Login;
+export default Register;

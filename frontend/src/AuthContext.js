@@ -79,6 +79,19 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const register = async (email, password, lastname, firstname) => {
+        try {
+            const response = await callApi('POST', '/auth/register', { email, password, lastname, firstname });
+            saveData(response.token, response.id);
+            setIsAuthenticated(true);
+            return response;
+        } catch (error) {
+            console.error('Login error:', error);
+            setIsAuthenticated(false);
+            throw error;
+        }
+    };
+
     const login = async (email, password) => {
         try {
             const response = await callApi('POST', '/auth/login', { email, password });
@@ -97,8 +110,70 @@ export const AuthProvider = ({ children }) => {
         setIsAuthenticated(false);
     };
 
+    const getAutomations = async () => {
+        try {
+            const response = await callApiWithToken('GET', `/automations`);
+            setIsAuthenticated(true);
+            return response;
+        } catch (error) {
+            console.error('Automations error:', error);
+            setIsAuthenticated(false);
+            throw error;
+        }
+    }
+
+    const getAllServices = async () => {
+        try {
+            const response = await callApiWithToken('GET', `/service`);
+            setIsAuthenticated(true);
+            return response;
+        } catch (error) {
+            console.error('Service error:', error);
+            setIsAuthenticated(false);
+            throw error;
+        }
+    }
+
+    const deleteAutomation = async (id) => {
+        try {
+            const response = await callApiWithToken('DELETE', `/automations`, { id });
+            setIsAuthenticated(true);
+            return response;
+        } catch (error) {
+            console.error('Automation delete error:', error);
+            setIsAuthenticated(false);
+            throw error;
+        }
+    }
+
+    const getUserById = async () => {
+        const userID = localStorage.getItem('userID');
+        try {
+            const response = await callApiWithToken('GET', `/user/${userID}`);
+            setIsAuthenticated(true);
+            return response;
+        } catch (error) {
+            console.error('Service error:', error);
+            setIsAuthenticated(false);
+            throw error;
+        }
+    }
+
+    const updateUserById = async (lastname, firstname) => {
+        const userID = localStorage.getItem('userID');
+        try {
+            const response = await callApiWithToken('PUT', `/user/${userID}`, { lastname, firstname });
+            setIsAuthenticated(true);
+            return response;
+        } catch (error) {
+            console.error('Service error:', error);
+            setIsAuthenticated(false);
+            throw error;
+        }
+    }
+
     return (
-        <AuthContext.Provider value={{ isAuthenticated, login, logout, verifyToken }}>
+        <AuthContext.Provider value={{ isAuthenticated, register, login, logout, verifyToken, getAutomations, getAllServices, deleteAutomation, getUserById, updateUserById }}>
             {children}
         </AuthContext.Provider>
     );
