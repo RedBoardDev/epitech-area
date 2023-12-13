@@ -23,15 +23,20 @@ import Background from '../Components/Background'
 import Logo from '../Components/Logo'
 import TextInput from '../Components/TextInput'
 import Button from '../Components/Button'
+import SettingsContext from '../Contexts/Settings';
 
 import { validateEmail, validatePassword } from '../Tests/Validators'
 
 import { RegisterEmailPass } from '../Core/ServerCalls'
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Icon from '../Components/Icon';
 
 function RegisterScreen() {
+  const { settings, setSettings } = useContext(SettingsContext);
   const navigation = useNavigation();
+  const { colors } = useTheme();
+  const [modalVisible, setModalVisible] = useState(false);
 
   const [firstname, setFirstname] = useState({ value: 'test', error: '' })
   const [lastname, setLastname] = useState({ value: 'test', error: '' })
@@ -49,7 +54,7 @@ function RegisterScreen() {
       return
     }
     try {
-      const token = await RegisterEmailPass(email.value, password.value, firstname.value, lastname.value);
+      const token = await RegisterEmailPass(settings.apiLocation, email.value, password.value, firstname.value, lastname.value);
       if (token.length > 10) {
         await AsyncStorage.setItem('jwtToken', token);
         navigation.reset({
@@ -65,7 +70,29 @@ function RegisterScreen() {
     }
   }
   return (
-<Background>
+    <Background>
+      <Modal
+        style={styles.modal}
+        animationType="slide"
+        transparent={false}
+        visible={modalVisible}
+        onRequestClose={() => { setModalVisible(false) }}
+      >
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20 }}>
+          <TextInput
+            label="API Location"
+            returnKeyType="next"
+            value={settings.apiLocation}
+            onChangeText={(text) => setSettings({ ...settings, apiLocation: text })}
+            error={!!email.error}
+            errorText={email.error}
+            autoCapitalize="none"
+            autoCompleteType="name"
+            textContentType="name"
+          />
+          <Button mode="contained" onPress={() => { setModalVisible(false) }} title="Save">Save</Button>
+        </View>
+      </Modal>
       {/* <BackButton goBack={navigation.goBack} /> */}
       <Logo />
       <Text style={styles.header}>Welcome to HarmonieWeb</Text>
@@ -126,6 +153,9 @@ function RegisterScreen() {
         <Image source={require("../../assets/github_logo.png")} style={styles.logo} />
         <Text style={styles.text}>Register with GitHub</Text>
       </TouchableOpacity>
+      <TouchableOpacity style={styles.settings} onPress={() => setModalVisible(true)}>
+        <Icon name="settings.png" size={24} color={'black'} />
+      </TouchableOpacity>
     </Background>
   );
 };
@@ -172,6 +202,20 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
   },
+  settings: {
+    position: 'absolute',
+    bottom: 15,
+    right: 0,
+    width: 50,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modal: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
 })
 
 export default RegisterScreen;

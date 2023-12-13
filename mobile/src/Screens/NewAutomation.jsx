@@ -23,9 +23,11 @@ import { getServices, addNewAutomation } from '../Core/ServerCalls';
 import { NewAutomation_Triggers1, NewAutomation_Triggers2 } from "./NewAutomation_Triggers";
 import { NewAutomation_Reactions1, NewAutomation_Reactions2 } from "./NewAutomation_Reactions";
 import Button from "../Components/Button";
-import config from '../config';
+import { useContext } from 'react';
+import SettingsContext from '../Contexts/Settings';
 
 function NewAutomation_Submit({ route }) {
+  const { settings } = useContext(SettingsContext);
   const { colors } = useTheme();
   const navigation = useNavigation();
   const { serviceData, triggerServiceId, triggerId, triggerParams, reactionServiceId, reactionId, reactionParams } = route.params;
@@ -49,7 +51,7 @@ function NewAutomation_Submit({ route }) {
     console.log('reactionId', reactionId);
     console.log('reactionParams', reactionParams);
     const token = await AsyncStorage.getItem('jwtToken');
-    addNewAutomation(token, triggerServiceId, triggerId, triggerParams, reactionServiceId, reactionId, reactionParams).then(() => {
+    addNewAutomation(settings.apiLocation, token, triggerServiceId, triggerId, triggerParams, reactionServiceId, reactionId, reactionParams).then(() => {
       navigation.navigate('AutomationsTab');
     }).catch((error) => {
       console.error(error);
@@ -60,7 +62,7 @@ function NewAutomation_Submit({ route }) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={[styles.card, styles.cardService]}>
-        <Image style={styles.image} source={{ uri: `${config.API_BASE_URL}/${triggerService?.icon}` }} />
+        <Image style={styles.image} source={{ uri: `${settings.apiLocation}/${triggerService?.icon}` }} />
         <View style={styles.infoContainer}>
           <View style={styles.header}>
             <Text style={styles.title}>{triggerService?.name}</Text>
@@ -70,7 +72,7 @@ function NewAutomation_Submit({ route }) {
       </View>
       <Image style={styles.arrow} source={require('../../assets/down_arrow.png')} tintColor={colors.text} />
       <View style={[styles.card, styles.cardService]}>
-        <Image style={styles.image} source={{ uri: `${config.API_BASE_URL}/${reactionService?.icon}` }} />
+        <Image style={styles.image} source={{ uri: `${settings.apiLocation}/${reactionService?.icon}` }} />
         <View style={styles.infoContainer}>
           <View style={styles.header}>
             <Text style={styles.title}>{reactionService?.name}</Text>
@@ -84,6 +86,7 @@ function NewAutomation_Submit({ route }) {
 }
 
 export default function NewAutomation() {
+  const { settings } = useContext(SettingsContext);
   const Stack = createNativeStackNavigator();
   const { colors } = useTheme();
   const navigation = useNavigation();
@@ -91,7 +94,7 @@ export default function NewAutomation() {
 
   useEffect(() => {
     const fetchServices = async () => {
-      const data = await getServices(await AsyncStorage.getItem('jwtToken'));
+      const data = await getServices(settings.apiLocation, await AsyncStorage.getItem('jwtToken'));
       setServices(data);
     };
 

@@ -19,6 +19,8 @@ import RegisterScreen from './src/Screens/Register';
 import NavBar from './src/Screens/NavBar';
 import NewAutomation from './src/Screens/NewAutomation';
 
+import SettingsContext from './src/Contexts/Settings';
+
 import Help from './src/Help';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -26,7 +28,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { WorkingToken } from './src/Core/ServerCalls';
 
 function App() {
-  const [settings, setSettings] = React.useState({});
+  const [settings, setSettings] = React.useState({
+    apiLocation: "https://82da-31-32-24-119.ngrok-free.app"
+  });
   const Stack = createStackNavigator();
 
   const [initialRouteName, setInitialRouteName] = React.useState(null);
@@ -60,16 +64,18 @@ function App() {
   }
 
   return (
-    <NavigationContainer theme={getColorTheme() === "dark" ? Dark : Light}>
-      <Stack.Navigator initialRouteName={initialRouteName}>
-        <Stack.Screen name="LoginScreen" component={LoginScreen} options={{ headerShown: false }} />
-        <Stack.Screen name="RegisterScreen" component={RegisterScreen} options={{ headerShown: false }} />
-        <Stack.Screen name="Help" component={Help} options={{ headerShown: false }} />
-        <Stack.Screen name="NavBar" component={NavBar} options={{ headerShown: false }} />
-        <Stack.Screen name="NewAutomation" component={NewAutomation} options={{ headerShown: true }} />
-      </Stack.Navigator>
-      <StatusBar style={getColorTheme() === "dark" ? "light" : "dark"} />
-    </NavigationContainer>
+    <SettingsContext.Provider value={{ settings, setSettings }}>
+      <NavigationContainer theme={getColorTheme() === "dark" ? Dark : Light}>
+        <Stack.Navigator initialRouteName={initialRouteName}>
+          <Stack.Screen name="LoginScreen" component={LoginScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="RegisterScreen" component={RegisterScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="Help" component={Help} options={{ headerShown: false }} />
+          <Stack.Screen name="NavBar" component={NavBar} options={{ headerShown: false }} />
+          <Stack.Screen name="NewAutomation" component={NewAutomation} options={{ headerShown: true }} />
+        </Stack.Navigator>
+        <StatusBar style={getColorTheme() === "dark" ? "light" : "dark"} />
+      </NavigationContainer>
+    </SettingsContext.Provider>
   );
 }
 

@@ -12,10 +12,11 @@ import {
   Image,
   Alert,
   SafeAreaView,
+  Modal
 } from 'react-native';
 
 import {
-  useNavigation
+  useNavigation, useTheme
 } from '@react-navigation/native';
 
 import { theme } from '../Components/Theme'
@@ -29,9 +30,14 @@ import { validateEmail, validatePassword } from '../Tests/Validators'
 import { LoginEmailPass, GetUser } from '../Core/ServerCalls'
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Icon from '../Components/Icon';
+import SettingsContext from '../Contexts/Settings';
 
 function LoginScreen() {
+  const { settings, setSettings } = useContext(SettingsContext);
   const navigation = useNavigation();
+  const { colors } = useTheme();
+  const [modalVisible, setModalVisible] = useState(false);
 
   const [email, setEmail] = useState({ value: 'test@gmail.com', error: '' })
   const [password, setPassword] = useState({ value: '12345678', error: '' })
@@ -50,7 +56,7 @@ function LoginScreen() {
       return
     }
     try {
-      const token = await LoginEmailPass(email.value, password.value);
+      const token = await LoginEmailPass(settings.apiLocation, email.value, password.value);
       if (token.length > 10) {
         await AsyncStorage.setItem('jwtToken', token);
         navigation.reset({
@@ -67,6 +73,28 @@ function LoginScreen() {
   }
   return (
     <Background>
+      <Modal
+        style={styles.modal}
+        animationType="slide"
+        transparent={false}
+        visible={modalVisible}
+        onRequestClose={() => { setModalVisible(false) }}
+      >
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20 }}>
+          <TextInput
+            label="API Location"
+            returnKeyType="next"
+            value={settings.apiLocation}
+            onChangeText={(text) => setSettings({ ...settings, apiLocation: text })}
+            error={!!email.error}
+            errorText={email.error}
+            autoCapitalize="none"
+            autoCompleteType="name"
+            textContentType="name"
+          />
+          <Button mode="contained" onPress={() => { setModalVisible(false) }} title="Save">Save</Button>
+        </View>
+      </Modal>
       {/* <BackButton goBack={navigation.goBack} /> */}
       <Logo />
       <Text style={styles.header}>Nice to see you again !</Text>
@@ -103,7 +131,7 @@ function LoginScreen() {
         Login
       </Button>
       <View style={styles.row}>
-        <Text>Don’t have an account ? </Text>
+        <Text>Don't have an account ? </Text>
         <TouchableOpacity onPress={() => navigation.navigate('RegisterScreen')}>
           <Text style={styles.link}>Sign up</Text>
         </TouchableOpacity>
@@ -111,6 +139,9 @@ function LoginScreen() {
       <TouchableOpacity style={styles.button_log_with} onPress={() => console.log("github login")}>
         <Image source={require("../../assets/github_logo.png")} style={styles.logo} />
         <Text style={styles.text}>Login with GitHub</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.settings} onPress={() => setModalVisible(true)}>
+        <Icon name="settings.png" size={24} color={'black'} />
       </TouchableOpacity>
     </Background>
   );
@@ -158,6 +189,20 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
   },
+  settings: {
+    position: 'absolute',
+    bottom: 15,
+    right: 0,
+    width: 50,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modal: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
 })
 
 export default LoginScreen;

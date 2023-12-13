@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import {
   View,
@@ -22,10 +22,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAutos, getImgByServiceId, getService } from '../Core/ServerCalls'
 
 import LinearGradient from 'react-native-linear-gradient';
+import SettingsContext from "../Contexts/Settings";
 
 const defaultImage = require("../../assets/logo.png");
 
 export default function Automations() {
+  const { settings } = useContext(SettingsContext);
   const { colors } = useTheme();
   const navigation = useNavigation();
   const [autos, setAutos] = useState([]);
@@ -35,7 +37,7 @@ export default function Automations() {
 
   useEffect(() => {
     const fetchAutos = async () => {
-      const data = await getAutos(await AsyncStorage.getItem('jwtToken'));
+      const data = await getAutos(settings.apiLocation, await AsyncStorage.getItem('jwtToken'));
       setAutos(data);
     };
 
@@ -49,14 +51,14 @@ export default function Automations() {
         let newImageUrls = {};
         for (let auto of autos) {
           try {
-            const imageUrl = await getServiceIcon(auto.trigger_service_id);
+            const imageUrl = await getServiceIcon(settings.apiLocation, auto.trigger_service_id);
             newImageUrls[auto.trigger_service_id] = imageUrl;
           } catch (error) {
             console.error('Error fetching image:', error);
             newImageUrls[auto.trigger_service_id] = null;
           }
           try {
-            const imageUrl = await getServiceIcon(auto.reaction_service_id);
+            const imageUrl = await getServiceIcon(settings.apiLocation, auto.reaction_service_id);
             newImageUrls[auto.reaction_service_id] = imageUrl;
           } catch (error) {
             console.error('Error fetching image:', error);
@@ -72,14 +74,14 @@ export default function Automations() {
         let newServices = {};
         for (let auto of autos) {
           try {
-            const json = await getServices(auto.trigger_service_id);
+            const json = await getServices(settings.apiLocation, auto.trigger_service_id);
             newServices[auto.trigger_service_id] = json;
           } catch (error) {
             console.error('Error fetching service:', error);
             newServices[auto.trigger_service_id] = null;
           }
           try {
-            const json = await getServices(auto.reaction_service_id);
+            const json = await getServices(settings.apiLocation, auto.reaction_service_id);
             newServices[auto.reaction_service_id] = json;
           } catch (error) {
             console.error('Error fetching service:', error);
@@ -102,15 +104,15 @@ export default function Automations() {
     navigation.navigate("NewAutomation");
   };
 
-  const getServiceIcon = async (serviceId) => {
+  const getServiceIcon = async (apiLocation, serviceId) => {
     const token = await AsyncStorage.getItem('jwtToken');
-    const response = await getImgByServiceId(token, serviceId);
+    const response = await getImgByServiceId(apiLocation, token, serviceId);
     return response;
   }
 
-  const getServices = async (serviceId) => {
+  const getServices = async (apiLocation, serviceId) => {
     const token = await AsyncStorage.getItem('jwtToken');
-    const response = await getService(token, serviceId);
+    const response = await getService(apiLocation, token, serviceId);
     return response;
   }
 

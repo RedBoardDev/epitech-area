@@ -17,9 +17,11 @@ import {
 
 import { ScrollView } from "react-native-gesture-handler";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import config from '../config';
+import { useContext } from 'react';
+import SettingsContext from '../Contexts/Settings';
 
 export function NewAutomation_Triggers1({ route }) {
+  const { settings } = useContext(SettingsContext);
   const { colors } = useTheme();
   const navigation = useNavigation();
   const { serviceData } = route.params;
@@ -34,7 +36,7 @@ export function NewAutomation_Triggers1({ route }) {
       <ScrollView>
         {serviceData && serviceData.map(service => (
           <TouchableOpacity style={[styles.card, styles.cardService]} key={service.id} onPress={() => { navigateToTriggers2(service.id) }}>
-            <Image style={styles.image} source={{ uri: `${config.API_BASE_URL}/${service.icon}` }} />
+            <Image style={styles.image} source={{ uri: `${settings.apiLocation}/${service.icon}` }} />
             <View style={styles.infoContainer}>
               <View style={styles.header}>
                 <Text style={styles.title}>{service.name}</Text>
