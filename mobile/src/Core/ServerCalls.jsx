@@ -45,6 +45,7 @@ export const WorkingToken = async (apiLocation, token) => {
             "Content-Type": "application/json"
         },
     });
+    console.log(token, response.ok);
     return response.ok;
 };
 
@@ -59,6 +60,21 @@ export const getAutos = async (apiLocation, token) => {
     const data = await response.json();
     if (!response.ok) {
         console.error(data);
+        throw new Error(data.msg);
+    }
+    return data;
+};
+
+export const getServices = async (apiLocation, token) => {
+    const response = await fetch(`${apiLocation}/service/`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+        },
+    });
+    const data = await response.json();
+    if (!response.ok) {
         throw new Error(data.msg);
     }
     return data;
@@ -94,8 +110,8 @@ export const getService = async (apiLocation, token, service_id) => {
     return data;
 }
 
-export const getServices = async (apiLocation, token) => {
-    const response = await fetch(`${apiLocation}/service/`, {
+export const getServiceToken = async (apiLocation, token, service_id) => {
+    const response = await fetch(`${apiLocation}/service/oauth/${service_id}/`, {
         method: "GET",
         headers: {
             "Authorization": `Bearer ${token}`,
@@ -104,9 +120,9 @@ export const getServices = async (apiLocation, token) => {
     });
     const data = await response.json();
     if (!response.ok) {
-        throw new Error(data.msg);
+        return "";
     }
-    return data;
+    return data.token;
 }
 
 export const addNewAutomation = async (apiLocation, token, trigger_service_id, trigger_id, trigger_params, reaction_service_id, reaction_id, reaction_params) => {
