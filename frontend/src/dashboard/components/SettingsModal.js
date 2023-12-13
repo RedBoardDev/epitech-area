@@ -13,9 +13,9 @@ export default function SettingsUserModal({ user, onUpdateUser }) {
     const [firstName, setFirstName] = useState(user.firstname);
     const [lastName, setLastName] = useState(user.lastname);
     const [email, setEmail] = useState(user.email);
-    const [password, setPassword] = useState("********");
-    const [confirmPassword, setConfirmPassword] = useState("********");
-    const { updtaeUserById, verifyToken } = useAuth();
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmNewPassword, setConfirmNewPassword] = useState("");
+    const { updateUserById, verifyToken } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -38,8 +38,10 @@ export default function SettingsUserModal({ user, onUpdateUser }) {
 
     const handleSave = async () => {
         try {
-            await updtaeUserById(3, lastName, firstName);
-            onUpdateUser({ ...user, firstname: firstName, lastname: lastName });
+            // if (newPassword === confirmNewPassword) {
+                // console.log(confirmNewPassword);
+                await updateUserById(lastName, firstName);
+                onUpdateUser({ ...user, firstname: firstName, lastname: lastName });
         } catch (error) {
             console.error('Update user failed:', error);
         }
@@ -80,19 +82,19 @@ export default function SettingsUserModal({ user, onUpdateUser }) {
                     />
                     <TextField
                         margin="dense"
-                        label="Password"
+                        label="New Password"
                         type="password"
                         fullWidth
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
                     />
                     <TextField
                         margin="dense"
-                        label="Confirm Password"
+                        label="Confirm New Password"
                         type="password"
                         fullWidth
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        value={confirmNewPassword}
+                        onChange={(e) => setConfirmNewPassword(e.target.value)}
                     />
                 </DialogContent>
                 <DialogActions>
