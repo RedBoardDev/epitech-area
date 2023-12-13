@@ -48,11 +48,14 @@ function App() {
 
   React.useEffect(() => {
     const CheckConnected = async () => {
-      const token = await AsyncStorage.getItem('jwtToken');
-      console.log(token);
-      if (await WorkingToken(token) == true) {
-        setInitialRouteName("NavBar");
-      } else {
+      try {
+        if (await WorkingToken(settings.apiLocation) == true) {
+          setInitialRouteName("NavBar");
+        } else {
+          setInitialRouteName("LoginScreen");
+        }
+      } catch (error) {
+        console.error(error);
         setInitialRouteName("LoginScreen");
       }
     }
