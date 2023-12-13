@@ -35,7 +35,7 @@ export default function Services() {
 
   useEffect(() => {
     const fetchServices = async () => {
-      const data = await getServices(settings.apiLocation, await AsyncStorage.getItem('jwtToken'));
+      const data = await getServices(settings.apiLocation);
       setServices(data);
     };
 
@@ -50,7 +50,7 @@ export default function Services() {
         let newImageUrls = {};
         for (let serv of services) {
           try {
-            const imageUrl = await getServiceIcon(serv.id);
+            const imageUrl = await getImgByServiceId(settings.apiLocation, serv.id);
             newImageUrls[serv.id] = imageUrl;
           } catch (error) {
             console.error('Error fetching image:', error);
@@ -84,12 +84,6 @@ export default function Services() {
   const handleLogoutPress = () => {
     navigateToLogin();
   };
-
-  const getServiceIcon = async (serviceId) => {
-    const token = await AsyncStorage.getItem('jwtToken');
-    const response = await getImgByServiceId(settings.apiLocation, token, serviceId);
-    return response;
-  }
 
   const getImageSource = (imageId) => {
     if (imageUrls && imageUrls[imageId]) {

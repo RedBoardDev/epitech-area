@@ -34,7 +34,8 @@ export const RegisterEmailPass = async (apiLocation, email, password, firstname,
     return data.token;
 };
 
-export const WorkingToken = async (apiLocation, token) => {
+export const WorkingToken = async (apiLocation) => {
+    const token = await AsyncStorage.getItem('jwtToken');
     if (!token) {
         return false;
     }
@@ -45,11 +46,11 @@ export const WorkingToken = async (apiLocation, token) => {
             "Content-Type": "application/json"
         },
     });
-    console.log(token, response.ok);
     return response.ok;
 };
 
-export const getAutos = async (apiLocation, token) => {
+export const getAutos = async (apiLocation) => {
+    const token = await AsyncStorage.getItem('jwtToken');
     const response = await fetch(`${apiLocation}/automations/`, {
         method: "GET",
         headers: {
@@ -65,7 +66,8 @@ export const getAutos = async (apiLocation, token) => {
     return data;
 };
 
-export const getServices = async (apiLocation, token) => {
+export const getServices = async (apiLocation) => {
+    const token = await AsyncStorage.getItem('jwtToken');
     const response = await fetch(`${apiLocation}/service/`, {
         method: "GET",
         headers: {
@@ -80,7 +82,8 @@ export const getServices = async (apiLocation, token) => {
     return data;
 };
 
-export const getImgByServiceId = async (apiLocation, token, service_id) => {
+export const getImgByServiceId = async (apiLocation, service_id) => {
+    const token = await AsyncStorage.getItem('jwtToken');
     const response = await fetch(`${apiLocation}/service/${service_id}/`, {
         method: "GET",
         headers: {
@@ -95,7 +98,8 @@ export const getImgByServiceId = async (apiLocation, token, service_id) => {
     return `${apiLocation}${data.icon}`;
 }
 
-export const getService = async (apiLocation, token, service_id) => {
+export const getService = async (apiLocation, service_id) => {
+    const token = await AsyncStorage.getItem('jwtToken');
     const response = await fetch(`${apiLocation}/service/${service_id}/`, {
         method: "GET",
         headers: {
@@ -110,7 +114,8 @@ export const getService = async (apiLocation, token, service_id) => {
     return data;
 }
 
-export const getServiceToken = async (apiLocation, token, service_id) => {
+export const getServiceToken = async (apiLocation, service_id) => {
+    const token = await AsyncStorage.getItem('jwtToken');
     const response = await fetch(`${apiLocation}/service/oauth/${service_id}/`, {
         method: "GET",
         headers: {
@@ -125,7 +130,8 @@ export const getServiceToken = async (apiLocation, token, service_id) => {
     return data.token;
 }
 
-export const addNewAutomation = async (apiLocation, token, trigger_service_id, trigger_id, trigger_params, reaction_service_id, reaction_id, reaction_params) => {
+export const addNewAutomation = async (apiLocation, trigger_service_id, trigger_id, trigger_params, reaction_service_id, reaction_id, reaction_params) => {
+    const token = await AsyncStorage.getItem('jwtToken');
     const response = await fetch(`${apiLocation}/automations/`, {
         method: "POST",
         headers: {

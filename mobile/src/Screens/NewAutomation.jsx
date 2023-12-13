@@ -50,8 +50,7 @@ function NewAutomation_Submit({ route }) {
     console.log('reactionServiceId', reactionServiceId);
     console.log('reactionId', reactionId);
     console.log('reactionParams', reactionParams);
-    const token = await AsyncStorage.getItem('jwtToken');
-    addNewAutomation(settings.apiLocation, token, triggerServiceId, triggerId, triggerParams, reactionServiceId, reactionId, reactionParams).then(() => {
+    addNewAutomation(settings.apiLocation, triggerServiceId, triggerId, triggerParams, reactionServiceId, reactionId, reactionParams).then(() => {
       navigation.navigate('AutomationsTab');
     }).catch((error) => {
       console.error(error);
@@ -94,7 +93,7 @@ export default function NewAutomation() {
 
   useEffect(() => {
     const fetchServices = async () => {
-      const data = await getServices(settings.apiLocation, await AsyncStorage.getItem('jwtToken'));
+      const data = await getServices(settings.apiLocation);
       setServices(data);
     };
 
