@@ -39,7 +39,7 @@ export default function ServicesDash() {
     const { verifyToken, getAllServices, getAutomations, deleteAutomation } = useAuth();
 
     useEffect(() => {
-        const getServices = async () => {
+        const getAllAutomations = async () => {
             if (!(await verifyToken())) {
                 navigate('/login');
             } else {
@@ -81,7 +81,7 @@ export default function ServicesDash() {
                 }
             }
         };
-        getServices();
+        getAllAutomations();
     }, [verifyToken, navigate, getAllServices]);
 
     const handleDeleteAutomation = async (id) => {

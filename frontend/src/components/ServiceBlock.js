@@ -42,7 +42,7 @@ const ServiceBlock = ({ imageSrc, title, backgroundColor }) => {
                 }}
             >
                 <img
-                    src={imageSrc}
+                    src={"http://127.0.0.1:3632" + imageSrc}
                     alt={title}
                     style={{ width: '100px', height: 'auto', borderRadius: '50%' }}
                 />
