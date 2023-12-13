@@ -13,8 +13,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useAuth } from '../../AuthContext';
 import { useNavigate } from 'react-router-dom';
 
-function createData(id, trigger, reaction, type, status) {
-    return { id, trigger, reaction, type, status };
+function createData(id, serviceName, trigger, reaction, type, status) {
+    return { id, serviceName, trigger, reaction, type, status };
 }
 
 const rows = [
@@ -35,7 +35,6 @@ const rows = [
 
 export default function ServicesDash() {
     const [tableData, setTableData] = useState(rows);
-    const [automations, setAutomations] = useState();
     const navigate = useNavigate();
     const { verifyToken, getAllServices, getAutomations, deleteAutomation } = useAuth();
 
@@ -69,7 +68,7 @@ export default function ServicesDash() {
                             });
                             const automationsData = Object.keys(automationPairs).map(automationId => {
                                 const { triggerName, reactionName } = automationPairs[automationId];
-                                return createData(automationId, triggerName, reactionName, 'Automation', 'Status');
+                                return createData(automationId, service.name, triggerName, reactionName, 'Automation', 'Status');
                             });
                             return automationsData;
                         }
@@ -110,6 +109,7 @@ export default function ServicesDash() {
                 <TableHead>
                     <TableRow>
                         <TableCell>ID</TableCell>
+                        <TableCell>Services name</TableCell>
                         <TableCell>Triggers</TableCell>
                         <TableCell>Reactions</TableCell>
                         <TableCell>Status</TableCell>
@@ -120,6 +120,15 @@ export default function ServicesDash() {
                     {tableData.map((row) => (
                         <TableRow key={row.id}>
                             <TableCell {...TableCellChildrends}>{row.id}</TableCell>
+                            <TableCell {...TableCellChildrends}>
+                                <img
+                                  src="http://127.0.0.1:3632/github.png"
+                                  alt="GitHub Logo"
+                                  height="32"
+                                  width="32"
+                                />
+                                {row.serviceName}
+                            </TableCell>
                             <TableCell {...TableCellChildrends}>{row.trigger}</TableCell>
                             <TableCell {...TableCellChildrends}>{row.reaction}</TableCell>
                             <TableCell {...TableCellChildrends}>{row.status}</TableCell>

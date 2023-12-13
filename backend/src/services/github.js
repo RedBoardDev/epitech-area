@@ -15,7 +15,7 @@ export const id = 'github';
 export const name = 'Github';
 export const description = 'Github service';
 export const color = '#6e5494';
-export const icon = '/github.svg';
+export const icon = '/github.png';
 
 export const triggers = [
     {
@@ -110,6 +110,35 @@ export const reactions = [
     {
         id: 2,
         name: 'Create pull request',
+        description: 'Creates a new pull request',
+        fields: [
+            {
+                name: 'Repository',
+                description: 'The repository to create the pull request in',
+                type: 'text'
+            },
+            {
+                name: 'Title',
+                description: 'The title of the pull request',
+                type: 'text'
+            },
+            {
+                name: 'Body',
+                description: 'The body of the pull request',
+                type: 'text'
+            }
+        ],
+        execute: async (userData, params, token, triggerData) => {
+            console.log(`${name} action 2 execute`);
+            console.log('userData:', userData);
+            console.log('params:', params);
+            console.log('token:', token);
+            console.log('triggerData:', triggerData);
+        }
+    },
+    {
+        id: 3,
+        name: 'TEST',
         description: 'Creates a new pull request',
         fields: [
             {
