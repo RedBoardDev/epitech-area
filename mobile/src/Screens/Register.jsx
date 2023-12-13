@@ -15,7 +15,8 @@ import {
 } from 'react-native';
 
 import {
-  useNavigation
+  useNavigation,
+  useTheme
 } from '@react-navigation/native';
 
 import { theme } from '../Components/Theme'
