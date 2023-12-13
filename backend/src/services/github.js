@@ -10,52 +10,41 @@ export const description = 'Github service';
 export const color = '#6e5494';
 export const icon = '/github.png';
 
-router.get('/connect', async (req, res) => {
+export const connect = async (userId) => {
     const { githubClientId, githubClientSecret } = process.env;
 
     try {
         const url = 'https://github.com/login/oauth/authorize';
         const params = {
             client_id: githubClientId,
-            redirect_uri: `${process.env.PROTOCOLE}://${process.env.HOST_NAME}:${process.env.PORT}/service/oauth/${id}/callback`,
+            redirect_uri: `${process.env.PROTOCOLE}://${process.env.HOST_NAME}:${process.env.PORT}/service/oauth/${id}/callback?userId=${userId}`,
             scope: 'user repo',
         };
         const query = Object.keys(params).map((key) => `${key}=${encodeURIComponent(params[key])}`).join('&');
-        const oauth = {
-            url: `${url}?${query}`,
-            callback: true,
-        };
-        res.status(200).json({ status: "success", oauth: oauth });
+        return { status: "success", url: `${url}?${query}` };
     } catch (error) {
-        res.status(400).json({ status: "error", msg: error });
+        return { status: "error", msg: error };
     }
-});
+};
 
-router.get('/callback', async (req, res) => {
-    const { code } = req.query;
-    if (!code)
-        return res.status(400).json({ msg: 'Bad parameter' });
-
+export const callback = async (code) => {
     const { githubClientId, githubClientSecret } = process.env;
-    axios.get('https://github.com/login/oauth/access_token', {
-        params: {
+    try {
+        const response = await axios.post('https://github.com/login/oauth/access_token', {
             client_id: githubClientId,
             client_secret: githubClientSecret,
             code: code,
-        },
-        headers: {
-            accept: 'application/json',
-        },
-    }).then((response) => {
-        const token = response.data.access_token;
-        if (!token)
-            return res.status(400).json({ status: "error", msg: 'Service token no found' });
-
-        return res.status(200).json({ status: "success", token: token });
-    }).catch((error) => {
-        return res.status(400).json({ status: "error", error: error });
-    });
-});
+        }, {
+            headers: {
+                accept: 'application/json',
+            },
+        });
+        return { status: "success", url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', token: response?.data?.access_token || undefined };
+    } catch (error) {
+        console.log(error);
+        return { status: "error", msg: error };
+    }
+};
 
 export const triggers = [
     {
