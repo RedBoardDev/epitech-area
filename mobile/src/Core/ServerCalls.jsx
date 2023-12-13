@@ -65,7 +65,22 @@ export const getAutos = async (token) => {
     return data;
 };
 
-export const getSvgByServiceId = async (token, service_id) => {
+export const getImgByServiceId = async (token, service_id) => {
+    const response = await fetch(`${config.API_BASE_URL}/service/${service_id}/`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+        },
+    });
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.msg);
+    }
+    return `${config.API_BASE_URL}${data.icon}`;
+}
+
+export const getService = async (token, service_id) => {
     const response = await fetch(`${config.API_BASE_URL}/service/${service_id}/`, {
         method: "GET",
         headers: {

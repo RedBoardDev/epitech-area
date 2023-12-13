@@ -9,10 +9,6 @@ import Automations from '../Tabs/Automations';
 
 import Icon from '../Components/Icon';
 
-import { WorkingToken } from '../Core/ServerCalls';
-
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
 export default function NavBar() {
   const Tab = createBottomTabNavigator();
   const { colors } = useTheme();
@@ -46,7 +42,7 @@ export default function NavBar() {
           headerShown: false,
           tabBarLabel: () => { return null },
           tabBarIcon: ({ focused, color, size }) => (
-            <Icon name={focused ? "home.png" : "home-outline.png"} color={color} size={size} />
+            <Icon name={focused ? "robot.png" : "robot-outline.png"} color={color} size={size} />
           ),
         }}
       />
