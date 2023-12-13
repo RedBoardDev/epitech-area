@@ -24,7 +24,8 @@ export const triggers = [
         description: 'Triggers when a new commit is pushed to a repository',
         fields: [
             {
-                name: 'Repository',
+                id: 'repository-name',
+                name: 'Repository name',
                 description: 'The repository to watch',
                 type: 'text'
             }
@@ -43,7 +44,8 @@ export const triggers = [
         description: 'Triggers when a new issue is created',
         fields: [
             {
-                name: 'Repository',
+                id: 'repository-name',
+                name: 'Repository name',
                 description: 'The repository to watch',
                 type: 'text'
             }
@@ -62,7 +64,8 @@ export const triggers = [
         description: 'Triggers when a new pull request is created',
         fields: [
             {
-                name: 'Repository',
+                id: 'repository-name',
+                name: 'Repository name',
                 description: 'The repository to watch',
                 type: 'text'
             }
@@ -84,16 +87,19 @@ export const reactions = [
         description: 'Creates a new issue',
         fields: [
             {
+                id: 'repository-name',
                 name: 'Repository',
                 description: 'The repository to create the issue in',
                 type: 'text'
             },
             {
+                id: 'title',
                 name: 'Title',
                 description: 'The title of the issue',
                 type: 'text'
             },
             {
+                id: 'body',
                 name: 'Body',
                 description: 'The body of the issue',
                 type: 'text'
@@ -113,16 +119,19 @@ export const reactions = [
         description: 'Creates a new pull request',
         fields: [
             {
+                id: 'repository-name',
                 name: 'Repository',
                 description: 'The repository to create the pull request in',
                 type: 'text'
             },
             {
+                id: 'title',
                 name: 'Title',
                 description: 'The title of the pull request',
                 type: 'text'
             },
             {
+                id: 'body',
                 name: 'Body',
                 description: 'The body of the pull request',
                 type: 'text'
@@ -142,16 +151,19 @@ export const reactions = [
         description: 'Creates a new pull request',
         fields: [
             {
+                id: 'repository-name',
                 name: 'Repository',
                 description: 'The repository to create the pull request in',
                 type: 'text'
             },
             {
+                id: 'title',
                 name: 'Title',
                 description: 'The title of the pull request',
                 type: 'text'
             },
             {
+                id: 'body',
                 name: 'Body',
                 description: 'The body of the pull request',
                 type: 'text'

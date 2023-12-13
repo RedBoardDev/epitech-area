@@ -14,6 +14,7 @@ export const triggers = [
         description: '',
         fields: [
             {
+                id: '',
                 name: '',
                 description: '',
                 type: 'text'
@@ -32,6 +33,7 @@ export const reactions = [
         description: '',
         fields: [
             {
+                id: '',
                 name: '',
                 description: '',
                 type: 'text'

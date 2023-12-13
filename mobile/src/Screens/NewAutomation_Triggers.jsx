@@ -8,7 +8,11 @@ import {
   Image,
   Alert,
   SafeAreaView,
+  Modal,
+  Button
 } from "react-native";
+
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import {
   useNavigation,
@@ -19,6 +23,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useContext } from 'react';
 import SettingsContext from '../Contexts/Settings';
+import TextInput from "../Components/TextInput";
 
 export function NewAutomation_Triggers1({ route }) {
   const { settings } = useContext(SettingsContext);
@@ -54,17 +59,55 @@ export function NewAutomation_Triggers2({ route }) {
   const { colors } = useTheme();
   const navigation = useNavigation();
   const { serviceData, triggerServiceId } = route.params;
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedTrigger, setSelectedTrigger] = useState(null);
+  const [triggerParams, setTriggerParams] = useState({});
 
   const navigateToReactions1 = (triggerId) => {
-    navigation.navigate('Reactions1', { serviceData, triggerServiceId, triggerId, triggerParams: {} });
+    navigation.navigate('Reactions1', { serviceData, triggerServiceId, triggerId, triggerParams });
+  }
+
+  const openModal = (triggerId) => {
+    setSelectedTrigger(serviceData.find(service => service.id === triggerServiceId).triggers.find(trigger => trigger.id === triggerId));
+    setModalVisible(true);
+  }
+
+  const RenderTextInput = (field) => {
+    return (
+      <View key={field.id}>
+        <Text>{field.name}</Text>
+        <TextInput
+          style={styles.input}
+          placeholder={field.description}
+          placeholderTextColor="#aaaaaa"
+          onChangeText={(text) => { setTriggerParams({ ...triggerParams, [field.id]: text }) }}
+          value={triggerParams[field.id]}
+          underlineColorAndroid="transparent"
+          autoCapitalize="none"
+        />
+      </View>
+    );
   }
 
   return (
     <SafeAreaView style={styles.container}>
+      <Modal animationType="slide" transparent={false} visible={modalVisible} style={styles.modal}>
+        <KeyboardAwareScrollView style={{ padding: 20 }}>
+          <Text style={{ fontSize: 30 }}>Parameters</Text>
+          {selectedTrigger && selectedTrigger.fields.map(field => {
+            if (field.type === 'text') {
+              return RenderTextInput(field);
+            } else {
+              return null;
+            }
+          })}
+          <Button title="OK" onPress={() => { navigateToReactions1(selectedTrigger.id); }} />
+        </KeyboardAwareScrollView>
+      </Modal>
       <Text>Chose a trigger</Text>
       <ScrollView>
         {serviceData && serviceData.find(service => service.id === triggerServiceId).triggers.map(trigger => (
-          <TouchableOpacity style={styles.card} key={trigger.id} onPress={() => { navigateToReactions1(trigger.id) }}>
+          <TouchableOpacity style={styles.card} key={trigger.id} onPress={() => { openModal(trigger.id) }}>
             <View style={styles.header}>
               <Text style={styles.title}>{trigger.name}</Text>
             </View>
@@ -131,5 +174,18 @@ const styles = StyleSheet.create({
   content: {
     padding: 10,
     fontSize: 15,
+  },
+
+  modal: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  input: {
+    height: 48,
+    borderRadius: 5,
+    overflow: 'hidden',
+    backgroundColor: 'white',
   },
 });

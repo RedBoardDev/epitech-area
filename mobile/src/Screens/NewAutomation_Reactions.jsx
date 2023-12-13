@@ -8,6 +8,8 @@ import {
   Image,
   Alert,
   SafeAreaView,
+  Modal,
+  Button,
 } from "react-native";
 
 import {
@@ -15,11 +17,14 @@ import {
   useTheme
 } from "@react-navigation/native";
 
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+
 import { ScrollView } from "react-native-gesture-handler";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getServices } from '../Core/ServerCalls';
 import { useContext } from 'react';
 import SettingsContext from '../Contexts/Settings';
+import TextInput from "../Components/TextInput";
 
 export function NewAutomation_Reactions1({ route }) {
   const { settings } = useContext(SettingsContext);
@@ -54,17 +59,55 @@ export function NewAutomation_Reactions2({ route }) {
   const { colors } = useTheme();
   const navigation = useNavigation();
   const { serviceData, triggerServiceId, triggerId, triggerParams, reactionServiceId } = route.params;
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedReaction, setSelectedReaction] = useState(null);
+  const [reactionParams, setReactionParams] = useState({});
 
   const navigateToSubmit = (reactionId) => {
-    navigation.navigate('Submit', { serviceData, triggerServiceId, triggerId, triggerParams, reactionServiceId, reactionId, reactionParams: {} });
+    navigation.navigate('Submit', { serviceData, triggerServiceId, triggerId, triggerParams, reactionServiceId, reactionId, reactionParams });
+  }
+
+  const openModal = (reactionId) => {
+    setSelectedReaction(serviceData.find(service => service.id === reactionServiceId).reactions.find(reaction => reaction.id === reactionId));
+    setModalVisible(true);
+  }
+
+  const RenderTextInput = (field) => {
+    return (
+      <View key={field.id}>
+        <Text>{field.name}</Text>
+        <TextInput
+          style={styles.input}
+          placeholder={field.description}
+          placeholderTextColor="#aaaaaa"
+          onChangeText={(text) => { setReactionParams({ ...reactionParams, [field.id]: text }) }}
+          value={reactionParams[field.id]}
+          underlineColorAndroid="transparent"
+          autoCapitalize="none"
+        />
+      </View>
+    );
   }
 
   return (
     <SafeAreaView style={styles.container}>
+      <Modal animationType="slide" transparent={false} visible={modalVisible} style={styles.modal}>
+        <KeyboardAwareScrollView style={{ padding: 20 }}>
+          <Text style={{ fontSize: 30 }}>Parameters</Text>
+          {selectedReaction && selectedReaction.fields.map(field => {
+            if (field.type === 'text') {
+              return RenderTextInput(field);
+            } else {
+              return null;
+            }
+          })}
+          <Button title="OK" onPress={() => { navigateToSubmit(selectedReaction.id); }} />
+        </KeyboardAwareScrollView>
+      </Modal>
       <Text>Chose a reaction</Text>
       <ScrollView>
         {serviceData && serviceData.find(service => service.id === reactionServiceId).reactions.map(reaction => (
-          <TouchableOpacity style={styles.card} key={reaction.id} onPress={() => { navigateToSubmit(reaction.id) }}>
+          <TouchableOpacity style={styles.card} key={reaction.id} onPress={() => { openModal(reaction.id) }}>
             <View style={styles.header}>
               <Text style={styles.title}>{reaction.name}</Text>
             </View>
