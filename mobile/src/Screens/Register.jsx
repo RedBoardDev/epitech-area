@@ -12,6 +12,7 @@ import {
   Image,
   Alert,
   SafeAreaView,
+  Modal,
 } from 'react-native';
 
 import {
