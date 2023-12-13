@@ -13,8 +13,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useAuth } from '../../AuthContext';
 import { useNavigate } from 'react-router-dom';
 
-function createData(id, serviceName, trigger, reaction, type, status) {
-    return { id, serviceName, trigger, reaction, type, status };
+function createData(id, serviceName, trigger, reaction, type, status, imageSrc) {
+    return { id, serviceName, trigger, reaction, type, status, imageSrc };
 }
 
 const rows = [
@@ -68,7 +68,7 @@ export default function ServicesDash() {
                             });
                             const automationsData = Object.keys(automationPairs).map(automationId => {
                                 const { triggerName, reactionName } = automationPairs[automationId];
-                                return createData(automationId, service.name, triggerName, reactionName, 'Automation', 'Status');
+                                return createData(automationId, service.name, triggerName, reactionName, 'Automation', 'Status', service.icon);
                             });
                             return automationsData;
                         }
@@ -122,10 +122,11 @@ export default function ServicesDash() {
                             <TableCell {...TableCellChildrends}>{row.id}</TableCell>
                             <TableCell {...TableCellChildrends}>
                                 <img
-                                  src="http://127.0.0.1:3632/github.png"
+                                  src={"http://127.0.0.1:3632" + row.imageSrc}
                                   alt="GitHub Logo"
                                   height="32"
                                   width="32"
+                                  style={{ verticalAlign: 'middle', marginRight: '8px' }}
                                 />
                                 {row.serviceName}
                             </TableCell>
