@@ -29,7 +29,7 @@ import { WorkingToken } from './src/Core/ServerCalls';
 
 function App() {
   const [settings, setSettings] = React.useState({
-    apiLocation: "https://82da-31-32-24-119.ngrok-free.app"
+    apiLocation: "http://localhost:3000"
   });
   const Stack = createStackNavigator();
 

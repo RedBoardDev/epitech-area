@@ -50,7 +50,7 @@ export default function Services() {
         let newImageUrls = {};
         for (let serv of services) {
           try {
-            const imageUrl = await getServiceIcon(settings.apiLocation, serv.id);
+            const imageUrl = await getServiceIcon(serv.id);
             newImageUrls[serv.id] = imageUrl;
           } catch (error) {
             console.error('Error fetching image:', error);
