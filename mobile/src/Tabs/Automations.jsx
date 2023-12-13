@@ -11,6 +11,7 @@ import {
 } from "react-native";
 
 import {
+  useIsFocused,
   useNavigation,
   useTheme
 } from "@react-navigation/native";
@@ -26,10 +27,11 @@ const defaultImage = require("../../assets/logo.png");
 
 export default function Automations() {
   const { colors } = useTheme();
+  const navigation = useNavigation();
   const [autos, setAutos] = useState([]);
   const [imageUrls, setImageUrls] = useState({});
-  const [services, setServices] = useState({k:{}});
-  
+  const [services, setServices] = useState({ k: {} });
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     const fetchAutos = async () => {
@@ -39,10 +41,9 @@ export default function Automations() {
 
     fetchAutos();
 
-  }, []);
+  }, [isFocused]);
 
   useEffect(() => {
-
     const fetchImages = async () => {
       if (autos) {
         let newImageUrls = {};
@@ -97,6 +98,10 @@ export default function Automations() {
     navigateToLogin();
   };
 
+  const navigateToAddAutomation = () => {
+    navigation.navigate("NewAutomation");
+  };
+
   const getServiceIcon = async (serviceId) => {
     const token = await AsyncStorage.getItem('jwtToken');
     const response = await getImgByServiceId(token, serviceId);
@@ -126,9 +131,9 @@ export default function Automations() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
-        <TouchableOpacity>
-          {autos && autos.map(auto => (
-            <LinearGradient colors={getBackgroundGradient(auto.trigger_service_id, auto.reaction_service_id)} style={ styles.card} key={auto.id}>
+        {autos && autos.map(auto => (
+          <TouchableOpacity key={auto.id}>
+            <LinearGradient colors={getBackgroundGradient(auto.trigger_service_id, auto.reaction_service_id)} style={styles.card}>
               <View style={[styles.header]}>
                 <Text style={styles.title}>Automation {auto.id}</Text>
               </View>
@@ -146,9 +151,12 @@ export default function Automations() {
                 </View>
               </View>
             </LinearGradient>
-          ))}
-        </TouchableOpacity>
+          </TouchableOpacity>
+        ))}
       </ScrollView>
+      <TouchableOpacity style={styles.addButton} onPress={navigateToAddAutomation}>
+        <Text style={styles.addButtonLabel}>+</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
@@ -198,5 +206,19 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  addButton: {
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: '#2196F3',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  addButtonLabel: {
+    fontSize: 30,
   }
 });

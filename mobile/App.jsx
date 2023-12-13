@@ -17,6 +17,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from './src/Screens/Login';
 import RegisterScreen from './src/Screens/Register';
 import NavBar from './src/Screens/NavBar';
+import NewAutomation from './src/Screens/NewAutomation';
 
 import Help from './src/Help';
 
@@ -65,6 +66,7 @@ function App() {
         <Stack.Screen name="RegisterScreen" component={RegisterScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Help" component={Help} options={{ headerShown: false }} />
         <Stack.Screen name="NavBar" component={NavBar} options={{ headerShown: false }} />
+        <Stack.Screen name="NewAutomation" component={NewAutomation} options={{ headerShown: true }} />
       </Stack.Navigator>
       <StatusBar style={getColorTheme() === "dark" ? "light" : "dark"} />
     </NavigationContainer>

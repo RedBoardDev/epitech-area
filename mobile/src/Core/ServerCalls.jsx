@@ -94,3 +94,35 @@ export const getService = async (token, service_id) => {
     }
     return data;
 }
+
+export const getServices = async (token) => {
+    const response = await fetch(`${config.API_BASE_URL}/service/`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+        },
+    });
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.msg);
+    }
+    return data;
+}
+
+export const addNewAutomation = async (token, trigger_service_id, trigger_id, trigger_params, reaction_service_id, reaction_id, reaction_params) => {
+    const response = await fetch(`${config.API_BASE_URL}/automations/`, {
+        method: "POST",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ trigger_service_id, trigger_id, trigger_params: JSON.stringify(trigger_params), reaction_service_id, reaction_id, reaction_params: JSON.stringify(reaction_params) }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+        console.error(data);
+        throw new Error(data.msg);
+    }
+    return data;
+}
