@@ -52,7 +52,6 @@ const Services = () => {
             } else {
                 try {
                     const result = await getAllServices();
-                    console.log(result);
                     const mappedServices = result.map(service => ({
                         imageSrc: service.icon,
                         title: service.name,

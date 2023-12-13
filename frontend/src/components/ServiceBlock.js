@@ -8,11 +8,7 @@ const ServiceBlock = ({ imageSrc, title, backgroundColor }) => {
     const navigate = useNavigate();
 
     const handleClick = async (e) => {
-        e.preventDefault();
-        if (!(await verifyToken())) {
-            navigate('/login');
-        } else
-            navigate(`/service/${title}`);
+        navigate(`/service/${title}`);
     };
     return (
         <Paper

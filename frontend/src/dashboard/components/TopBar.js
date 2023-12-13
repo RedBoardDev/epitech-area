@@ -37,16 +37,12 @@ export default function TopBar() {
 
     useEffect(() => {
       const getUser = async () => {
-          if (!(await verifyToken())) {
-              navigate('/login');
-          } else {
-              try {
-                  const result = await getUserById();
-                  setUser(result);
-              } catch (error) {
-                  console.error('Error fetching automations:', error);
-              }
-          }
+        try {
+            const result = await getUserById();
+            setUser(result);
+        } catch (error) {
+            console.error('Error fetching automations:', error);
+        }
       };
       getUser();
   }, [verifyToken, navigate, getUserById]);

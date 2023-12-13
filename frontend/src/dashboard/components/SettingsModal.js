@@ -5,7 +5,6 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../AuthContext';
 
 export default function SettingsUserModal({ user, onUpdateUser }) {
@@ -15,17 +14,7 @@ export default function SettingsUserModal({ user, onUpdateUser }) {
     const [email, setEmail] = useState(user.email);
     const [newPassword, setNewPassword] = useState("");
     const [confirmNewPassword, setConfirmNewPassword] = useState("");
-    const { updateUserById, verifyToken } = useAuth();
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        const checkToken = async () => {
-            if (!await verifyToken()) {
-                navigate('/');
-            }
-        };
-        checkToken();
-    }, [verifyToken, navigate]);
+    const { updateUserById } = useAuth();
 
     const handleClickOpen = () => {
         setOpen(true);

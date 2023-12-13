@@ -11,7 +11,6 @@ import { PauseCircleOutline } from '@mui/icons-material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useAuth } from '../../AuthContext';
-import { useNavigate } from 'react-router-dom';
 
 function createData(id, serviceName, trigger, reaction, type, status, imageSrc) {
     return { id, serviceName, trigger, reaction, type, status, imageSrc };
@@ -35,57 +34,44 @@ const rows = [
 
 export default function ServicesDash() {
     const [tableData, setTableData] = useState(rows);
-    const navigate = useNavigate();
-    const { verifyToken, getAllServices, getAutomations, deleteAutomation } = useAuth();
+    const { getAllServices, getAutomations, deleteAutomation } = useAuth();
 
     useEffect(() => {
         const getAllAutomations = async () => {
-            if (!(await verifyToken())) {
-                navigate('/login');
-            } else {
-                try {
-                    const result = await getAllServices();
-                    const userAutomations = await getAutomations();
+            try {
+                const result = await getAllServices();
+                const userAutomations = await getAutomations();
 
-                    const newData = result.flatMap(service => {
-                        const serviceAutomations = userAutomations.filter(
-                            automation => automation.reaction_service_id === service.id || automation.trigger_service_id === service.id
-                        );
+                const automationsMap = {};
 
-                        if (serviceAutomations.length > 0) {
-                            const automationPairs = {};
+                userAutomations.forEach(automation => {
+                    const triggerService = result.find(service => service.id === automation.trigger_service_id);
+                    const reactionService = result.find(service => service.id === automation.reaction_service_id);
 
-                            serviceAutomations.forEach(automation => {
-                                const trigger = service.triggers.find(trigger => trigger.id === automation.trigger_id);
-                                const reaction = service.reactions.find(reaction => reaction.id === automation.reaction_id);
+                    const trigger = triggerService.triggers.find(trigger => trigger.id === automation.trigger_id)?.name || 'Unknown Trigger';
+                    const reaction = reactionService.reactions.find(reaction => reaction.id === automation.reaction_id)?.name || 'Unknown Reaction';
 
-                                if (trigger && reaction) {
-                                    automationPairs[automation.id] = {
-                                        triggerName: trigger.name,
-                                        reactionName: reaction.name,
-                                    };
-                                }
-                            });
-                            const automationsData = Object.keys(automationPairs).map(automationId => {
-                                const { triggerName, reactionName } = automationPairs[automationId];
-                                return createData(automationId, service.name, triggerName, reactionName, 'Automation', 'Status', service.icon);
-                            });
-                            return automationsData;
-                        }
-                        return [];
-                    });
-
-                    setTableData(newData);
-                } catch (error) {
-                    console.error('Error fetching automations:', error);
-                }
+                    const automationData = createData(
+                        automation.id,
+                        triggerService.name,
+                        trigger,
+                        reaction,
+                        'Automation',
+                        'Status',
+                        triggerService.icon
+                    );
+                    automationsMap[automation.id] = automationData;
+                });
+                const newData = Object.values(automationsMap);
+                setTableData(newData);
+            } catch (error) {
+                console.error('Error fetching automations:', error);
             }
         };
         getAllAutomations();
-    }, [verifyToken, navigate, getAllServices]);
+    }, [getAllServices, getAutomations]);
 
     const handleDeleteAutomation = async (id) => {
-        console.log(id);
         try {
             await deleteAutomation(id);
             const updatedTableData = tableData.filter(row => row.id !== id);
