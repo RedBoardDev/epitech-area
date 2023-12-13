@@ -49,6 +49,7 @@ function App() {
   React.useEffect(() => {
     const CheckConnected = async () => {
       const token = await AsyncStorage.getItem('jwtToken');
+      console.log(token);
       if (await WorkingToken(token) == true) {
         setInitialRouteName("NavBar");
       } else {

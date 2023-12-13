@@ -6,6 +6,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from '../Tabs/Home';
 import Settings from '../Tabs/Settings';
 import Automations from '../Tabs/Automations';
+import Services from '../Tabs/Services';
 
 import Icon from '../Components/Icon';
 
@@ -43,6 +44,18 @@ export default function NavBar() {
           tabBarLabel: () => { return null },
           tabBarIcon: ({ focused, color, size }) => (
             <Icon name={focused ? "robot.png" : "robot-outline.png"} color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="ServicesTab"
+        component={Services}
+        options={{
+          title: 'Services',
+          headerShown: false,
+          tabBarLabel: () => { return null },
+          tabBarIcon: ({ focused, color, size }) => (
+            <Icon name={focused ? "list.png" : "list.png"} color={color} size={size} />
           ),
         }}
       />

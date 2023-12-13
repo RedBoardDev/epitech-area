@@ -135,7 +135,7 @@ export default function Automations() {
       <ScrollView>
         {autos && autos.map(auto => (
           <TouchableOpacity key={auto.id}>
-            <LinearGradient colors={getBackgroundGradient(auto.trigger_service_id, auto.reaction_service_id)} style={styles.card}>
+            <LinearGradient useAngle={true} angle={90} colors={getBackgroundGradient(auto.trigger_service_id, auto.reaction_service_id)} style={styles.card}>
               <View style={[styles.header]}>
                 <Text style={styles.title}>Automation {auto.id}</Text>
               </View>
