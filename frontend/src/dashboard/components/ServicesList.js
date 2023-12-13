@@ -85,25 +85,6 @@ export default function ServicesDash() {
         getServices();
     }, [verifyToken, navigate, getAllServices]);
 
-    useEffect(() => {
-        const checkToken = async () => {
-            if (!(await verifyToken())) {
-                navigate('/login');
-            } else {
-                const getAllAutomations = async () => {
-                    try {
-                        const result = await getAutomations();
-                        setAutomations(result);
-                    } catch (error) {
-                        console.error('Error fetching automations:', error);
-                    }
-                };
-                getAllAutomations();
-            }
-        };
-        checkToken();
-    }, [verifyToken, navigate, getAutomations]);
-
     const handleDeleteAutomation = async (id) => {
         console.log(id);
         try {
