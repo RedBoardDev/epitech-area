@@ -19,13 +19,13 @@ export const LoginEmailPass = async (email, password) => {
     return data.token;
 };
 
-export const RegisterEmailPass = async (email, password) => {
+export const RegisterEmailPass = async (email, password, firstname, lastname) => {
     const response = await fetch(`${config.API_BASE_URL}/auth/register`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, firstname, lastname }),
     });
 
     const data = await response.json();
@@ -60,6 +60,7 @@ export const getAutos = async (token) => {
     });
     const data = await response.json();
     if (!response.ok) {
+        console.error(data);
         throw new Error(data.msg);
     }
     return data;

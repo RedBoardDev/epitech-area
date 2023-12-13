@@ -33,6 +33,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 function RegisterScreen() {
   const navigation = useNavigation();
 
+  const [firstname, setFirstname] = useState({ value: 'test', error: '' })
+  const [lastname, setLastname] = useState({ value: 'test', error: '' })
   const [email, setEmail] = useState({ value: 'test@gmail.com', error: '' })
   const [password, setPassword] = useState({ value: '12345678', error: '' })
   const [error, setError] = useState("")
@@ -47,7 +49,7 @@ function RegisterScreen() {
       return
     }
     try {
-      const token = await RegisterEmailPass(email.value, password.value);
+      const token = await RegisterEmailPass(email.value, password.value, firstname.value, lastname.value);
       if (token.length > 10) {
         await AsyncStorage.setItem('jwtToken', token);
         navigation.reset({
@@ -68,6 +70,28 @@ function RegisterScreen() {
       <Logo />
       <Text style={styles.header}>Welcome to HarmonieWeb</Text>
       {error && <Text style={{ color: 'red' }}>{error}</Text>}
+      <TextInput
+        label="First Name"
+        returnKeyType="next"
+        value={firstname.value}
+        onChangeText={(text) => setFirstname({ value: text, error: '' }) & setError('')}
+        error={!!firstname.error}
+        errorText={firstname.error}
+        autoCapitalize="none"
+        autoCompleteType="name"
+        textContentType="name"
+      />
+      <TextInput
+        label="Last Name"
+        returnKeyType="next"
+        value={lastname.value}
+        onChangeText={(text) => setLastname({ value: text, error: '' }) & setError('')}
+        error={!!lastname.error}
+        errorText={lastname.error}
+        autoCapitalize="none"
+        autoCompleteType="name"
+        textContentType="name"
+      />
       <TextInput
         label="Email"
         returnKeyType="next"

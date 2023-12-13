@@ -53,6 +53,7 @@ function NewAutomation_Submit({ route }) {
       navigation.navigate('AutomationsTab');
     }).catch((error) => {
       console.error(error);
+      Alert.alert('Error', 'Failed to add new automation');
     });
   }
 
