@@ -7,11 +7,47 @@ import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import DbManager from "./dbLink.js";
 import ServiceManager from "./serviceManager.js";
+import swaggerUi from "swagger-ui-express";
+import swaggerJsdoc from "swagger-jsdoc";
+import multer from 'multer';
+import fs from 'fs';
+import { options_SwaggerJsdoc, options_SwaggerUI } from "./swaggerConfig.js";
 
 dotenv.config();
 
+if (!fs.existsSync(`${process.env.UPLOAD_DIRECTORY}/uploads`)) {
+    fs.mkdirSync(`${process.env.UPLOAD_DIRECTORY}/uploads`);
+}
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/');
+    },
+    filename: function (req, file, cb) {
+        const ext = file.originalname.split('.').pop();
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+        cb(null, `${uniqueSuffix}.${ext}`);
+    },
+});
+
+export const upload = multer({
+    storage: storage,
+    fileFilter: (req, file, cb) => {
+        const allowedMimes = ['image/jpeg', 'image/png',];
+        if (allowedMimes.includes(file.mimetype)) {
+            cb(null, true);
+        } else {
+            cb(new Error('Invalid file type. Allowed types: jpeg, png'));
+        }
+    },
+});
+
 export const db = new DbManager();
 export const app = express();
+
+const specs = swaggerJsdoc(options_SwaggerJsdoc);
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(specs, options_SwaggerUI));
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.json());

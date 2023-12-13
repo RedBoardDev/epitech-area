@@ -3,6 +3,35 @@ import { db, serviceManager, verifyToken, getIdFromToken } from "../global.js";
 
 const router = express.Router();
 
+/**
+ * @swagger
+ * /automations:
+ *   get:
+ *     tags:
+ *       - automations
+ *     summary: Get all automations associated to the current user
+ *     description: Get all automations associated to the current user
+ *     operationId: getAllAutomations
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       '200':
+ *         description: Successful operation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: "#/components/schemas/automation"
+ *       '403':
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/unauthorized"
+ *     security:
+ *       - bearerAuth: []
+ */
 router.get('/', verifyToken, async (req, res) => {
     try {
         const userId = getIdFromToken(req, res); if (userId === -1) return;
@@ -13,6 +42,73 @@ router.get('/', verifyToken, async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /automations:
+ *   post:
+ *     tags:
+ *       - automations
+ *     summary: Add an automation
+ *     description: Add an automation
+ *     operationId: addAutomation
+ *     consumes:
+ *       - application/json
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: body
+ *         in: body
+ *         description: Automation
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             trigger_service_id:
+ *               type: string
+ *             trigger_id:
+ *               type: integer
+ *               format: int64
+ *             trigger_params:
+ *               type: string
+ *               example: "{}"
+ *               description: JSON string
+ *             reaction_service_id:
+ *               type: string
+ *             reaction_id:
+ *               type: integer
+ *               format: int64
+ *             reaction_params:
+ *               type: string
+ *               example: "{}"
+ *               description: JSON string
+ *     responses:
+ *       '201':
+ *         description: Successful operation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *       '400':
+ *         description: Bad parameters
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *       '403':
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/unauthorized"
+ *     security:
+ *       - bearerAuth: []
+ */
 router.post('/', verifyToken, async (req, res) => {
     const userId = getIdFromToken(req, res); if (userId === -1) return;
     if (!req.body.trigger_service_id || !req.body.trigger_id || !req.body.trigger_params || !req.body.reaction_service_id || !req.body.reaction_id || !req.body.reaction_params) {
@@ -27,9 +123,81 @@ router.post('/', verifyToken, async (req, res) => {
         });
 });
 
+/**
+ * @swagger
+ * /automations:
+ *   put:
+ *     tags:
+ *       - automations
+ *     summary: Update an automation
+ *     description: Update an automation
+ *     operationId: updateAutomation
+ *     consumes:
+ *       - application/json
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: body
+ *         in: body
+ *         description: Automation
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             id:
+ *               type: integer
+ *               format: int64
+ *             trigger_service_id:
+ *               type: string
+ *             trigger_id:
+ *               type: integer
+ *               format: int64
+ *             trigger_params:
+ *               type: string
+ *               example: "{}"
+ *               description: JSON string
+ *             reaction_service_id:
+ *               type: string
+ *             reaction_id:
+ *               type: integer
+ *               format: int64
+ *             reaction_params:
+ *               type: string
+ *               example: "{}"
+ *               description: JSON string
+ *     responses:
+ *       '200':
+ *         description: Successful operation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *       '400':
+ *         description: Bad parameters
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *       '403':
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/unauthorized"
+ *     security:
+ *       - bearerAuth: []
+ */
 router.put('/', verifyToken, async (req, res) => {
     const userId = getIdFromToken(req, res); if (userId === -1) return;
     let query = "";
+    if (req.body.active)
+        query += `active = ${req.body.active}, `;
     if (req.body.trigger_service_id)
         query += `trigger_service_id = ${req.body.trigger_service_id}, `;
     if (req.body.trigger_id)
@@ -56,6 +224,58 @@ router.put('/', verifyToken, async (req, res) => {
         });
 });
 
+/**
+ * @swagger
+ * /automations:
+ *   delete:
+ *     tags:
+ *       - automations
+ *     summary: Delete an automation
+ *     description: Delete an automation
+ *     operationId: deleteAutomation
+ *     consumes:
+ *       - application/json
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: "body"
+ *         in: "body"
+ *         description: Automation
+ *         required: true
+ *         schema:
+ *           type: "object"
+ *           properties:
+ *             id:
+ *               type: "integer"
+ *               format: "int64"
+ *     responses:
+ *       '200':
+ *         description: Successful operation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: "object"
+ *               properties:
+ *                 msg:
+ *                   type: "string"
+ *       '400':
+ *         description: Bad parameters
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: "object"
+ *               properties:
+ *                 msg:
+ *                   type: "string"
+ *       '403':
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/unauthorized"
+ *     security:
+ *       - bearerAuth: []
+ */
 router.delete('/', verifyToken, async (req, res) => {
     const userId = getIdFromToken(req, res); if (userId === -1) return;
     if (!req.body.id) {
