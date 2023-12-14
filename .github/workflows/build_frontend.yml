@@ -3,10 +3,10 @@ on:
   pull_request:
     branches:
       - main
-      - ci-cd
+      - CI-CD
   push:
     branches:
-      - ci-cd
+      - CI-CD
 jobs:
   build:
     runs-on: ubuntu-latest
