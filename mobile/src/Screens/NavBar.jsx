@@ -22,6 +22,14 @@ export default function NavBar() {
     <Tab.Navigator screenOptions={({ route }) => ({
       tabBarActiveTintColor: colors.primary,
       tabBarInactiveTintColor: colors.text,
+      tabBarStyle: { 
+        borderRadius: 20,
+        marginBottom: 20,
+        marginLeft: 20,
+        marginRight: 20,
+        paddingBottom: 5,
+        height: 80,
+      },
     })}>
       <Tab.Screen
         name="HomeTab"
