@@ -20,7 +20,7 @@ import { ScrollView } from "react-native-gesture-handler";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { getAutos, getImgByServiceId, getService } from '../Core/ServerCalls'
+import { getAutos, getImgByServiceId, getService, removeAuto } from '../Core/ServerCalls'
 
 import LinearGradient from 'react-native-linear-gradient';
 import SettingsContext from "../Contexts/Settings";
@@ -102,6 +102,12 @@ export default function Automations() {
     navigateToLogin();
   };
 
+  const removeAutomation = async (id) => {
+    removeAuto(settings.apiLocation, id);
+    const data = await getAutos(settings.apiLocation);
+    setAutos(data);
+  };
+
   const navigateToAddAutomation = () => {
     navigation.navigate("NewAutomation");
   };
@@ -128,9 +134,10 @@ export default function Automations() {
       imageStyle={{ opacity: 0.3 }}
     >
     <SafeAreaView style={styles.container}>
-      <ScrollView>
+      <ScrollView style={{ flexDirection: "columns" }}>
         {autos && autos.map(auto => (
-          <TouchableOpacity key={auto.id}>
+          <View key={auto.id} style={{ flexDirection: "row" }}>
+          <TouchableOpacity style={{ flex: 1 }}>
             <LinearGradient useAngle={true} angle={90} colors={getBackgroundGradient(auto.trigger_service_id, auto.reaction_service_id)} style={styles.card}>
               <View style={[styles.header]}>
                 <Text style={styles.title}>Automation {auto.id}</Text>
@@ -150,6 +157,10 @@ export default function Automations() {
               </View>
             </LinearGradient>
           </TouchableOpacity>
+          <TouchableOpacity style={ styles.removeButton } onPress={ () => removeAutomation(auto.id) }>
+            <Image source={require("../../assets/trash.png")} style={{ width: 30, height: 40 }} />
+          </TouchableOpacity>
+          </View>
         ))}
       </ScrollView>
       <TouchableOpacity style={styles.addButton} onPress={navigateToAddAutomation}>
@@ -167,6 +178,7 @@ const styles = StyleSheet.create({
 
   },
   card: {
+    flex: 1,
     borderRadius: 10,
     padding: 15,
     shadowColor: '#000',
@@ -225,5 +237,14 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     backgroundColor: "#000",
+  },
+  removeButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#e01f40',
+    width: 50,
+    borderRadius: 10,
+    margin: 10,
+    marginLeft: 0,
   },
 });

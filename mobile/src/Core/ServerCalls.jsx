@@ -77,10 +77,26 @@ export const getNbAutos = async (apiLocation) => {
     });
     const data = await response.json();
     if (!response.ok) {
-        console.error(data);
         throw new Error(data.msg);
     }
     return data.length;
+};
+
+export const removeAuto = async (apiLocation, id) => {
+    const token = await AsyncStorage.getItem('jwtToken');
+    const response = await fetch(`${apiLocation}/automations/`, {
+        method: "DELETE",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ id }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.msg);
+    }
+    return data;
 };
 
 export const getServices = async (apiLocation) => {
