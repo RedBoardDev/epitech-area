@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import SideBar from './components/SideBar';
 import TopBar from './components/TopBar';
+import { useAuth } from '../AuthContext';
 import Grid from '@mui/material/Grid';
 import { ArrowDropDown } from '@mui/icons-material';
 
@@ -31,7 +32,7 @@ function AddServices(service) {
     );
 }
 
-function AddCategory(name, services) {
+function AddCategory({ name, services }) {
     const [isOpen, setIsOpen] = useState(false);
     return (
         <div style={{width: '20rem', background: '#333448'}} className="no-overflow">
@@ -54,6 +55,18 @@ function AddCategory(name, services) {
 }
 
 export default function ServicesDash() {
+    const [services, setServices] = useState([]);
+    const { getAllServices } = useAuth();
+
+    useEffect(() => {
+        getAllServices().then((data) => {
+            console.log(data);
+            setServices(data);
+        }).catch((error) => {
+            console.error('Error:', error);
+        });
+    }, []);
+
     return (
         <Grid container style={{overflow: 'hidden'}}>
             <Grid item xs={2}>
@@ -67,8 +80,7 @@ export default function ServicesDash() {
                     <Grid item xs={12} style={{overflow: 'hidden'}}>
                         <div style={{height: '93.6%', top: '6.4%', left: '15%', position: 'absolute', width: '85', overflow: 'auto'}}>
                             <div style={{width: '20rem', height: '100%', background: '#333448'}} className="no-overflow">
-                                {AddCategory('Discord', dummyServices)}
-                                {AddCategory('Spotify', spotifyServices)}
+                                {services.map((service) => ( <AddCategory key={service.id} name={service.name} services={service.triggers} /> ))}
                             </div>
                         </div>
                     </Grid>
