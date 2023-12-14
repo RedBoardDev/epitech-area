@@ -8,6 +8,8 @@ import {
   Image,
   Alert,
   SafeAreaView,
+  Dimensions,
+  ImageBackground,
 } from "react-native";
 
 import {
@@ -20,6 +22,8 @@ import Logo from '../Components/Logo'
 import { getNbAutos, getNbServices } from "../Core/ServerCalls";
 
 import SettingsContext from "../Contexts/Settings";
+
+const screenWidth = Dimensions.get('window').width;
 
 export default function Home() {
   const { colors } = useTheme();
@@ -44,15 +48,20 @@ export default function Home() {
   }, []);
 
   return (
+    <ImageBackground blurRadius={5} source={require("../../assets/back.png")} resizeMode="cover" style={{ flex: 1 }}>
     <SafeAreaView style={styles.container}>
       <Logo/>
       <Text style={{ color: "#fff", textAlign: "center", fontSize: 32, fontWeight: "bold" }}>HarmonieWeb</Text>
-      <Text style={{ color: "#fff", textAlign: "center", fontSize: 112, marginTop: 40 }}>{nbAutos}</Text>
-      <Text style={{ color: "#fff", textAlign: "center", fontSize: 22, marginTop: 10 }}>Automation{(nbAutos > 1 ? "s" : "")}</Text>
-      <Text style={{ color: "#fff", textAlign: "center", fontSize: 112, marginTop: 50 }}>{nbServices}</Text>
-      <Text style={{ color: "#fff", textAlign: "center", fontSize: 22, marginTop: 10 }}>Service{(nbServices > 1 ? "s" : "")}</Text>
-
+      <View style={ styles.cardLeft}>
+      <Text style={{ color: "#fff", textAlign: "right", fontSize: 112 }}>{nbAutos}</Text>
+      <Text style={{ color: "#fff", textAlign: "right", fontSize: 22, marginTop: 10 }}>Automation{(nbAutos > 1 ? "s" : "")}</Text>
+      </View>
+      <View style={ styles.cardRight}>
+      <Text style={{ color: "#fff", textAlign: "left", fontSize: 112 }}>{nbServices}</Text>
+      <Text style={{ color: "#fff", textAlign: "left", fontSize: 22, marginTop: 10 }}>Service{(nbServices > 1 ? "s" : "")}</Text>
+      </View>
     </SafeAreaView>
+    </ImageBackground>
   );
 }
 
@@ -62,14 +71,28 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-  logoutButton: {
-    backgroundColor: "rgba(255, 255, 255, 0.1)",
-    paddingVertical: 20,
+  cardLeft : {
+    backgroundColor: 'rgba(55, 155, 255, 0.3)',
     borderRadius: 15,
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.2)",
+    marginTop: 50,
+    padding: 20,
+    paddingRight: 40,
+    width: '100%',
+    transform: [
+      { translateX: -screenWidth / 2 + 100 },
+    ],
+  },
+
+  cardRight : {
+    backgroundColor: 'rgba(0, 255, 55, 0.3)',
+    borderRadius: 15,
+    marginTop: 50,
+    padding: 20,
+    paddingLeft: 40,
+    width: '100%',
+    transform: [
+      { translateX: screenWidth / 2 - 100 },
+    ],
   },
 
   logoutButtonText: {
