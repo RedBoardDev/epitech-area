@@ -53,7 +53,6 @@ const Register = () => {
         try {
             await register(username, password, lastname, firstname);
             navigate('/');
-            console.log('registered!')
         } catch (error) {
             logout();
             console.error('Register failed:', error);
@@ -151,6 +150,7 @@ const Register = () => {
                     >
                         S'inscire
                     </Button>
+
                     <Button
                         variant="contained"
                         color="primary"
