@@ -90,10 +90,12 @@ export function NewAutomation_Reactions2({ route }) {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <Modal animationType="slide" transparent={false} visible={modalVisible} style={styles.modal}>
+      <SafeAreaView style={styles.container}>
+
         <KeyboardAwareScrollView style={{ padding: 20 }}>
-          <Text style={{ fontSize: 30 }}>Parameters</Text>
+          <Text style={{ fontSize: 30, marginBottom: 30 }}>Parameters</Text>
           {selectedReaction && selectedReaction.fields.map(field => {
             if (field.type === 'text') {
               return RenderTextInput(field);
@@ -103,6 +105,7 @@ export function NewAutomation_Reactions2({ route }) {
           })}
           <Button title="OK" onPress={() => { navigateToSubmit(selectedReaction.id); }} />
         </KeyboardAwareScrollView>
+        </SafeAreaView>
       </Modal>
       <Text>Chose a reaction</Text>
       <ScrollView>
@@ -115,7 +118,7 @@ export function NewAutomation_Reactions2({ route }) {
           </TouchableOpacity>
         ))}
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 

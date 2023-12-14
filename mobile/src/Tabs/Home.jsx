@@ -54,11 +54,11 @@ export default function Home() {
       <Text style={{ color: "#fff", textAlign: "center", fontSize: 32, fontWeight: "bold" }}>HarmonieWeb</Text>
       <View style={ styles.cardLeft}>
       <Text style={{ color: "#fff", textAlign: "right", fontSize: 112 }}>{nbAutos}</Text>
-      <Text style={{ color: "#fff", textAlign: "right", fontSize: 22, marginTop: 10 }}>Automation{(nbAutos > 1 ? "s" : "")}</Text>
+      <Text style={{ color: "#fff", textAlign: "right", fontSize: 22, marginTop: 10 }}>🤖 Automation{(nbAutos > 1 ? "s" : "")}</Text>
       </View>
       <View style={ styles.cardRight}>
       <Text style={{ color: "#fff", textAlign: "left", fontSize: 112 }}>{nbServices}</Text>
-      <Text style={{ color: "#fff", textAlign: "left", fontSize: 22, marginTop: 10 }}>Service{(nbServices > 1 ? "s" : "")}</Text>
+      <Text style={{ color: "#fff", textAlign: "left", fontSize: 22, marginTop: 10 }}>Service{(nbServices > 1 ? "s" : "")} ⚙️</Text>
       </View>
     </SafeAreaView>
     </ImageBackground>

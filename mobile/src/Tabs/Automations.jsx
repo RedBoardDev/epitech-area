@@ -9,6 +9,7 @@ import {
   Alert,
   SafeAreaView,
   ImageBackground,
+  RefreshControl,
 } from "react-native";
 
 import {
@@ -36,6 +37,7 @@ export default function Automations() {
   const [imageUrls, setImageUrls] = useState({});
   const [services, setServices] = useState({ k: {} });
   const isFocused = useIsFocused();
+  const [refreshing, setRefreshing] = React.useState(false);
 
   useEffect(() => {
     const fetchAutos = async () => {
@@ -102,10 +104,21 @@ export default function Automations() {
     navigateToLogin();
   };
 
-  const removeAutomation = async (id) => {
+  const rmOne = async (id) => {
     removeAuto(settings.apiLocation, id);
     const data = await getAutos(settings.apiLocation);
     setAutos(data);
+  }
+
+  const removeAutomation = async (id) => {
+    Alert.alert('Removal', 'Are you sure you want to remove this automation ?', [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      {text: 'Yes', onPress: () => rmOne(id)},
+    ]);
+
   };
 
   const navigateToAddAutomation = () => {
@@ -126,6 +139,13 @@ export default function Automations() {
     return [color, color1];
   }
 
+  const onRefresh = React.useCallback(async () => {
+    setRefreshing(true);
+    const data = await getAutos(settings.apiLocation);
+    setAutos(data);
+    setRefreshing(false);
+  }, []);
+
   return (
     <ImageBackground
       source={require('../../assets/background_dot.png')}
@@ -134,7 +154,9 @@ export default function Automations() {
       imageStyle={{ opacity: 0.3 }}
     >
     <SafeAreaView style={styles.container}>
-      <ScrollView style={{ flexDirection: "columns" }}>
+      <ScrollView style={{ flexDirection: "columns" }} refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
         {autos && autos.map(auto => (
           <View key={auto.id} style={{ flexDirection: "row" }}>
           <TouchableOpacity style={{ flex: 1 }}>
