@@ -1,5 +1,9 @@
 name: CI/CD - backend
-on: [push]
+on:
+  pull_request:
+    branches:
+      - main
+      - CI/CD
 jobs:
   build:
     runs-on: ubuntu-latest
