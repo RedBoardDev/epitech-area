@@ -9,7 +9,7 @@ import HeaderComponent from './Header';
 import backgroundImage from '../img/BgTop.png';
 import GitHubIcon from '@mui/icons-material/GitHub';
 
-export const GithubCallback = () => {
+export const RegisterGithubCallback = () => {
     const navigate = useNavigate();
     const { registerGithub } = useAuth();
     const urlParams = new URLSearchParams(window.location.search);
@@ -150,7 +150,6 @@ const Register = () => {
                     >
                         S'inscire
                     </Button>
-
                     <Button
                         variant="contained"
                         color="primary"

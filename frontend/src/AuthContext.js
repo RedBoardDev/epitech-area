@@ -118,6 +118,19 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const loginGithub = async (code) => {
+        try {
+            const response = await callApi('POST', `/auth/login/github/${code}`);
+            saveData(response.token, response.id);
+            setIsAuthenticated(true);
+            return response;
+        } catch (error) {
+            console.error('Login error:', error);
+            setIsAuthenticated(false);
+            throw error;
+        }
+    };
+
     const logout = () => {
         deleteData();
         setIsAuthenticated(false);
@@ -186,7 +199,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, register, login, logout, verifyToken, getAutomations, getAllServices, deleteAutomation, getUserById, updateUserById, registerGithub }}>
+        <AuthContext.Provider value={{ isAuthenticated, register, login, logout, verifyToken, getAutomations, getAllServices, deleteAutomation, getUserById, updateUserById, registerGithub, loginGithub }}>
             {children}
         </AuthContext.Provider>
     );
