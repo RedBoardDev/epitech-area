@@ -226,6 +226,43 @@ export const reactions = [
         ],
         execute: async (userData, params, token, triggerData) => {
             console.log(triggerData.text);
+
+            const createOrUpdateFile = async (sha = null) => {
+                const options = {
+                    message: params.commit_msg,
+                    content: Buffer.from(params.body && params.body.length ? params.body : triggerData.text).toString('base64'),
+                };
+                const headers = {
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        "Accept": 'application/vnd.github+json',
+                        "X-GitHub-Api-Version": "2022-11-28"
+                    }
+                };
+                if (sha)
+                    options.sha = sha;
+                axios.put(`https://api.github.com/repos/${params.repository_name}/contents/${params.filename}`, options, headers)
+                    .then((response) => {
+                        if (sha)
+                            console.log("File updated");
+                        else
+                            console.log("File created");
+                    }).catch((error) => {
+                        console.log("error:", error);
+                    });
+            }
+
+            axios.get(`https://api.github.com/repos/${params.repository_name}/contents/${params.filename}`, {
+                headers: {
+                    "Authorization": `Bearer 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`,
+                    "Accept": 'application/vnd.github+json',
+                    "X-GitHub-Api-Version": "2022-11-28"
+                }
+            }).then((response) => {
+                createOrUpdateFile(response.data.sha);
+            }).catch((error) => {
+                createOrUpdateFile();
+            });
         }
     }
 ];
