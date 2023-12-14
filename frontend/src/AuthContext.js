@@ -92,6 +92,19 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const registerGithub = async (code) => {
+        try {
+            const response = await callApi('POST', `/auth/register/github/${code}`);
+            saveData(response.token, response.id);
+            setIsAuthenticated(true);
+            return response;
+        } catch (error) {
+            console.error('Login error:', error);
+            setIsAuthenticated(false);
+            throw error;
+        }
+    };
+
     const login = async (email, password) => {
         try {
             const response = await callApi('POST', '/auth/login', { email, password });
@@ -173,7 +186,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, register, login, logout, verifyToken, getAutomations, getAllServices, deleteAutomation, getUserById, updateUserById }}>
+        <AuthContext.Provider value={{ isAuthenticated, register, login, logout, verifyToken, getAutomations, getAllServices, deleteAutomation, getUserById, updateUserById, registerGithub }}>
             {children}
         </AuthContext.Provider>
     );

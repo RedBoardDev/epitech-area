@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './components/Login';
-import Register from './components/Register';
+import Register, { GithubCallback } from './components/Register';
 import Home from './components/Home';
 import Services from './components/Services';
 import Lost from './components/Lost';
@@ -18,6 +18,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/register/github/callback" element={<GithubCallback />} />
           <Route path="/services" element={<Services />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/dashboard/services" element={<ServicesDash />} />
