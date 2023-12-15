@@ -64,6 +64,7 @@ export function NewAutomation_Triggers2({ route }) {
   const [triggerParams, setTriggerParams] = useState({});
 
   const navigateToReactions1 = (triggerId) => {
+    setModalVisible(false);
     navigation.navigate('Reactions1', { serviceData, triggerServiceId, triggerId, triggerParams });
   }
 

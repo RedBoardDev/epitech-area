@@ -191,8 +191,7 @@ export const addNewAutomation = async (apiLocation, trigger_service_id, trigger_
     });
     const data = await response.json();
     if (!response.ok) {
-        console.error(data);
-        throw new Error(data.msg);
+        return { status: response.status, ...data };
     }
     return data;
 }
@@ -206,6 +205,22 @@ export const updateServiceToken = async (apiLocation, service_id, token) => {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({ token }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.msg);
+    }
+    return data;
+}
+
+export const serviceOauth = async (apiLocation, service_id) => {
+    const token = await AsyncStorage.getItem('jwtToken');
+    const response = await fetch(`${apiLocation}/service/oauth/${service_id}/connect`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+        },
     });
     const data = await response.json();
     if (!response.ok) {
