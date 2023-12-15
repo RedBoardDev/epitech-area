@@ -1,0 +1,15 @@
+name: Update API on Raspberry Pi 4
+on:
+  push:
+    branches:
+      - main
+      - CI/CD
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Trigger API update on Raspberry Pi 4
+      run: |
+        curl -X POST https://area.thomasott.fr/update/
