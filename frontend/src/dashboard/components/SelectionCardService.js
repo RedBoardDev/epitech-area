@@ -26,19 +26,20 @@ const AddIconWrapper = styled(AddIcon)({
     color: 'white',
 });
 
-function SelectionCardService({ service }) {
+function SelectionCardService({ id, obj, callback }) {
 
     const handleClick = () => {
-        console.log(service.name);
+        obj.service_id = id;
+        callback(obj);
     };
 
     return (
         <StyledBox onClick={handleClick}>
             <Typography variant="h6" sx={{ color: 'white', padding: '1rem' }}>
-                {service.name}
+                {obj.name}
             </Typography>
             <Typography variant="body2" sx={{ color: 'white', padding: '1rem' }}>
-                {service.description}
+                {obj.description}
             </Typography>
             <AddIconWrapper />
         </StyledBox>

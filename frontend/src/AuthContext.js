@@ -172,8 +172,47 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
+    const addAutomation = async (trigger_service_id, trigger_id, trigger_params, reaction_service_id, reaction_id, reaction_params) => {
+        try {
+            const response = await callApiWithToken('POST', `/automations`, { trigger_service_id, trigger_id, trigger_params, reaction_service_id, reaction_id, reaction_params });
+            setIsAuthenticated(true);
+            return response;
+        } catch (error) {
+            setIsAuthenticated(false);
+            throw error;
+        }
+    }
+
+    const serviceOauth = async (service_id) => {
+        try {
+            const response = await callApiWithToken('GET', `/service/oauth/${service_id}/connect`);
+            setIsAuthenticated(true);
+            // Ouvre une nouvelle fenêtre avec l'URL de redirection
+            window.open(response.url, '_blank', 'width=600,height=400');
+            return response;
+        } catch (error) {
+            console.error('Service error:', error);
+            setIsAuthenticated(false);
+            throw error;
+        }
+    };
+
+
     return (
-        <AuthContext.Provider value={{ isAuthenticated, register, login, logout, verifyToken, getAutomations, getAllServices, deleteAutomation, getUserById, updateUserById }}>
+        <AuthContext.Provider value={{
+            isAuthenticated,
+            register,
+            login,
+            logout,
+            verifyToken,
+            getAutomations,
+            getAllServices,
+            deleteAutomation,
+            getUserById,
+            updateUserById,
+            addAutomation,
+            serviceOauth
+        }}>
             {children}
         </AuthContext.Provider>
     );
