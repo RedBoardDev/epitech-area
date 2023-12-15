@@ -20,7 +20,7 @@ export const triggers = [
                 type: 'text'
             }
         ],
-        check: async (userData, params, token) => {
+        check: async (autoId, userData, params, checkData, token) => {
             return null;
         }
     }
