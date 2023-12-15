@@ -14,7 +14,7 @@ class ServiceManager {
         this.services = [];
         this.importServices();
 
-        // this.intervalId = setInterval(() => this.checkTriggers(), 10000);
+        this.intervalId = setInterval(() => this.checkTriggers(), 10000);
     }
 
     async importServices() {

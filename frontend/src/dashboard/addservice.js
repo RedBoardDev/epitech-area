@@ -6,12 +6,15 @@ import Grid from '@mui/material/Grid';
 import AddCategory from './addCategory';
 import PuzzlePiece from './components/PuzzlePiece';
 import Button from '@mui/material/Button';
+import ModalSettingsService from './components/ModalSettingsService';
 
 export default function ServicesDash() {
     const [services, setServices] = useState([]);
     const { getAllServices, addAutomation, serviceOauth } = useAuth();
     const [selectedTrigger, setSelectedTrigger] = useState(null);
     const [selectedReaction, setSelectedReaction] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalData, setModalData] = useState(null);
 
     useEffect(() => {
         getAllServices().then((data) => {
@@ -22,21 +25,31 @@ export default function ServicesDash() {
         });
     }, []);
 
-    const handleClick = (choose) => {
-        console.log(choose);
+    const openModal = (choose) => {
+        if (selectedTrigger && selectedReaction) return;
+        setModalData(choose);
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+    };
+
+    const submitSettings = (data) => {
+        console.log("chooose", data);
         if (!selectedTrigger) {
-            setSelectedTrigger(choose);
+            setSelectedTrigger(data);
             console.log("selectedTrigger", selectedTrigger);
         } else {
-            setSelectedReaction(choose);
+            setSelectedReaction(data);
             console.log("selectedReaction", selectedReaction);
         }
     }
 
     const handleConfirm = async () => {
         try {
-            await addAutomation(selectedTrigger.service_id, selectedTrigger.id, JSON.stringify(selectedTrigger.fields),
-                selectedReaction.service_id, selectedReaction.id, JSON.stringify(selectedReaction.fields));
+            await addAutomation(selectedTrigger.service_id, selectedTrigger.id, JSON.stringify(selectedTrigger.formValues),
+                selectedReaction.service_id, selectedReaction.id, JSON.stringify(selectedReaction.formValues));
         } catch (error) {
             const errData = error?.response?.data || null;
             if (!errData) return;
@@ -64,8 +77,8 @@ export default function ServicesDash() {
                         <div style={{ height: '93.6%', top: '6.4%', left: '15%', position: 'absolute', width: '85%', overflow: 'auto', display: 'flex' }}>
                             <div style={{ width: '20rem', height: '100%', background: '#333448' }} className="no-overflow">
                                 {!selectedTrigger ?
-                                    services.map((service) => (<AddCategory key={service.id} id={service.id} name={service.name} color={service.color} triggers={service.triggers} handleClick={handleClick} />))
-                                    : services.map((service) => (<AddCategory key={service.id} id={service.id} name={service.name} color={service.color} triggers={service.reactions} handleClick={handleClick} />))
+                                    services.map((service) => (<AddCategory key={service.id} id={service.id} name={service.name} color={service.color} triggers={service.triggers} handleClick={openModal} />))
+                                    : services.map((service) => (<AddCategory key={service.id} id={service.id} name={service.name} color={service.color} triggers={service.reactions} handleClick={openModal} />))
                                 }
                             </div>
                             {selectedTrigger && (
@@ -78,6 +91,7 @@ export default function ServicesDash() {
                                 <Button onClick={handleConfirm}>Confirm</Button>
                             )}
                         </div>
+                        <ModalSettingsService isOpen={isModalOpen} closeModal={closeModal} data={modalData} onSubmit={submitSettings} />
                     </Grid>
                 </Grid>
             </Grid>

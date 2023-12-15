@@ -162,7 +162,7 @@ router.post("/register", (req, res) => {
             return;
         }
 
-        db.insertUser(req.body.email, passwordHash, req.body.lastname, req.body.firstname).then((rows) => {
+        db.insertUser(req.body.email, passwordHash, req.body.lastname, req.body.firstname, 'password').then((rows) => {
             const token = jwt.sign({ id: `${rows.insertId}` }, process.env.SECRET, { expiresIn: '40w' });
             res.status(201).json({ token: token, id: rows.insertId });
         }).catch((err) => {
