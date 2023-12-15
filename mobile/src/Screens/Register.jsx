@@ -12,11 +12,12 @@ import {
   Image,
   Alert,
   SafeAreaView,
-  Modal
+  Modal,
 } from 'react-native';
 
 import {
-  useNavigation, useTheme
+  useNavigation,
+  useTheme
 } from '@react-navigation/native';
 
 import { theme } from '../Components/Theme'
@@ -24,39 +25,38 @@ import Background from '../Components/Background'
 import Logo from '../Components/Logo'
 import TextInput from '../Components/TextInput'
 import Button from '../Components/Button'
+import SettingsContext from '../Contexts/Settings';
 
 import { validateEmail, validatePassword } from '../Tests/Validators'
 
-import { LoginEmailPass, GetUser } from '../Core/ServerCalls'
+import { RegisterEmailPass } from '../Core/ServerCalls'
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from '../Components/Icon';
-import SettingsContext from '../Contexts/Settings';
 
-function LoginScreen() {
+function RegisterScreen() {
   const { settings, setSettings } = useContext(SettingsContext);
   const navigation = useNavigation();
   const { colors } = useTheme();
   const [modalVisible, setModalVisible] = useState(false);
 
+  const [firstname, setFirstname] = useState({ value: 'test', error: '' })
+  const [lastname, setLastname] = useState({ value: 'test', error: '' })
   const [email, setEmail] = useState({ value: 'test@gmail.com', error: '' })
   const [password, setPassword] = useState({ value: '12345678', error: '' })
   const [error, setError] = useState("")
 
-  useEffect(() => {
-  }, []);
 
-  const onLoginPressed = async () => {
+  const onRegisterPressed = async () => {
     const emailError = validateEmail(email.value)
     const passwordError = validatePassword(password.value)
     if (!emailError || !passwordError) {
       setEmail({ ...email, error: emailError })
       setPassword({ ...password, error: passwordError })
-
       return
     }
     try {
-      const token = await LoginEmailPass(settings.apiLocation, email.value, password.value);
+      const token = await RegisterEmailPass(settings.apiLocation, email.value, password.value, firstname.value, lastname.value);
       if (token.length > 10) {
         await AsyncStorage.setItem('jwtToken', token);
         navigation.reset({
@@ -64,7 +64,7 @@ function LoginScreen() {
           routes: [{ name: 'NavBar' }],
         });
       } else {
-        setError("Unknown error, please try again. ")
+        setError("Unknown error, please try again.")
       }
     } catch (err) {
       setError(err.message)
@@ -97,13 +97,35 @@ function LoginScreen() {
       </Modal>
       {/* <BackButton goBack={navigation.goBack} /> */}
       <Logo />
-      <Text style={styles.header}>Nice to see you again !</Text>
+      <Text style={styles.header}>Welcome to HarmonieWeb</Text>
       {error && <Text style={{ color: 'red' }}>{error}</Text>}
+      <TextInput
+        label="First Name"
+        returnKeyType="next"
+        value={firstname.value}
+        onChangeText={(text) => setFirstname({ value: text, error: '' }) & setError('')}
+        error={!!firstname.error}
+        errorText={firstname.error}
+        autoCapitalize="none"
+        autoCompleteType="name"
+        textContentType="name"
+      />
+      <TextInput
+        label="Last Name"
+        returnKeyType="next"
+        value={lastname.value}
+        onChangeText={(text) => setLastname({ value: text, error: '' }) & setError('')}
+        error={!!lastname.error}
+        errorText={lastname.error}
+        autoCapitalize="none"
+        autoCompleteType="name"
+        textContentType="name"
+      />
       <TextInput
         label="Email"
         returnKeyType="next"
         value={email.value}
-        onChangeText={(text) => setEmail({ value: text, error: '' })}
+        onChangeText={(text) => setEmail({ value: text, error: '' }) & setError('')}
         error={!!email.error}
         errorText={email.error}
         autoCapitalize="none"
@@ -120,25 +142,18 @@ function LoginScreen() {
         errorText={password.error}
         secureTextEntry
       />
-      {/* <View style={styles.forgotPassword}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('ResetPasswordScreen')}
-        >
-          <Text style={styles.forgot}>Forgot your password ?</Text>
-        </TouchableOpacity>
-      </View> */}
-      <Button mode="contained" onPress={onLoginPressed} title="Login">
-        Login
+      <Button mode="contained" onPress={onRegisterPressed} title="Register">
+        Register
       </Button>
       <View style={styles.row}>
-        <Text>Don't have an account ? </Text>
-        <TouchableOpacity onPress={() => navigation.navigate('RegisterScreen')}>
-          <Text style={styles.link}>Sign up</Text>
+        <Text>Already have an account ? </Text>
+        <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')}>
+          <Text style={styles.link}>Login</Text>
         </TouchableOpacity>
       </View>
       <TouchableOpacity style={styles.button_log_with} onPress={() => console.log("github login")}>
         <Image source={require("../../assets/github_logo.png")} style={styles.logo} />
-        <Text style={styles.text}>Login with GitHub</Text>
+        <Text style={styles.text}>Register with GitHub</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.settings} onPress={() => setModalVisible(true)}>
         <Icon name="settings.png" size={24} color={'black'} />
@@ -205,4 +220,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default LoginScreen;
+export default RegisterScreen;

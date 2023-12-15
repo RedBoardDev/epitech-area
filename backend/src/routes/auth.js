@@ -149,7 +149,7 @@ router.post("/login/github/:code", async (req, res) => {
  *                   type: string
  */
 router.post("/register", (req, res) => {
-    if (!req.body.email || !req.body.password || !checkEmail(req.body.email) || !checkPassword(req.body.password)) {
+    if (!req.body.email || !req.body.password || !req.body.lastname || !req.body.firstname || !checkEmail(req.body.email) || !checkPassword(req.body.password)) {
         res.status(400).json({ msg: "Bad parameter" });
         return;
     }

@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Image } from 'react-native';
-import { useTheme } from '@react-navigation/native';
+import { useTheme, useNavigation } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import Home from '../Tabs/Home';
 import Settings from '../Tabs/Settings';
+import Automations from '../Tabs/Automations';
+import Services from '../Tabs/Services';
+
 import Icon from '../Components/Icon';
 
 export default function NavBar() {
@@ -12,12 +15,21 @@ export default function NavBar() {
   const { colors } = useTheme();
 
   useEffect(() => {
+
   }, []);
 
   return (
     <Tab.Navigator screenOptions={({ route }) => ({
       tabBarActiveTintColor: colors.primary,
       tabBarInactiveTintColor: colors.text,
+      tabBarStyle: { 
+        borderRadius: 20,
+        marginBottom: 20,
+        marginLeft: 20,
+        marginRight: 20,
+        paddingBottom: 5,
+        height: 80,
+      },
     })}>
       <Tab.Screen
         name="HomeTab"
@@ -28,6 +40,30 @@ export default function NavBar() {
           tabBarLabel: () => { return null },
           tabBarIcon: ({ focused, color, size }) => (
             <Icon name={focused ? "home.png" : "home-outline.png"} color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="AutomationsTab"
+        component={Automations}
+        options={{
+          title: 'Automations',
+          headerShown: false,
+          tabBarLabel: () => { return null },
+          tabBarIcon: ({ focused, color, size }) => (
+            <Icon name={focused ? "robot.png" : "robot-outline.png"} color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="ServicesTab"
+        component={Services}
+        options={{
+          title: 'Services',
+          headerShown: false,
+          tabBarLabel: () => { return null },
+          tabBarIcon: ({ focused, color, size }) => (
+            <Icon name={focused ? "list.png" : "list.png"} color={color} size={size} />
           ),
         }}
       />
