@@ -14,12 +14,13 @@ export const triggers = [
         description: '',
         fields: [
             {
+                id: '',
                 name: '',
                 description: '',
                 type: 'text'
             }
         ],
-        check: async (userData, params, token) => {
+        check: async (autoId, userData, params, checkData, token) => {
             return null;
         }
     }
@@ -32,6 +33,7 @@ export const reactions = [
         description: '',
         fields: [
             {
+                id: '',
                 name: '',
                 description: '',
                 type: 'text'

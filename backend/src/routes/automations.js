@@ -111,14 +111,38 @@ router.get('/', verifyToken, async (req, res) => {
  */
 router.post('/', verifyToken, async (req, res) => {
     const userId = getIdFromToken(req, res); if (userId === -1) return;
-    if (!req.body.trigger_service_id || !req.body.trigger_id || !req.body.trigger_params || !req.body.reaction_service_id || !req.body.reaction_id || !req.body.reaction_params) {
+    const {
+        trigger_service_id,
+        trigger_id,
+        trigger_params,
+        reaction_service_id,
+        reaction_id,
+        reaction_params
+    } = req.body;
+
+    if (!trigger_service_id || !trigger_id || !trigger_params || !reaction_service_id || !reaction_id || !reaction_params) {
         res.status(400).json({ msg: 'Bad parameters' });
         return;
     }
+
     db.insertAutomation(userId, req.body.trigger_service_id, req.body.trigger_id, req.body.trigger_params, req.body.reaction_service_id, req.body.reaction_id, req.body.reaction_params)
         .then((result) => {
             res.status(201).json({ msg: 'Automation created' });
-        }).catch((error) => {
+        }).catch(async (error) => {
+            if (error.code === 'ER_NO_REFERENCED_ROW_2') {
+                const triggerServiceExists = await db.getServiceOauth(userId, trigger_service_id);
+
+                if (!triggerServiceExists || !triggerServiceExists.length) {
+                    res.status(401).json({ msg: 'Trigger service does not exist', service_id: trigger_service_id });
+                    return;
+                }
+
+                const reactionServiceExists = await db.getServiceOauth(userId, reaction_service_id);
+                if (!reactionServiceExists || !reactionServiceExists.length) {
+                    res.status(401).json({ msg: 'Reaction service does not exist', service_id: reaction_service_id });
+                    return;
+                }
+            }
             res.status(500).json({ msg: 'Internal server error', error: error });
         });
 });
