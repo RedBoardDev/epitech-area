@@ -149,7 +149,8 @@ router.get('/oauth/:id/connect', verifyToken, async (req, res) => {
     if (ret === "error") {
         res.status(400).json(msg.error);
     } else {
-        res.redirect(ret.url);
+        // res.redirect(ret.url);
+        res.status(200).json({ url: ret.url });
     }
 });
 
@@ -237,19 +238,19 @@ router.get('/oauth/:id/callback', async (req, res) => {
     const ret = await service.callback(code);
     if (ret === "error")
         return res.status(400).json(ret.msg);
-    if (!ret.token)
+    if (!ret.token || !ret.action)
         return res.status(400).json({ msg: 'Bad parameter' });
 
     db.getServiceOauth(userId, service.id).then((rows) => {
         if (rows[0]) {
             db.updateServiceOauth(userId, service.id, ret.token).then((result) => {
-                return res.redirect(ret.url);
+                res.send(ret.action);
             }).catch((err) => {
                 return res.status(500).json({ msg: 'Internal server error', error: err });
             });
         } else {
             db.insertServiceOauth(userId, service.id, ret.token).then((result) => {
-                return res.redirect(ret.url);
+                res.send(ret.action);
             }).catch((err) => {
                 return res.status(500).json({ msg: 'Internal server error', error: err });
             });

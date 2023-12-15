@@ -213,8 +213,7 @@ export const AuthProvider = ({ children }) => {
         try {
             const response = await callApiWithToken('GET', `/service/oauth/${service_id}/connect`);
             setIsAuthenticated(true);
-            // Ouvre une nouvelle fenêtre avec l'URL de redirection
-            window.open(response.url, '_blank', 'width=600,height=400');
+            window.open(response.url, '_blank');
             return response;
         } catch (error) {
             console.error('Service error:', error);
@@ -222,7 +221,6 @@ export const AuthProvider = ({ children }) => {
             throw error;
         }
     };
-
 
     return (
         <AuthContext.Provider value={{

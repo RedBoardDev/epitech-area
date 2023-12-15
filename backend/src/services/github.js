@@ -39,7 +39,17 @@ export const callback = async (code) => {
                 accept: 'application/json',
             },
         });
-        return { status: "success", url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', token: response?.data?.access_token || undefined };
+        const htmlResponse = `
+            <html>
+                <body>
+                    <p>Vou can now close this window.</p>
+                    <script>
+                        window.close();
+                    </script>
+                </body>
+            </html>
+        `;
+        return { status: "success", action: htmlResponse, token: response?.data?.access_token || undefined };
     } catch (error) {
         console.log(error);
         return { status: "error", msg: error };
