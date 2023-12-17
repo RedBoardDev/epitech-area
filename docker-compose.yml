@@ -1,0 +1,65 @@
+version: "3"
+
+services:
+  db:
+    container_name: "area-db"
+    build:
+      context: ./backend
+      dockerfile: Dockerfile-db
+    env_file:
+      - .env
+    environment:
+      MYSQL_DATABASE: $MYSQL_DATABASE
+      MYSQL_USER: $MYSQL_USER_OTHER
+      MYSQL_PASSWORD: $MYSQL_PASSWORD
+      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+    volumes:
+      - $PWD/area-database:/var/lib/mysql
+    networks:
+      areaNetwork:
+        ipv4_address: $MYSQL_HOST
+    restart: always
+
+  backend:
+    container_name: "area-backend"
+    build:
+      context: ./backend
+      dockerfile: Dockerfile-api
+    env_file:
+      - .env
+    depends_on:
+      - db
+    networks:
+      areaNetwork:
+        ipv4_address: $API_HOST_NAME
+    ports:
+      - "$API_PORT:$API_PORT"
+    restart: always
+
+  webapp:
+    container_name: "area-webapp"
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - backend
+    networks:
+      areaNetwork:
+        ipv4_address: $WEBAPP_HOST_NAME
+    ports:
+      - "8080:$REACT_APP_PORT"
+    restart: on-failure
+
+networks:
+  areaNetwork:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: "192.168.50.0/24"
+          gateway: "192.168.50.1"
+
+volumes:
+  area-db-data:
