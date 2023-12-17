@@ -19,7 +19,6 @@ const ModalSettingsService = ({ isOpen, closeModal, data, onSubmit }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log('formValues:', formValues);
         data['formValues'] = formValues;
         onSubmit(data);
         closeModal();
