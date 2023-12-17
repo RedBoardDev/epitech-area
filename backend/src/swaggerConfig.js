@@ -12,7 +12,7 @@ export const options_SwaggerJsdoc = {
         },
         servers: [
             {
-                url: `${process.env.PROTOCOLE}://${process.env.HOST_NAME}:${process.env.PORT}`,
+                url: `${process.env.API_PROTOCOLE}://${process.env.API_HOST_NAME}:${process.env.API_PORT}`,
             },
         ],
         tags: [

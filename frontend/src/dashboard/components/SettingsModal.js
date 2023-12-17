@@ -27,17 +27,13 @@ export default function SettingsUserModal({ user, onUpdateUser }) {
 
     const handleSave = async () => {
         try {
-            // if (newPassword === confirmNewPassword) {
-                // console.log(confirmNewPassword);
                 await updateUserById(lastName, firstName);
                 onUpdateUser({ ...user, firstname: firstName, lastname: lastName });
         } catch (error) {
             console.error('Update user failed:', error);
         }
-        // Sauvegardez les informations de l'utilisateur ici...
         setOpen(false);
     };
-
 
     return (
         <div>

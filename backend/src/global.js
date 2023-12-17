@@ -14,7 +14,6 @@ import fs from 'fs';
 import { options_SwaggerJsdoc, options_SwaggerUI } from "./swaggerConfig.js";
 
 dotenv.config();
-
 if (!fs.existsSync(`${process.env.UPLOAD_DIRECTORY}/uploads`)) {
     fs.mkdirSync(`${process.env.UPLOAD_DIRECTORY}/uploads`);
 }
@@ -59,13 +58,13 @@ const algorithm = 'aes-256-cbc';
 
 export function encryptString(text) {
     const iv = crypto.randomBytes(16);
-    let cipher = crypto.createCipheriv(algorithm, Buffer.from(process.env.SECRET, 'utf8'), iv);
+    let cipher = crypto.createCipheriv(algorithm, Buffer.from(process.env.API_SECRET, 'utf8'), iv);
     return JSON.stringify({ i: iv.toString('hex'), e: Buffer.concat([cipher.update(text), cipher.final()]).toString('hex') });
 }
 
 export function decryptString(text) {
     text = JSON.parse(text);
-    let decipher = crypto.createDecipheriv(algorithm, Buffer.from(process.env.SECRET, 'utf8'), Buffer.from(text.i, 'hex'));
+    let decipher = crypto.createDecipheriv(algorithm, Buffer.from(process.env.API_SECRET, 'utf8'), Buffer.from(text.i, 'hex'));
     return Buffer.concat([decipher.update(Buffer.from(text.e, 'hex')), decipher.final()]).toString();
 }
 
@@ -90,7 +89,7 @@ export function verifyToken(req, res, next) {
     req.token = bearerToken;
 
     try {
-        let decoded = jwt.verify(req.token, process.env.SECRET);
+        let decoded = jwt.verify(req.token, process.env.API_SECRET);
         db.getUserById(decoded.id).then((rows) => {
             if (rows[0] && rows[0].id == decoded.id)
                 next();
@@ -114,7 +113,7 @@ export function verifyToken(req, res, next) {
  */
 export function getIdFromToken(req, res) {
     try {
-        let decoded = jwt.verify(req.token, process.env.SECRET);
+        let decoded = jwt.verify(req.token, process.env.API_SECRET);
         return decoded.id;
     } catch (err) {
         res.status(403).json({ msg: "Token is not valid" });

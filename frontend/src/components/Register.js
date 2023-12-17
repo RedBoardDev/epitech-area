@@ -18,8 +18,7 @@ export const RegisterGithubCallback = () => {
     useEffect(() => {
         const handleGithubCallback = async () => {
             try {
-                const resp = await registerGithub(code);
-                console.log(resp);
+                await registerGithub(code);
                 navigate('/');
             } catch (error) {
                 console.error('Github callback failed:', error);

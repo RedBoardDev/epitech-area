@@ -19,7 +19,6 @@ export default function ServicesDash() {
     useEffect(() => {
         getAllServices().then((data) => {
             setServices(data);
-            console.log("services", data);
         }).catch((error) => {
             console.error('Error:', error);
         });
@@ -36,13 +35,10 @@ export default function ServicesDash() {
     };
 
     const submitSettings = (data) => {
-        console.log("chooose", data);
         if (!selectedTrigger) {
             setSelectedTrigger(data);
-            console.log("selectedTrigger", selectedTrigger);
         } else {
             setSelectedReaction(data);
-            console.log("selectedReaction", selectedReaction);
         }
     }
 
@@ -55,7 +51,6 @@ export default function ServicesDash() {
             if (!errData) return;
 
             if (error.response && error.response.status === 401) {
-                console.log("Unauthorized: ", error);
                 serviceOauth(error.response.data.service_id);
             } else {
                 console.error("Error during addAutomation:", error);

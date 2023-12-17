@@ -20,8 +20,7 @@ export const LoginGithubCallback = () => {
     useEffect(() => {
         const handleGithubCallback = async () => {
             try {
-                const resp = await loginGithub(code);
-                console.log(resp);
+                await loginGithub(code);
                 navigate('/');
             } catch (error) {
                 console.error('Github callback failed:', error);
