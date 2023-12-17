@@ -14,7 +14,6 @@ import fs from 'fs';
 import { options_SwaggerJsdoc, options_SwaggerUI } from "./swaggerConfig.js";
 
 dotenv.config();
-console.log("FU", process.env.API_PROTOCOLE, process.env.API_PORT, process.env.API_HOST_NAME, process.env.UPLOAD_DIRECTORY, process.env.API_SECRET);
 if (!fs.existsSync(`${process.env.UPLOAD_DIRECTORY}/uploads`)) {
     fs.mkdirSync(`${process.env.UPLOAD_DIRECTORY}/uploads`);
 }
