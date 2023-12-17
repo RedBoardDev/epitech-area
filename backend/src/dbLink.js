@@ -7,7 +7,7 @@ class DbManager {
     constructor() {
         this.con = mysql.createConnection({
             host: process.env.MYSQL_HOST,
-            user: process.env.MYSQL_USER,
+            user: process.env.MYSQL_USER_OTHER,
             password: process.env.MYSQL_PASSWORD,
             database: process.env.MYSQL_DATABASE,
         });

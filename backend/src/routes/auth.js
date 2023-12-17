@@ -65,7 +65,7 @@ router.post("/login", (req, res) => {
         }
 
         if (bcrypt.compareSync(req.body.password, rows[0].password)) {
-            let token = jwt.sign({ id: `${rows[0].id}` }, process.env.SECRET, { expiresIn: '40w' });
+            let token = jwt.sign({ id: `${rows[0].id}` }, process.env.API_SECRET, { expiresIn: '40w' });
             res.status(201).json({ token: token, id: rows[0].id });
         } else {
             res.status(400).json({ msg: "Invalid Credentials" });
@@ -129,7 +129,7 @@ router.post("/register", (req, res) => {
         }
 
         db.insertUser(req.body.email, passwordHash, req.body.lastname, req.body.firstname).then((rows) => {
-            let token = jwt.sign({ id: `${rows.insertId}` }, process.env.SECRET, { expiresIn: '40w' });
+            let token = jwt.sign({ id: `${rows.insertId}` }, process.env.API_SECRET, { expiresIn: '40w' });
             res.status(201).json({ token: token, id: rows.insertId });
         }).catch((err) => {
             res.status(500).json({ msg: "Internal server error", error: err });
