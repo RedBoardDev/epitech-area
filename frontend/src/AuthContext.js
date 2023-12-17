@@ -92,9 +92,35 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const registerGithub = async (code) => {
+        try {
+            const response = await callApi('POST', `/auth/register/github/${code}`);
+            saveData(response.token, response.id);
+            setIsAuthenticated(true);
+            return response;
+        } catch (error) {
+            console.error('Login error:', error);
+            setIsAuthenticated(false);
+            throw error;
+        }
+    };
+
     const login = async (email, password) => {
         try {
             const response = await callApi('POST', '/auth/login', { email, password });
+            saveData(response.token, response.id);
+            setIsAuthenticated(true);
+            return response;
+        } catch (error) {
+            console.error('Login error:', error);
+            setIsAuthenticated(false);
+            throw error;
+        }
+    };
+
+    const loginGithub = async (code) => {
+        try {
+            const response = await callApi('POST', `/auth/login/github/${code}`);
             saveData(response.token, response.id);
             setIsAuthenticated(true);
             return response;
@@ -172,8 +198,47 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
+    const addAutomation = async (trigger_service_id, trigger_id, trigger_params, reaction_service_id, reaction_id, reaction_params) => {
+        try {
+            const response = await callApiWithToken('POST', `/automations`, { trigger_service_id, trigger_id, trigger_params, reaction_service_id, reaction_id, reaction_params });
+            setIsAuthenticated(true);
+            return response;
+        } catch (error) {
+            setIsAuthenticated(false);
+            throw error;
+        }
+    }
+
+    const serviceOauth = async (service_id) => {
+        try {
+            const response = await callApiWithToken('GET', `/service/oauth/${service_id}/connect`);
+            setIsAuthenticated(true);
+            window.open(response.url, '_blank');
+            return response;
+        } catch (error) {
+            console.error('Service error:', error);
+            setIsAuthenticated(false);
+            throw error;
+        }
+    };
+
     return (
-        <AuthContext.Provider value={{ isAuthenticated, register, login, logout, verifyToken, getAutomations, getAllServices, deleteAutomation, getUserById, updateUserById }}>
+        <AuthContext.Provider value={{
+            isAuthenticated,
+            register,
+            login,
+            logout,
+            verifyToken,
+            getAutomations,
+            getAllServices,
+            deleteAutomation,
+            getUserById,
+            updateUserById,
+            addAutomation,
+            serviceOauth,
+            loginGithub,
+            registerGithub
+        }}>
             {children}
         </AuthContext.Provider>
     );

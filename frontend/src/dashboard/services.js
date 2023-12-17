@@ -1,10 +1,24 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import SideBar from './components/SideBar';
 import TopBar from './components/TopBar';
 import Grid from '@mui/material/Grid';
-import ServicesList from './components/ServicesList';
+import ServicesList from './components/AutomationsList';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../AuthContext';
 
 export default function ServicesDash() {
+    const navigate = useNavigate();
+    const { verifyToken } = useAuth();
+
+    useEffect(() => {
+        const checkToken = async () => {
+            if (!await verifyToken()) {
+                navigate('/login');
+            }
+        };
+        checkToken();
+    }, [verifyToken, navigate]);
+
     return (
         <Grid container style={{overflow: 'hidden'}}>
             <Grid item xs={2}>

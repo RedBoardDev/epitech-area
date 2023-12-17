@@ -7,9 +7,10 @@ import Typography from '@mui/material/Typography';
 import { ArrowDownwardTwoTone } from '@mui/icons-material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
+import HomeIcon from '@mui/icons-material/Home';
 import SettingsUserModal from './SettingsModal';
 import { useAuth } from '../../AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 
 export default function TopBar() {
@@ -36,16 +37,12 @@ export default function TopBar() {
 
     useEffect(() => {
       const getUser = async () => {
-          if (!(await verifyToken())) {
-              navigate('/login');
-          } else {
-              try {
-                  const result = await getUserById();
-                  setUser(result);
-              } catch (error) {
-                  console.error('Error fetching automations:', error);
-              }
-          }
+        try {
+            const result = await getUserById();
+            setUser(result);
+        } catch (error) {
+            console.error('Error fetching automations:', error);
+        }
       };
       getUser();
   }, [verifyToken, navigate, getUserById]);
@@ -65,6 +62,9 @@ export default function TopBar() {
             </Typography>
             <IconButton color="inherit" sx={{ marginLeft: '10px' }}>
               <Avatar alt="User Avatar" src="https://image.shutterstock.com/image-vector/dotted-spiral-vortex-royaltyfree-images-600w-2227567913.jpg" />
+            </IconButton>
+            <IconButton color="inherit" sx={{ marginLeft: '10px' }} component={Link} to="/">
+                <HomeIcon />
             </IconButton>
             <IconButton color="inherit" sx={{ marginLeft: '10px' }} onClick={() => setOpenSettingsModal(true)}>
                 <SettingsIcon />

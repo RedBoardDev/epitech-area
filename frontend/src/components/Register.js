@@ -7,6 +7,30 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import HeaderComponent from './Header';
 import backgroundImage from '../img/BgTop.png';
+import GitHubIcon from '@mui/icons-material/GitHub';
+
+export const RegisterGithubCallback = () => {
+    const navigate = useNavigate();
+    const { registerGithub } = useAuth();
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+
+    useEffect(() => {
+        const handleGithubCallback = async () => {
+            try {
+                const resp = await registerGithub(code);
+                console.log(resp);
+                navigate('/');
+            } catch (error) {
+                console.error('Github callback failed:', error);
+                navigate('/register');
+            }
+        };
+        handleGithubCallback();
+    }, [code]);
+
+    return null;
+};
 
 const Register = () => {
     const [username, setUsername] = useState('test@thomasott.com');
@@ -15,6 +39,7 @@ const Register = () => {
     const [firstname, setFirstname] = useState('Lucas');
     const { register, logout, verifyToken } = useAuth();
     const navigate = useNavigate();
+
     useEffect(() => {
         const checkToken = async () => {
             if (await verifyToken()) {
@@ -23,16 +48,29 @@ const Register = () => {
         };
         checkToken();
     }, [verifyToken, navigate]);
+
     const handleRegister = async () => {
         try {
             await register(username, password, lastname, firstname);
             navigate('/');
-            console.log('registered!')
         } catch (error) {
             logout();
             console.error('Register failed:', error);
         }
     };
+
+    const handleRegisterGithub = async () => {
+        const url = 'https://github.com/login/oauth/authorize';
+        const params = {
+            client_id: 'c3d64fec01309362ebc6',
+            redirect_uri: 'https://127.0.0.1:3000/register/github/callback',
+            scope: 'user repo',
+        };
+        const query = Object.keys(params).map((key) => `${key}=${encodeURIComponent(params[key])}`).join('&');
+
+        window.location.href = `${url}?${query}`;
+    }
+
     return (
         <div style={{
             backgroundImage: 'linear-gradient(to right, #f3f3f3, #dcdcdc)',
@@ -112,14 +150,23 @@ const Register = () => {
                     >
                         S'inscire
                     </Button>
-                                                      
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        size="large"
+                        startIcon={<GitHubIcon />}
+                        onClick={handleRegisterGithub}
+                        sx={{ width: '200px', marginTop: '1rem' }}
+                    >
+                        S'inscrire avec GitHub
+                    </Button>
                     <Typography
                         component={Link}
                         to="/login"
                         color="primary"
                         size="large"
                         align='center'
-                        sx={{ width: '200px'}}
+                        sx={{ width: '200px', marginTop: '1rem' }}
                     >
                         Login
                     </Typography>

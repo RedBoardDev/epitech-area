@@ -2,6 +2,7 @@ import express from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { db, encryptString } from "../global.js";
+import { getGithubToken, getGithubEmail, getGithubInfos } from "./authGithubUtils.js";
 
 function checkEmail(email) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
@@ -65,7 +66,7 @@ router.post("/login", (req, res) => {
         }
 
         if (bcrypt.compareSync(req.body.password, rows[0].password)) {
-            let token = jwt.sign({ id: `${rows[0].id}` }, process.env.API_SECRET, { expiresIn: '40w' });
+            const token = jwt.sign({ id: `${rows[0].id}` }, process.env.API_SECRET, { expiresIn: '40w' });
             res.status(201).json({ token: token, id: rows[0].id });
         } else {
             res.status(400).json({ msg: "Invalid Credentials" });
@@ -74,6 +75,39 @@ router.post("/login", (req, res) => {
         res.status(500).json({ msg: "Internal server error", error: err });
         console.error(err);
     });
+});
+
+router.post("/login/github/:code", async (req, res) => {
+    if (!req.params.code) {
+        res.status(400).json({ msg: "Bad parameter" });
+        return;
+    }
+    const code = req.params.code;
+
+    try {
+        const token = await getGithubToken(code);
+        const email = await getGithubEmail(token);
+
+        db.getUserByEmail(email, true).then((rows) => {
+            if (rows[0] === undefined) {
+                res.status(400).json({ msg: "Invalid Credentials" });
+                return;
+            }
+            if (rows[0].auth_type !== 'github') {
+                res.status(400).json({ msg: "Invalid Credentials" });
+                return;
+            }
+
+            const token = jwt.sign({ id: `${rows[0].id}` }, process.env.SECRET, { expiresIn: '40w' });
+            res.status(201).json({ token: token, id: rows[0].id });
+        }).catch((err) => {
+            res.status(500).json({ msg: "Internal server error", error: err });
+            console.error(err);
+        });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ msg: "Internal server error", error: error });
+    }
 });
 
 /**
@@ -115,7 +149,7 @@ router.post("/login", (req, res) => {
  *                   type: string
  */
 router.post("/register", (req, res) => {
-    if (!req.body.email || !req.body.password || !checkEmail(req.body.email) || !checkPassword(req.body.password)) {
+    if (!req.body.email || !req.body.password || !req.body.lastname || !req.body.firstname || !checkEmail(req.body.email) || !checkPassword(req.body.password)) {
         res.status(400).json({ msg: "Bad parameter" });
         return;
     }
@@ -128,8 +162,8 @@ router.post("/register", (req, res) => {
             return;
         }
 
-        db.insertUser(req.body.email, passwordHash, req.body.lastname, req.body.firstname).then((rows) => {
-            let token = jwt.sign({ id: `${rows.insertId}` }, process.env.API_SECRET, { expiresIn: '40w' });
+        db.insertUser(req.body.email, passwordHash, req.body.lastname, req.body.firstname, 'password').then((rows) => {
+            const token = jwt.sign({ id: `${rows.insertId}` }, process.env.API_SECRET, { expiresIn: '40w' });
             res.status(201).json({ token: token, id: rows.insertId });
         }).catch((err) => {
             res.status(500).json({ msg: "Internal server error", error: err });
@@ -139,6 +173,41 @@ router.post("/register", (req, res) => {
         res.status(500).json({ msg: "Internal server error", error: err });
         console.error(err);
     });
+});
+
+router.post("/register/github/:code", async (req, res) => {
+    if (!req.params.code) {
+        res.status(400).json({ msg: "Bad parameter" });
+        return;
+    }
+    const code = req.params.code;
+
+    try {
+        const token = await getGithubToken(code);
+        const email = await getGithubEmail(token);
+        const infos = await getGithubInfos(token);
+
+        db.getUserByEmail(email).then((rows) => {
+            if (rows[0] !== undefined) {
+                res.status(400).json({ msg: "Email already exists" });
+                return;
+            }
+
+            db.insertUser(email, null, infos.username, infos.username, 'github').then((rows) => {
+                const jwtToken = jwt.sign({ id: `${rows.insertId}` }, process.env.SECRET, { expiresIn: '40w' });
+                res.status(201).json({ token: jwtToken, id: rows.insertId });
+            }).catch((err) => {
+                res.status(500).json({ msg: "Internal server error", error: err });
+                console.error(err);
+            });
+        }).catch((err) => {
+            res.status(500).json({ msg: "Internal server error", error: err });
+            console.error(err);
+        });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ msg: "Internal server error", error: error });
+    }
 });
 
 export default router;

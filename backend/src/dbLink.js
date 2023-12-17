@@ -40,7 +40,7 @@ class DbManager {
     }
 
     getAllUsers(withPassword = false) {
-        const query = `SELECT ${withPassword ? '*' : 'id, email, profile_img, created_at'} FROM user;`;
+        const query = `SELECT ${withPassword ? '*' : 'id, email, lastname, firstname, profile_img, created_at'} FROM user;`;
         const values = [];
         return this.executeQuery(query, values);
     }
@@ -63,9 +63,9 @@ class DbManager {
         return this.executeQuery(query, values);
     }
 
-    insertUser(email, passwordHash, lastname, firstname) {
-        const query = 'INSERT INTO user(email, password, lastname, firstname) VALUES (?, ?, ?, ?)';
-        const values = [email, passwordHash, lastname, firstname];
+    insertUser(email, passwordHash, lastname, firstname, authType) {
+        const query = 'INSERT INTO user(email, password, lastname, firstname, auth_type) VALUES (?, ?, ?, ?, ?)';
+        const values = [email, passwordHash ?? null, lastname, firstname, authType];
         return this.executeQuery(query, values);
     }
 

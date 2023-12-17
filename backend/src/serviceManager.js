@@ -14,7 +14,7 @@ class ServiceManager {
         this.services = [];
         this.importServices();
 
-        // this.intervalId = setInterval(() => this.checkTriggers(), 10000);
+        this.intervalId = setInterval(() => this.checkTriggers(), 10000);
     }
 
     async importServices() {
@@ -30,7 +30,7 @@ class ServiceManager {
 
     registerService(service) {
         this.services.push(service);
-        this.app.use(`/service/${service.id}`, service.router);
+        this.app.use(`/service/oauth/${service.id}`, service.router);
     }
 
     getServices() {
@@ -56,7 +56,7 @@ class ServiceManager {
                 const automations = await db.getAutomations(user.id);
                 automations.forEach(async (automation) => {
                     const triggerServiceToken = (await db.getServiceOauth(user.id, automation.trigger_service_id))[0].token;
-                    const triggerServiceData = await this.getTrigger(automation.trigger_service_id, automation.trigger_id).check(user, JSON.parse(automation.trigger_params), triggerServiceToken);
+                    const triggerServiceData = await this.getTrigger(automation.trigger_service_id, automation.trigger_id).check(automation.id, user, JSON.parse(automation.trigger_params), JSON.parse(automation.trigger_check_data), triggerServiceToken);
                     if (triggerServiceData) {
                         const reactionServiceToken = (await db.getServiceOauth(user.id, automation.reaction_service_id))[0].token;
                         await this.getReaction(automation.reaction_service_id, automation.reaction_id).execute(user, JSON.parse(automation.reaction_params), reactionServiceToken, triggerServiceData);
@@ -66,7 +66,6 @@ class ServiceManager {
         } catch (error) {
             console.error(error);
         }
-        console.log('-------------------------------------------------------------------------');
     }
 }
 
