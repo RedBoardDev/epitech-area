@@ -98,7 +98,7 @@ router.post("/login/github/:code", async (req, res) => {
                 return;
             }
 
-            const token = jwt.sign({ id: `${rows[0].id}` }, process.env.SECRET, { expiresIn: '40w' });
+            const token = jwt.sign({ id: `${rows[0].id}` }, process.env.API_SECRET, { expiresIn: '40w' });
             res.status(201).json({ token: token, id: rows[0].id });
         }).catch((err) => {
             res.status(500).json({ msg: "Internal server error", error: err });
@@ -194,7 +194,7 @@ router.post("/register/github/:code", async (req, res) => {
             }
 
             db.insertUser(email, null, infos.username, infos.username, 'github').then((rows) => {
-                const jwtToken = jwt.sign({ id: `${rows.insertId}` }, process.env.SECRET, { expiresIn: '40w' });
+                const jwtToken = jwt.sign({ id: `${rows.insertId}` }, process.env.API_SECRET, { expiresIn: '40w' });
                 res.status(201).json({ token: jwtToken, id: rows.insertId });
             }).catch((err) => {
                 res.status(500).json({ msg: "Internal server error", error: err });
