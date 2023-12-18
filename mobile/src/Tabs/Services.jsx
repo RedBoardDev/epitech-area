@@ -9,6 +9,7 @@ import {
   Alert,
   SafeAreaView,
   ImageBackground,
+  Linking,
 } from "react-native";
 
 import {
@@ -19,7 +20,7 @@ import { ScrollView } from "react-native-gesture-handler";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { getImgByServiceId, getServices, getServiceToken, updateServiceToken } from '../Core/ServerCalls'
+import { getImgByServiceId, getServices, getConnected, updateServiceToken, serviceOauth, deleteServiceConnexion } from '../Core/ServerCalls'
 
 import LinearGradient from 'react-native-linear-gradient';
 import SettingsContext from "../Contexts/Settings";
@@ -30,7 +31,7 @@ export default function Services() {
   const { colors } = useTheme();
   const [imageUrls, setImageUrls] = useState({});
   const [services, setServices] = useState({ k: {} });
-  const [tokens, setTokens] = useState({ k: "" });
+  const [connected, setConnected] = useState({ k: "" });
   const { settings } = useContext(SettingsContext);
 
   const fetchServices = async () => {
@@ -43,19 +44,28 @@ export default function Services() {
 
   }, []);
 
-  const fetchTokens = async () => {
+  const connectToService = async (service_id) => {
+    try {
+      const response = await serviceOauth(settings.apiLocation, service_id);
+      await Linking.openURL(response.url);
+    } catch (error) {
+      console.error('Service error:', error);
+    }
+  };
+
+  const fetchConnected = async () => {
     if (Array.isArray(services)) {
-      let newTokens = {};
+      let newCon = {};
       for (let service of services) {
         try {
-          const token = await getServiceToken(settings.apiLocation, service.id);
-          newTokens[service.id] = token;
+          const con = await getConnected(settings.apiLocation, service.id);
+          newCon[service.id] = con;
         } catch (error) {
-          console.error('Error fetching service:', error);
-          newTokens[auto.trigger_service_id] = null;
+          console.log('Error fetching service:', error);
+          newCon[service.id] = false;
         }
       }
-      setTokens(newTokens);
+      setConnected(newCon);
     }
   };
 
@@ -77,7 +87,7 @@ export default function Services() {
       }
     };
 
-    fetchTokens();
+    fetchConnected();
     fetchImages();
   }, [services]);
 
@@ -100,7 +110,7 @@ export default function Services() {
   }
 
   const getSConnected = (serviceId) => {
-    if (tokens && tokens[serviceId] && tokens[serviceId].length > 1) {
+    if (connected && connected[serviceId]) {
       return true;
     } else {
       return false;
@@ -118,15 +128,14 @@ export default function Services() {
         text: 'Cancel',
         style: 'cancel',
       },
-      {text: 'Yes', onPress: () => rmService(id)},
+      {text: 'Yes', onPress: () => deleteServiceConnexion(id)},
     ]);
     fetchServices();
   };
 
   const addService = async (id) => {
-    updateServiceToken(settings.apiLocation, id, "ttttttttttt");
+    await connectToService(id);
     fetchServices();
-
   };
 
   return (
