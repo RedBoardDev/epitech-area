@@ -128,7 +128,7 @@ export default function Services() {
         text: 'Cancel',
         style: 'cancel',
       },
-      {text: 'Yes', onPress: () => deleteServiceConnexion(id)},
+      {text: 'Yes', onPress: () => deleteServiceConnexion(settings.apiLocation, id)},
     ]);
     fetchServices();
   };
