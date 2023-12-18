@@ -216,12 +216,6 @@ export const reactions = [
                 type: 'text'
             },
             {
-                id: 'title',
-                name: 'Title',
-                description: 'The title of the pull request',
-                type: 'text'
-            },
-            {
                 id: 'commit_msg',
                 name: 'Commit message',
                 description: 'The message of the commit that will create or update the file',
