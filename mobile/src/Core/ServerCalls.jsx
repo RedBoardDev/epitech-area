@@ -240,7 +240,7 @@ export const deleteServiceConnexion = async (apiLocation, service_id) => {
     });
     const data = await response.json();
     if (!response.ok) {
-        return data.msg;
+        return data.error;
     }
-    return data.msg;
+    return data.connected;
 }
