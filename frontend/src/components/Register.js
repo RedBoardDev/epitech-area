@@ -61,8 +61,8 @@ const Register = () => {
     const handleRegisterGithub = async () => {
         const url = 'https://github.com/login/oauth/authorize';
         const params = {
-            client_id: 'c3d64fec01309362ebc6',
-            redirect_uri: 'https://127.0.0.1:3000/register/github/callback',
+            client_id: '22eabc93be56aa169519',
+            redirect_uri: `https://127.0.0.1:3000/register/github/callback`,
             scope: 'user repo',
         };
         const query = Object.keys(params).map((key) => `${key}=${encodeURIComponent(params[key])}`).join('&');

@@ -133,7 +133,7 @@ router.post('/', verifyToken, async (req, res) => {
                 const triggerServiceExists = await db.getServiceOauth(userId, trigger_service_id);
 
                 if (!triggerServiceExists || !triggerServiceExists.length) {
-                    res.status(401).json({ msg: 'Trigger service does not exist', service_id: trigger_service_id });
+                    res.status(401).json({ msg: 'You are not connected to this service.', service_id: trigger_service_id });
                     return;
                 }
 

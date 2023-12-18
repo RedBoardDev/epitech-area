@@ -50,7 +50,7 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(specs, options_SwaggerUI));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.json());
-app.use(cors());
+app.use(cors({ origin: "*" }));
 app.use(express.static('public'));
 export const serviceManager = new ServiceManager(app);
 

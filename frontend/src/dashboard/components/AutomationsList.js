@@ -108,7 +108,7 @@ export default function ServicesDash() {
                             <TableCell {...TableCellChildrends}>{row.id}</TableCell>
                             <TableCell {...TableCellChildrends}>
                                 <img
-                                  src={"http://127.0.0.1:3632" + row.imageSrc}
+                                  src={process.env.REACT_APP_API_URL + row.imageSrc}
                                   alt="GitHub Logo"
                                   height="32"
                                   width="32"
