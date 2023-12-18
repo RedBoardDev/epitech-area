@@ -64,6 +64,7 @@ export function NewAutomation_Reactions2({ route }) {
   const [reactionParams, setReactionParams] = useState({});
 
   const navigateToSubmit = (reactionId) => {
+    setModalVisible(false);
     navigation.navigate('Submit', { serviceData, triggerServiceId, triggerId, triggerParams, reactionServiceId, reactionId, reactionParams });
   }
 

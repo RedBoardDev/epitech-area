@@ -8,6 +8,7 @@ import {
   Image,
   Alert,
   SafeAreaView,
+  Linking,
 } from "react-native";
 
 import {
@@ -19,7 +20,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { ScrollView } from "react-native-gesture-handler";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getServices, addNewAutomation } from '../Core/ServerCalls';
+import { getServices, addNewAutomation, serviceOauth } from '../Core/ServerCalls';
 import { NewAutomation_Triggers1, NewAutomation_Triggers2 } from "./NewAutomation_Triggers";
 import { NewAutomation_Reactions1, NewAutomation_Reactions2 } from "./NewAutomation_Reactions";
 import Button from "../Components/Button";
@@ -50,12 +51,22 @@ function NewAutomation_Submit({ route }) {
     console.log('reactionServiceId', reactionServiceId);
     console.log('reactionId', reactionId);
     console.log('reactionParams', reactionParams);
-    addNewAutomation(settings.apiLocation, triggerServiceId, triggerId, triggerParams, reactionServiceId, reactionId, reactionParams).then(() => {
+
+    const connect = async (service_id) => {
+      try {
+        const response = await serviceOauth(settings.apiLocation, service_id);
+        await Linking.openURL(response.url);
+      } catch (error) {
+        console.error('Service error:', error);
+      }
+    };
+
+    const resp = await addNewAutomation(settings.apiLocation, triggerServiceId, triggerId, triggerParams, reactionServiceId, reactionId, reactionParams);
+    if (resp.status === 401) {
+      await connect(resp.service_id);
+    } else {
       navigation.navigate('AutomationsTab');
-    }).catch((error) => {
-      console.error(error);
-      Alert.alert('Error', 'Failed to add new automation');
-    });
+    }
   }
 
   return (
