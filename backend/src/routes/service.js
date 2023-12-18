@@ -260,4 +260,154 @@ router.get('/oauth/:id/callback', async (req, res) => {
     });
 });
 
+/**
+ * @swagger
+ * /service/oauth/{id}:
+ *   delete:
+ *     summary: Delete service OAuth
+ *     description: Deletes the OAuth credentials for a specific service.
+ *     tags:
+ *       - service
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The ID of the service.
+ *         schema:
+ *           type: string
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       '200':
+ *         description: Successful deletion
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: Success message
+ *       '400':
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   description: Error message
+ *       '404':
+ *         description: Service not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: Error message
+ *       '401':
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: Error message
+ */
+router.delete('/oauth/:id', verifyToken, async (req, res) => {
+    const userId = getIdFromToken(req, res); if (userId === -1) return;
+    const service = serviceManager.getService(req.params.id);
+    if (!service) {
+        res.status(404).json({ msg: 'Service not found' });
+        return;
+    }
+    db.deleteServiceOauth(userId, service.id).then((result) => {
+        res.status(200).json({ msg: "Service deleted" });
+    }).catch((err) => {
+        res.status(400).json(msg.error);
+    });
+});
+
+/**
+ * @swagger
+ * /service/oauth/{id}/connected:
+ *   get:
+ *     summary: Check if service is connected
+ *     description: Checks if a specific service is connected for the user.
+ *     tags:
+ *       - service
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The ID of the service.
+ *         schema:
+ *           type: string
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       '200':
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 connected:
+ *                   type: boolean
+ *                   description: Indicates if the service is connected or not.
+ *       '400':
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   description: Error message
+ *       '404':
+ *         description: Service not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: Error message
+ *       '401':
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: Error message
+ */
+router.get('/oauth/:id/connected', verifyToken, async (req, res) => {
+    const userId = getIdFromToken(req, res); if (userId === -1) return;
+    const service = serviceManager.getService(req.params.id);
+    if (!service) {
+        res.status(404).json({ msg: 'Service not found' });
+        return;
+    }
+    db.getServiceOauth(userId, service.id).then((rows) => {
+        if (rows[0]) {
+            res.status(200).json({ connected: true });
+        } else {
+            res.status(200).json({ connected: false });
+        }
+    }).catch((err) => {
+        res.status(400).json(msg.error);
+    });
+});
+
 export default router;
