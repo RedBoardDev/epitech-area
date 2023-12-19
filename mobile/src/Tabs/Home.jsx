@@ -48,7 +48,7 @@ export default function Home() {
   }, []);
 
   return (
-    <ImageBackground blurRadius={5} source={require("../../assets/back.png")} resizeMode="cover" style={{ flex: 1 }}>
+    <ImageBackground blurRadius={15} source={require("../../assets/back.png")} resizeMode="cover" style={{ flex: 1 }}>
     <SafeAreaView style={styles.container}>
       <Logo/>
       <Text style={{ color: "#fff", textAlign: "center", fontSize: 32, fontWeight: "bold" }}>HarmonieWeb</Text>

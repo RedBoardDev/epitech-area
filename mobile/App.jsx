@@ -29,7 +29,7 @@ import { WorkingToken } from './src/Core/ServerCalls';
 
 function App() {
   const [settings, setSettings] = React.useState({
-    apiLocation: "http://localhost:3000"
+    apiLocation: "https://area.thomasott.fr/api"
   });
   const Stack = createStackNavigator();
 
