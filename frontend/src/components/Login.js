@@ -61,8 +61,8 @@ const Login = () => {
     const handleLoginGithub = async () => {
         const url = 'https://github.com/login/oauth/authorize';
         const params = {
-            client_id: '22eabc93be56aa169519',
-            redirect_uri: `https://127.0.0.1:3000/login/github/callback`,
+            client_id: process.env.REACT_APP_GITHUB_CLIENT_ID,
+            redirect_uri: `${process.env.REACT_APP_PUBLIC_URL}/login/github/callback`,
             scope: 'user repo',
         };
         const query = Object.keys(params).map((key) => `${key}=${encodeURIComponent(params[key])}`).join('&');

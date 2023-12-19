@@ -49,8 +49,6 @@ services:
     networks:
       areaNetwork:
         ipv4_address: $WEBAPP_HOST_NAME
-    ports:
-      - "8080:$REACT_APP_PORT"
     restart: on-failure
 
 networks:
