@@ -4,6 +4,9 @@ on:
     branches:
       - main
       - CI/CD
+  push:
+    branches:
+      - CI/CD
 jobs:
   build:
     runs-on: ubuntu-latest
