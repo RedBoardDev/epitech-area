@@ -264,7 +264,7 @@ export const reactions = [
 
             axios.get(`https://api.github.com/repos/${params.repository_name}/contents/${params.filename}`, {
                 headers: {
-                    "Authorization": `Bearer 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`,
+                    "Authorization": `Bearer ${token}`,
                     "Accept": 'application/vnd.github+json',
                     "X-GitHub-Api-Version": "2022-11-28"
                 }
