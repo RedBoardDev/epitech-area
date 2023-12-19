@@ -44,6 +44,34 @@ export default function Services() {
 
   }, []);
 
+  const openLink = async (url) => {
+    try {
+      const isAvailable = await InAppBrowser.isAvailable()
+      if (isAvailable) {
+        InAppBrowser.open(url, {
+          // iOS Properties
+          dismissButtonStyle: 'cancel',
+          preferredBarTintColor: 'gray',
+          preferredControlTintColor: 'white',
+          // Android Properties
+          showTitle: true,
+          toolbarColor: '#6200EE',
+          secondaryToolbarColor: 'black',
+          enableUrlBarHiding: true,
+          enableDefaultShare: true,
+          forceCloseOnRedirection: true,
+        }).then((result) => {
+          Alert.alert(JSON.stringify(result))
+        })
+      } else {
+        console.log("InAppBrowser is not available.")
+        Linking.openURL(url)
+      }
+    } catch (error) {
+      Alert.alert(error.message)
+    }
+  }
+
   const connectToService = async (service_id) => {
     try {
       const response = await serviceOauth(settings.apiLocation, service_id);
