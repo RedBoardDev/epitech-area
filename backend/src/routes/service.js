@@ -329,7 +329,7 @@ router.delete('/oauth/:id', verifyToken, async (req, res) => {
     db.deleteServiceOauth(userId, service.id).then((result) => {
         res.status(200).json({ msg: "Service deleted" });
     }).catch((err) => {
-        res.status(400).json(msg.error);
+        res.status(400).json(err);
     });
 });
 
