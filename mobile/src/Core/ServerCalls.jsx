@@ -163,9 +163,9 @@ export const getService = async (apiLocation, service_id) => {
     return data;
 }
 
-export const getServiceToken = async (apiLocation, service_id) => {
+export const getConnected = async (apiLocation, service_id) => {
     const token = await AsyncStorage.getItem('jwtToken');
-    const response = await fetch(`${apiLocation}/service/oauth/${service_id}/`, {
+    const response = await fetch(`${apiLocation}/service/oauth/${service_id}/connected`, {
         method: "GET",
         headers: {
             "Authorization": `Bearer ${token}`,
@@ -176,7 +176,7 @@ export const getServiceToken = async (apiLocation, service_id) => {
     if (!response.ok) {
         return data.msg;
     }
-    return data.token;
+    return data.connected;
 }
 
 export const addNewAutomation = async (apiLocation, trigger_service_id, trigger_id, trigger_params, reaction_service_id, reaction_id, reaction_params) => {
@@ -224,7 +224,23 @@ export const serviceOauth = async (apiLocation, service_id) => {
     });
     const data = await response.json();
     if (!response.ok) {
-        throw new Error(data.msg);
+        throw new Error(data.error);
     }
     return data;
+}
+
+export const deleteServiceConnexion = async (apiLocation, service_id) => {
+    const token = await AsyncStorage.getItem('jwtToken');
+    const response = await fetch(`${apiLocation}/service/oauth/${service_id}/`, {
+        method: "DELETE",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+        },
+    });
+    const data = await response.json();
+    if (!response.ok) {
+        return data.error;
+    }
+    return data.connected;
 }
