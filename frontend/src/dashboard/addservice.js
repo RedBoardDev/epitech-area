@@ -94,7 +94,7 @@ export default function ServicesDash() {
                         <TopBar />
                     </Grid>
                     <Grid item xs={12} style={{ overflow: 'hidden' }}>
-                        <Grid container style={{ height: '93.6%', top: '6.4%', left: '15%', position: 'absolute', width: '85%', overflow: 'auto', backgroundColor: 'red' }}>
+                        <Grid container style={{ height: '93.6%', top: '6.4%', left: '15%', position: 'absolute', width: '85%', overflow: 'auto', backgroundColor: 'white' }}>
                             <Grid item xs={2} style={{ height: '100%', background: '#333448' }} className="no-overflow">
                             {!selectedReaction &&
                                 services.map((service) => (<AddCategory key={service.id} id={service.id} name={service.name} color={service.color} triggers={service.triggers} reactions={service.reactions} handleClick={openModal} />))
@@ -111,11 +111,9 @@ export default function ServicesDash() {
                                         <PuzzlePiece name={selectedReaction.name} description={selectedReaction.description} />
                                     </Grid>
                                 )}
-                                {selectedTriggers.length > 0 && selectedReaction && (
                                     <Grid item xs={2}>
                                         <Button onClick={handleConfirm}>Confirm</Button>
                                     </Grid>
-                                )}
                             </Grid>
                         </Grid>
                         <ModalSettingsService isOpen={isModalOpen} closeModal={closeModal} data={modalData} onSubmit={submitSettings} />

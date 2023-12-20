@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import axios from 'axios';
 import { db } from "../global.js";
-import { Client, GatewayIntentBits } from 'discord.js';
+import { Client, GatewayIntentBits, ChannelType, PermissionFlagsBits } from 'discord.js';
 export const router = Router();
 export const id = 'discord';
 export const name = 'Discord';
@@ -38,6 +38,76 @@ async function getVariables() {
 }
 
 
+// Discord bot
+
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMembers] });
+let chan_survery_list = [];
+
+client.on('ready', () => {
+    console.log(`Logged in as ${client.user.tag}!`);
+});
+
+setInterval(() => {
+    getVariables().then((data) => {
+        chan_survery_list = [];
+        data.forEach(element => {
+            chan_survery_list.push(element.channel_id);
+        });
+    }).catch((error) => {
+        console.error('Error:', error);
+    });
+}, 5000);
+
+
+
+client.on('messageCreate', async (message) => {
+    if (message.author.bot) return;
+    console.log(message.channelId + ' ' + chan_survery_list.includes(message.channel.id));
+    if (chan_survery_list.includes(message.channel.id)) {
+        await message.react('🇷');
+        await message.react('🅰');
+        await message.react('🇹');
+        await message.react('🇮');
+        await message.react('🇴');
+    }
+});
+
+function sendMessages(channel_id, message) {
+    const channel = client.channels.cache.get(channel_id);
+    channel.send(message);
+}
+
+async function createChannelText(guild_id, channel_name) {
+    if (!channel_name) {
+        console.error('Channel name is required');
+        return;
+    }
+    const guild = await client.guilds.fetch(guild_id);
+    if (!guild) {
+        console.error(`Guild with ID ${guild_id} not found`);
+        return;
+    }
+    await guild.channels.create({
+        name: channel_name,
+        type: ChannelType.GuildText,
+    });
+}
+
+async function createChannelVoice(guild_id, channel_name) {
+    if (!channel_name) {
+        console.error('Channel name is required');
+        return;
+    }
+    const guild = await client.guilds.fetch(guild_id);
+    if (!guild) {
+        console.error(`Guild with ID ${guild_id} not found`);
+        return;
+    }
+    await guild.channels.create({
+        name: channel_name,
+        type: ChannelType.GuildVoice,
+    });
+}
 
 export const triggers = [
     {
@@ -90,8 +160,8 @@ export const reactions = [
     },
     {
         id: 2,
-        name: 'Create a channel',
-        description: 'Create a new channel',
+        name: 'Create a text channel',
+        description: 'Create a new text channel',
         fields: [
             {
                 id: 'guild_id',
@@ -106,41 +176,27 @@ export const reactions = [
                 type: 'text'
             }
         ],
-    }
+    },
+    {
+        id: 3,
+        name: 'Create a voice channel',
+        description: 'Create a new voice channel',
+        fields: [
+            {
+                id: 'guild_id',
+                name: 'Guild ID',
+                description: 'The guild to create the channel in',
+                type: 'text'
+            },
+            {
+                id: 'channel_name',
+                name: 'Channel name',
+                description: 'The name of the channel to create',
+                type: 'text'
+            }
+        ],
+    },
 ];
 
-// Discord bot
-
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
-let chan_survery_list = [];
-
-client.on('ready', () => {
-    console.log(`Logged in as ${client.user.tag}!`);
-});
-
-setInterval(() => {
-    getVariables().then((data) => {
-        chan_survery_list = [];
-        data.forEach(element => {
-            chan_survery_list.push(element.channel_id);
-        });
-    }).catch((error) => {
-        console.error('Error:', error);
-    });
-}, 5000);
-
-
-
-client.on('messageCreate', async (message) => {
-    if (message.author.bot) return;
-    console.log(message.channelId + ' ' + chan_survery_list.includes(message.channel.id));
-    if (chan_survery_list.includes(message.channel.id)) {
-        await message.react('🇷');
-        await message.react('🅰');
-        await message.react('🇹');
-        await message.react('🇮');
-        await message.react('🇴');
-    }
-});
 
 client.login(process.env.discordClientSecret);
