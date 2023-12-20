@@ -20,6 +20,7 @@ jobs:
       run: npm ci
       continue-on-error: false
       working-directory: frontend
-    - name: Build frontend
+    - name: Testing frontend
       run: npm run test
+      continue-on-error: false
       working-directory: frontend
