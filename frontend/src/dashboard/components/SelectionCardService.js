@@ -17,6 +17,7 @@ const StyledBox = styled(Box)({
         backgroundColor: 'rgba(18, 18, 18, 0.5)',
     },
     position: 'relative',
+    userSelect: 'none',
 });
 
 const AddIconWrapper = styled(AddIcon)({
