@@ -148,6 +148,18 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
+    const getAutomationsById = async (automationId) => {
+        try {
+            const response = await callApiWithToken('GET', `/automations/${automationId}`);
+            setIsAuthenticated(true);
+            return response;
+        } catch (error) {
+            console.error('Service error:', error);
+            setIsAuthenticated(false);
+            throw error;
+        }
+    }
+
     const getAllServices = async () => {
         try {
             const response = await callApiWithToken('GET', `/service`);
@@ -209,6 +221,18 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
+    const updateAutomationById = async (id, reaction_params, trigger_params, automation_name) => {
+        try {
+            const response = await callApiWithToken('PUT', `/automations/${id}`, { reaction_params, trigger_params, automation_name });
+            setIsAuthenticated(true);
+            return response;
+        } catch (error) {
+            console.error('Service error:', error);
+            setIsAuthenticated(false);
+            throw error;
+        }
+    }
+
     const serviceOauth = async (service_id) => {
         try {
             const response = await callApiWithToken('GET', `/service/oauth/${service_id}/connect`);
@@ -237,7 +261,9 @@ export const AuthProvider = ({ children }) => {
             addAutomation,
             serviceOauth,
             loginGithub,
-            registerGithub
+            registerGithub,
+            getAutomationsById,
+            updateAutomationById
         }}>
             {children}
         </AuthContext.Provider>

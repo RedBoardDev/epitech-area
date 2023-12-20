@@ -30,7 +30,8 @@ CREATE TABLE `automation` (
   `trigger_check_data` TEXT DEFAULT '{}',
   `reaction_service_id` VARCHAR(100) NOT NULL,
   `reaction_id` INT UNSIGNED NOT NULL,
-  `reaction_params` TEXT DEFAULT '{}'
+  `reaction_params` TEXT DEFAULT '{}',
+  `automation_name` VARCHAR(100) NOT NULL
 );
 
 ALTER TABLE `automation` ADD FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);

@@ -11,9 +11,10 @@ import { PauseCircleOutline } from '@mui/icons-material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useAuth } from '../../AuthContext';
+import EditModalAutomations from './EditModalAutomations';
 
-function createData(id, serviceName, trigger, reaction, type, status, imageSrc) {
-    return { id, serviceName, trigger, reaction, type, status, imageSrc };
+function createData(id, serviceName, trigger, reaction, type, status, imageSrc, name) {
+    return { id, serviceName, trigger, reaction, type, status, imageSrc, name };
 }
 
 const rows = [
@@ -34,7 +35,9 @@ const rows = [
 
 export default function ServicesDash() {
     const [tableData, setTableData] = useState(rows);
-    const { getAllServices, getAutomations, deleteAutomation } = useAuth();
+    const [automation, setAutomation] = useState();
+    const [openEditModal, setOpenEditModal] = useState(false);
+    const { getAllServices, getAutomations, deleteAutomation, getAutomationsById } = useAuth();
 
     useEffect(() => {
         const getAllAutomations = async () => {
@@ -58,8 +61,9 @@ export default function ServicesDash() {
                         reaction,
                         'Automation',
                         'Status',
-                        triggerService.icon
-                    );
+                        triggerService.icon,
+                        automation.automation_name
+                        );
                     automationsMap[automation.id] = automationData;
                 });
                 const newData = Object.values(automationsMap);
@@ -71,6 +75,23 @@ export default function ServicesDash() {
         getAllAutomations();
     }, [getAllServices, getAutomations]);
 
+    const handleOpenEditModal = (row) => {
+        const getAutomation = async () => {
+            try {
+                const result = await getAutomationsById(row);
+                setAutomation(result);
+            } catch (error) {
+                console.error('Error fetching automation by id:', error);
+            }
+        }
+        getAutomation();
+        setOpenEditModal(true);
+    };
+
+    const closeModal = () => {
+        setOpenEditModal(false);
+    };
+
     const handleDeleteAutomation = async (id) => {
         try {
             await deleteAutomation(id);
@@ -78,6 +99,20 @@ export default function ServicesDash() {
             setTableData(updatedTableData);
         } catch (error) {
             console.error('delete automation failed:', error);
+        }
+    };
+
+    const updateAutomation = (updatedAutomationData) => {
+        if (updatedAutomationData && updatedAutomationData.id) {
+            setTableData((prevTableData) =>
+                prevTableData.map((row) =>
+                    row.id === updatedAutomationData.id
+                    ? { ...row, name: updatedAutomationData.automation_name }
+                    : row
+                )
+            );
+        } else {
+            console.error('Invalid data format for updating automation.');
         }
     };
 
@@ -96,6 +131,7 @@ export default function ServicesDash() {
                     <TableRow>
                         <TableCell>ID</TableCell>
                         <TableCell>Services name</TableCell>
+                        <TableCell>Automations name</TableCell>
                         <TableCell>Triggers</TableCell>
                         <TableCell>Reactions</TableCell>
                         <TableCell>Status</TableCell>
@@ -116,6 +152,7 @@ export default function ServicesDash() {
                                 />
                                 {row.serviceName}
                             </TableCell>
+                            <TableCell {...TableCellChildrends}>{row.name}</TableCell>
                             <TableCell {...TableCellChildrends}>{row.trigger}</TableCell>
                             <TableCell {...TableCellChildrends}>{row.reaction}</TableCell>
                             <TableCell {...TableCellChildrends}>{row.status}</TableCell>
@@ -123,7 +160,7 @@ export default function ServicesDash() {
                                 <IconButton style={{ color: TableCell.defaultProps.style.color }} aria-label="play">
                                     <PlayCircleOutlineIcon />
                                 </IconButton>
-                                <IconButton style={{ color: TableCell.defaultProps.style.color }} aria-label="edit">
+                                <IconButton onClick={() => handleOpenEditModal(row.id)} style={{ color: TableCell.defaultProps.style.color }} aria-label="edit">
                                     <EditIcon />
                                 </IconButton>
                                 <IconButton onClick={() => handleDeleteAutomation(row.id)} style={{ color: TableCell.defaultProps.style.color }} aria-label="delete">
@@ -132,6 +169,7 @@ export default function ServicesDash() {
                             </TableCell>
                         </TableRow>
                     ))}
+                    <EditModalAutomations isOpen={openEditModal} closeModal={closeModal} selectedAutomation={automation} onUpdateAutomation={updateAutomation} />
                 </TableBody>
             </Table>
             <div style={{ height: '100px' }}></div>

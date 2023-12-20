@@ -87,6 +87,12 @@ class DbManager {
         return this.executeQuery(query, values);
     }
 
+    getAutomationsById(automationId) {
+        const query = `SELECT * FROM automation WHERE id = ?;`;
+        const values = [automationId];
+        return this.executeQuery(query, values);
+    }
+
     insertAutomation(userId, triggerServiceId, triggerId, triggerParams, reactionServiceId, reactionId, reactionParams) {
         const query = `INSERT INTO automation(user_id, trigger_service_id, trigger_id, trigger_params, reaction_service_id, reaction_id, reaction_params) VALUES (?, ?, ?, ?, ?, ?, ?);`;
         const values = [userId, triggerServiceId, triggerId, triggerParams, reactionServiceId, reactionId, reactionParams];
@@ -96,6 +102,12 @@ class DbManager {
     updateAutomation(userId, automationId, updateQueryString) {
         const query = `UPDATE automation SET ${updateQueryString} WHERE user_id = ? AND id = ?;`;
         const values = [userId, automationId];
+        return this.executeQuery(query, values);
+    }
+
+    updateAutomationById(id, reaction_params, trigger_params, automation_name) {
+        const query = `UPDATE automation SET reaction_params = ?, trigger_params = ?, automation_name = ? WHERE id = ?;`;
+        const values = [reaction_params, trigger_params, automation_name, id];
         return this.executeQuery(query, values);
     }
 
