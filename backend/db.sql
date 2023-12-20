@@ -33,6 +33,11 @@ CREATE TABLE `automation` (
   `reaction_params` TEXT DEFAULT '{}'
 );
 
+CREATE TABLE 'discord_channels_survey_ids' (
+  `channel_id` VARCHAR(100) NOT NULL,
+  PRIMARY KEY (`channel_id`)
+);
+
 ALTER TABLE `automation` ADD FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
 ALTER TABLE `automation` ADD FOREIGN KEY (`user_id`, `trigger_service_id`) REFERENCES `service_oauth` (`user_id`, `service_id`);
 ALTER TABLE `automation` ADD FOREIGN KEY (`user_id`, `reaction_service_id`) REFERENCES `service_oauth` (`user_id`, `service_id`);

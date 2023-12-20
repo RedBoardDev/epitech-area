@@ -1,15 +1,41 @@
 import { Router } from 'express';
 import axios from 'axios';
 import { db } from "../global.js";
-
+import { Client, GatewayIntentBits } from 'discord.js';
 export const router = Router();
-
 export const id = 'discord';
 export const name = 'Discord';
 export const description = 'Discord service';
 export const color = '#7289da';
 export const icon = '/discord.png';
 
+async function createVariable(channel_id) {
+    const query = `INSERT INTO discord_channels_survey_ids (channel_id) VALUES ('${channel_id}')`;
+    try {
+        await db.executeQuery(query);
+    } catch (error) {
+        console.error(`Error creating variable: ${error}`);
+    }
+}
+
+async function deleteVariable(channel_id) {
+    const query = `DELETE FROM discord_channels_survey_ids WHERE channel_id = '${channel_id}'`;
+    try {
+        await db.executeQuery(query);
+    } catch (error) {
+        console.error(`Error deleting variable: ${error}`);
+    }
+}
+
+async function getVariables() {
+    const query = `SELECT * FROM discord_channels_survey_ids`;
+    try {
+        const result = await db.executeQuery(query);
+        return result;
+    } catch (error) {
+        console.error(`Error getting variables: ${error}`);
+    }
+}
 
 export const triggers = [
     {
@@ -24,6 +50,9 @@ export const triggers = [
                 type: 'text'
             }
         ],
+        callback: async (data) => {
+            await createVariable(data.channel_id);
+        }
     },
     {
         id: 2,
@@ -80,3 +109,36 @@ export const reactions = [
         ],
     }
 ];
+
+// Discord bot
+
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
+let chan_survery_list = [];
+
+client.on('ready', () => {
+    console.log(`Logged in as ${client.user.tag}!`);
+});
+
+getVariables().then((data) => {
+    data.forEach(element => {
+        chan_survery_list.push(element.channel_id);
+    });
+    console.log(chan_survery_list);
+}).catch((error) => {
+    console.error('Error:', error);
+});
+
+
+client.on('messageCreate', async (message) => {
+    if (message.author.bot) return;
+    console.log(message.channelId + ' ' + chan_survery_list.includes(message.channel.id));
+    if (chan_survery_list.includes(message.channel.id)) {
+        await message.react('🇷');
+        await message.react('🅰');
+        await message.react('🇹');
+        await message.react('🇮');
+        await message.react('🇴');
+    }
+});
+
+client.login(process.env.discordClientSecret);
