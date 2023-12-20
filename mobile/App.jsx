@@ -28,7 +28,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { WorkingToken } from './src/Core/ServerCalls';
 
 function Main() {
-  const { settings, setSettings } = useSettings();
+  const { settings, setSettings, t } = useSettings();
   const [initialRouteName, setInitialRouteName] = React.useState(null);
   const Stack = createStackNavigator();
 
@@ -71,7 +71,7 @@ function Main() {
         <Stack.Screen name="RegisterScreen" component={RegisterScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Help" component={Help} options={{ headerShown: false }} />
         <Stack.Screen name="NavBar" component={NavBar} options={{ headerShown: false }} />
-        <Stack.Screen name="NewAutomation" component={NewAutomation} options={{ headerShown: true }} />
+        <Stack.Screen name="NewAutomation" component={NewAutomation} options={{ title: t("New automation"), headerShown: true }} />
       </Stack.Navigator>
       <StatusBar style={getColorTheme() === "dark" ? "light" : "dark"} />
     </NavigationContainer>

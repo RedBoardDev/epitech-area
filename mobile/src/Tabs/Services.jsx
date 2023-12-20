@@ -32,7 +32,7 @@ export default function Services() {
   const [imageUrls, setImageUrls] = useState({});
   const [services, setServices] = useState({ k: {} });
   const [connected, setConnected] = useState({ k: "" });
-  const { settings } = useSettings();
+  const { settings, t } = useSettings();
 
   const fetchServices = async () => {
     const data = await getServices(settings.apiLocation);
@@ -187,10 +187,10 @@ export default function Services() {
                       </View>
                       {getSConnected(service.id) ?
                         <LinearGradient key={service.id} useAngle={true} angle={170} colors={["#fff", "#76EC8B"]} style={styles.header}>
-                          <Text style={{}}>Connected</Text>
+                          <Text style={{}}>{t("Connected")}</Text>
                         </LinearGradient> :
                         <LinearGradient key={service.id} useAngle={true} angle={170} colors={["#fff", "#F16A37"]} style={styles.header}>
-                          <Text style={{}}>Not Connected</Text>
+                          <Text style={{}}>{t("Not connected")}</Text>
                         </LinearGradient>}
                     </View>
                     <View style={styles.minServiceImgView}><Image

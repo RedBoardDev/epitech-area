@@ -53,6 +53,8 @@ app.use(bodyParser.json());
 app.use(express.json());
 app.use(cors({ origin: "*" }));
 app.use(express.static('public'));
+app.use('/fr', express.static('public'));
+app.use('/en', express.static('public'));
 export const langRouter = express.Router();
 app.use('/fr', langRouter);
 app.use('/en', langRouter);

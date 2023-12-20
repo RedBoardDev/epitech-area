@@ -34,7 +34,7 @@ import Icon from '../Components/Icon';
 import { useSettings } from '../Contexts/Settings';
 
 function LoginScreen() {
-  const { settings, setSettings } = useSettings();
+  const { settings, setSettings, t } = useSettings();
   const navigation = useNavigation();
   const { colors } = useTheme();
   const [modalVisible, setModalVisible] = useState(false);
@@ -82,7 +82,7 @@ function LoginScreen() {
       >
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20 }}>
           <TextInput
-            label="API Location"
+            label={t("API Location")}
             returnKeyType="next"
             value={settings.apiLocation}
             onChangeText={(text) => setSettings({ ...settings, apiLocation: text })}
@@ -92,15 +92,15 @@ function LoginScreen() {
             autoCompleteType="name"
             textContentType="name"
           />
-          <Button mode="contained" onPress={() => { setModalVisible(false) }} title="Save">Save</Button>
+          <Button mode="contained" onPress={() => { setModalVisible(false) }}>{t("Save")}</Button>
         </View>
       </Modal>
       {/* <BackButton goBack={navigation.goBack} /> */}
       <Logo />
-      <Text style={styles.header}>Nice to see you again !</Text>
+      <Text style={styles.header}>{t("Nice to see you again!")}</Text>
       {error && <Text style={{ color: 'red' }}>{error}</Text>}
       <TextInput
-        label="Email"
+        label={t("Email")}
         returnKeyType="next"
         value={email.value}
         onChangeText={(text) => setEmail({ value: text, error: '' })}
@@ -112,7 +112,7 @@ function LoginScreen() {
         keyboardType="email-address"
       />
       <TextInput
-        label="Password"
+        label={t("Password")}
         returnKeyType="done"
         value={password.value}
         onChangeText={(text) => setPassword({ value: text, error: '' })}
@@ -127,18 +127,16 @@ function LoginScreen() {
           <Text style={styles.forgot}>Forgot your password ?</Text>
         </TouchableOpacity>
       </View> */}
-      <Button mode="contained" onPress={onLoginPressed} title="Login">
-        Login
-      </Button>
+      <Button mode="contained" onPress={onLoginPressed}>{t("Login")}</Button>
       <View style={styles.row}>
-        <Text>Don't have an account ? </Text>
+        <Text>{t("Don't have an account? ")}</Text>
         <TouchableOpacity onPress={() => navigation.navigate('RegisterScreen')}>
-          <Text style={styles.link}>Sign up</Text>
+          <Text style={styles.link}>{t("Sign up")}</Text>
         </TouchableOpacity>
       </View>
       <TouchableOpacity style={styles.button_log_with} onPress={() => console.log("github login")}>
         <Image source={require("../../assets/github_logo.png")} style={styles.logo} />
-        <Text style={styles.text}>Login with GitHub</Text>
+        <Text style={styles.text}>{t("Login with GitHub")}</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.settings} onPress={() => setModalVisible(true)}>
         <Icon name="settings.png" size={24} color={'black'} />

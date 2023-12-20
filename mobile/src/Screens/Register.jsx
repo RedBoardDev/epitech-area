@@ -35,7 +35,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from '../Components/Icon';
 
 function RegisterScreen() {
-  const { settings, setSettings } = useSettings();
+  const { settings, setSettings, t } = useSettings();
   const navigation = useNavigation();
   const { colors } = useTheme();
   const [modalVisible, setModalVisible] = useState(false);
@@ -82,7 +82,7 @@ function RegisterScreen() {
       >
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20 }}>
           <TextInput
-            label="API Location"
+            label={t("API Location")}
             returnKeyType="next"
             value={settings.apiLocation}
             onChangeText={(text) => setSettings({ ...settings, apiLocation: text })}
@@ -92,15 +92,15 @@ function RegisterScreen() {
             autoCompleteType="name"
             textContentType="name"
           />
-          <Button mode="contained" onPress={() => { setModalVisible(false) }} title="Save">Save</Button>
+          <Button mode="contained" onPress={() => { setModalVisible(false) }}>{t("Save")}</Button>
         </View>
       </Modal>
       {/* <BackButton goBack={navigation.goBack} /> */}
       <Logo />
-      <Text style={styles.header}>Welcome to HarmonieWeb</Text>
+      <Text style={styles.header}>{t("Welcome to HarmonieWeb")}</Text>
       {error && <Text style={{ color: 'red' }}>{error}</Text>}
       <TextInput
-        label="First Name"
+        label={t("First Name")}
         returnKeyType="next"
         value={firstname.value}
         onChangeText={(text) => setFirstname({ value: text, error: '' }) & setError('')}
@@ -111,7 +111,7 @@ function RegisterScreen() {
         textContentType="name"
       />
       <TextInput
-        label="Last Name"
+        label={t("Last Name")}
         returnKeyType="next"
         value={lastname.value}
         onChangeText={(text) => setLastname({ value: text, error: '' }) & setError('')}
@@ -122,7 +122,7 @@ function RegisterScreen() {
         textContentType="name"
       />
       <TextInput
-        label="Email"
+        label={t("Email")}
         returnKeyType="next"
         value={email.value}
         onChangeText={(text) => setEmail({ value: text, error: '' }) & setError('')}
@@ -134,7 +134,7 @@ function RegisterScreen() {
         keyboardType="email-address"
       />
       <TextInput
-        label="Password"
+        label={t("Password")}
         returnKeyType="done"
         value={password.value}
         onChangeText={(text) => setPassword({ value: text, error: '' })}
@@ -142,18 +142,16 @@ function RegisterScreen() {
         errorText={password.error}
         secureTextEntry
       />
-      <Button mode="contained" onPress={onRegisterPressed} title="Register">
-        Register
-      </Button>
+      <Button mode="contained" onPress={onRegisterPressed}>{t("Register")}</Button>
       <View style={styles.row}>
-        <Text>Already have an account ? </Text>
+        <Text>{t("Already have an account ? ")}</Text>
         <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')}>
-          <Text style={styles.link}>Login</Text>
+          <Text style={styles.link}>{t("Login")}</Text>
         </TouchableOpacity>
       </View>
       <TouchableOpacity style={styles.button_log_with} onPress={() => console.log("github login")}>
         <Image source={require("../../assets/github_logo.png")} style={styles.logo} />
-        <Text style={styles.text}>Register with GitHub</Text>
+        <Text style={styles.text}>{t("Register with GitHub")}</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.settings} onPress={() => setModalVisible(true)}>
         <Icon name="settings.png" size={24} color={'black'} />

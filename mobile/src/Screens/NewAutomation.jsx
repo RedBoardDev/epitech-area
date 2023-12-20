@@ -28,7 +28,7 @@ import { useContext } from 'react';
 import { useSettings } from '../Contexts/Settings';
 
 function NewAutomation_Submit({ route }) {
-  const { settings } = useSettings();
+  const { settings, t } = useSettings();
   const { colors } = useTheme();
   const navigation = useNavigation();
   const { serviceData, triggerServiceId, triggerId, triggerParams, reactionServiceId, reactionId, reactionParams } = route.params;
@@ -90,13 +90,13 @@ function NewAutomation_Submit({ route }) {
           <Text style={styles.content}>{reaction?.name}</Text>
         </View>
       </View>
-      <Button onPress={submit}>Submit</Button>
+      <Button onPress={submit}>{t("Submit")}</Button>
     </SafeAreaView>
   );
 }
 
 export default function NewAutomation() {
-  const { settings } = useSettings();
+  const { settings, t } = useSettings();
   const Stack = createNativeStackNavigator();
   const { colors } = useTheme();
   const navigation = useNavigation();
@@ -114,11 +114,11 @@ export default function NewAutomation() {
   return (
     services &&
     <Stack.Navigator>
-      <Stack.Screen name="Triggers1" options={{ title: "Chose a service for your trigger" }} component={NewAutomation_Triggers1} initialParams={{ serviceData: services }} />
-      <Stack.Screen name="Triggers2" options={{ title: "Chose a trigger" }} component={NewAutomation_Triggers2} initialParams={{ serviceData: services }} />
-      <Stack.Screen name="Reactions1" options={{ title: "Chose a service for your reaction" }} component={NewAutomation_Reactions1} initialParams={{ serviceData: services }} />
-      <Stack.Screen name="Reactions2" options={{ title: "Chose a reaction" }} component={NewAutomation_Reactions2} initialParams={{ serviceData: services }} />
-      <Stack.Screen name="Submit" options={{ title: "Submit" }} component={NewAutomation_Submit} initialParams={{ serviceData: services }} />
+      <Stack.Screen name="Triggers1" options={{ title: t("Chose a service for your trigger") }} component={NewAutomation_Triggers1} initialParams={{ serviceData: services }} />
+      <Stack.Screen name="Triggers2" options={{ title: t("Chose a trigger") }} component={NewAutomation_Triggers2} initialParams={{ serviceData: services }} />
+      <Stack.Screen name="Reactions1" options={{ title: t("Chose a service for your reaction") }} component={NewAutomation_Reactions1} initialParams={{ serviceData: services }} />
+      <Stack.Screen name="Reactions2" options={{ title: t("Chose a reaction") }} component={NewAutomation_Reactions2} initialParams={{ serviceData: services }} />
+      <Stack.Screen name="Submit" options={{ title: t("Submit") }} component={NewAutomation_Submit} initialParams={{ serviceData: services }} />
     </Stack.Navigator>
   );
 }

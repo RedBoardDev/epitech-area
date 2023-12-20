@@ -56,6 +56,7 @@ export function NewAutomation_Reactions1({ route }) {
 }
 
 export function NewAutomation_Reactions2({ route }) {
+  const { t } = useSettings();
   const { colors } = useTheme();
   const navigation = useNavigation();
   const { serviceData, triggerServiceId, triggerId, triggerParams, reactionServiceId } = route.params;
@@ -96,7 +97,7 @@ export function NewAutomation_Reactions2({ route }) {
       <SafeAreaView style={styles.container}>
 
         <KeyboardAwareScrollView style={{ padding: 20 }}>
-          <Text style={{ fontSize: 30, marginBottom: 30 }}>Parameters</Text>
+          <Text style={{ fontSize: 30, marginBottom: 30 }}>{t("Parameters")}</Text>
           {selectedReaction && selectedReaction.fields.map(field => {
             if (field.type === 'text') {
               return RenderTextInput(field);
@@ -108,7 +109,6 @@ export function NewAutomation_Reactions2({ route }) {
         </KeyboardAwareScrollView>
         </SafeAreaView>
       </Modal>
-      <Text>Chose a reaction</Text>
       <ScrollView>
         {serviceData && serviceData.find(service => service.id === reactionServiceId).reactions.map(reaction => (
           <TouchableOpacity style={styles.card} key={reaction.id} onPress={() => { openModal(reaction.id) }}>

@@ -17,9 +17,11 @@ import {
 } from "@react-navigation/native";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useSettings } from "../Contexts/Settings";
 
 export default function Settings() {
   const navigation = useNavigation();
+  const { settings, setSettings, t } = useSettings();
   const { colors } = useTheme();
 
   const navigateToLogin = () => {
@@ -36,11 +38,11 @@ export default function Settings() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={{ color: "#fff", textAlign: "center", fontSize: 32, fontWeight: "bold" }}>Settings</Text>
+      <Text style={{ color: "#fff", textAlign: "center", fontSize: 32, fontWeight: "bold" }}>{t("Settings")}</Text>
       <View style={{ flex: 1 }}/>
-      <Button title="Help" onPress={() => navigation.navigate("Help")} />
+      <Button title={t("Help")} onPress={() => navigation.navigate("Help")} />
       <TouchableOpacity onPress={() => handleLogoutPress()} style={styles.logoutButton}>
-        <Text style={ styles.textBtn }>Logout</Text>
+        <Text style={ styles.textBtn }>{t("Logout")}</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
