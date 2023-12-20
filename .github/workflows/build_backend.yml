@@ -3,7 +3,7 @@ on:
   pull_request:
     branches:
       - main
-      - CI/CD
+      - dev
   push:
     branches:
       - CI/CD
