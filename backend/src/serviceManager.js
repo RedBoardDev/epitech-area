@@ -52,9 +52,8 @@ class ServiceManager {
 
     getServiceTranslated(lang, id) {
         const replacer = (key, value) => {
-            if (typeof value === 'string') {
+            if (typeof value === 'string' && (key === 'name' || key === 'description'))
                 return t.t(lang, value);
-            }
             return value;
         };
         return JSON.parse(JSON.stringify(this.getService(id), replacer));
