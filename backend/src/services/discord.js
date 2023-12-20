@@ -37,6 +37,8 @@ async function getVariables() {
     }
 }
 
+
+
 export const triggers = [
     {
         id: 1,
@@ -50,9 +52,6 @@ export const triggers = [
                 type: 'text'
             }
         ],
-        callback: async (data) => {
-            await createVariable(data.channel_id);
-        }
     },
     {
         id: 2,
@@ -119,14 +118,17 @@ client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 });
 
-getVariables().then((data) => {
-    data.forEach(element => {
-        chan_survery_list.push(element.channel_id);
+setInterval(() => {
+    getVariables().then((data) => {
+        chan_survery_list = [];
+        data.forEach(element => {
+            chan_survery_list.push(element.channel_id);
+        });
+    }).catch((error) => {
+        console.error('Error:', error);
     });
-    console.log(chan_survery_list);
-}).catch((error) => {
-    console.error('Error:', error);
-});
+}, 5000);
+
 
 
 client.on('messageCreate', async (message) => {
