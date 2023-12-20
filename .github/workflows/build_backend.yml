@@ -9,6 +9,8 @@ on:
       - CI/CD
 jobs:
   build:
+    env:
+        DATABASE_CONFIG: ${{ secrets.DATABASE_CONFIG }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
