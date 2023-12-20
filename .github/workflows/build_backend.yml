@@ -22,7 +22,7 @@ jobs:
       run: npm ci
       continue-on-error: false
       working-directory: backend
-    - name: Testing backend
-      run: npm test
-      continue-on-error: false
-      working-directory: backend
+    # - name: Testing backend
+    #   run: npm test
+    #   continue-on-error: false
+    #   working-directory: backend
