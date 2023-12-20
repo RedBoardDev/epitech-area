@@ -2,7 +2,7 @@ import fs from 'fs';
 import servicesRouter from './routes/service.js';
 import automationsRouter from './routes/automations.js';
 
-import { db } from './global.js';
+import { db, t } from './global.js';
 
 class ServiceManager {
     constructor(app) {
@@ -37,8 +37,27 @@ class ServiceManager {
         return this.services;
     }
 
+    getServicesTranslated(lang) {
+        const replacer = (key, value) => {
+            if (typeof value === 'string' && (key === 'name' || key === 'description'))
+                return t.t(lang, value);
+            return value;
+        };
+        return JSON.parse(JSON.stringify(this.services, replacer));
+    }
+
     getService(id) {
         return this.services.find((service) => service.id === id);
+    }
+
+    getServiceTranslated(lang, id) {
+        const replacer = (key, value) => {
+            if (typeof value === 'string') {
+                return t.t(lang, value);
+            }
+            return value;
+        };
+        return JSON.parse(JSON.stringify(this.getService(id), replacer));
     }
 
     getTrigger(serviceId, id) {

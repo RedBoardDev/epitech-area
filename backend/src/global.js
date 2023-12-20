@@ -11,6 +11,7 @@ import swaggerUi from "swagger-ui-express";
 import swaggerJsdoc from "swagger-jsdoc";
 import multer from 'multer';
 import fs from 'fs';
+import Translation from "./translations.js";
 import { options_SwaggerJsdoc, options_SwaggerUI } from "./swaggerConfig.js";
 
 dotenv.config();
@@ -41,18 +42,21 @@ export const upload = multer({
     },
 });
 
+export const t = new Translation('./translations/');
 export const db = new DbManager();
 export const app = express();
 
 const specs = swaggerJsdoc(options_SwaggerJsdoc);
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(specs, options_SwaggerUI));
-
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(cors({ origin: "*" }));
 app.use(express.static('public'));
-export const serviceManager = new ServiceManager(app);
+export const langRouter = express.Router();
+app.use('/fr', langRouter);
+app.use('/en', langRouter);
+export const serviceManager = new ServiceManager(langRouter);
 
 const algorithm = 'aes-256-cbc';
 
