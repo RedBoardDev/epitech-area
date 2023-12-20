@@ -21,13 +21,13 @@ import Logo from '../Components/Logo'
 
 import { getNbAutos, getNbServices } from "../Core/ServerCalls";
 
-import SettingsContext from "../Contexts/Settings";
+import { useSettings } from "../Contexts/Settings";
 
 const screenWidth = Dimensions.get('window').width;
 
 export default function Home() {
   const { colors } = useTheme();
-  const { settings } = useContext(SettingsContext);
+  const { settings } = useSettings();
   const [nbServices, setNbServices] = useState(0);
   const [nbAutos, setNbAutos] = useState(0);
 

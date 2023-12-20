@@ -24,13 +24,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAutos, getImgByServiceId, getService, removeAuto } from '../Core/ServerCalls'
 
 import LinearGradient from 'react-native-linear-gradient';
-import SettingsContext from "../Contexts/Settings";
+import { useSettings } from "../Contexts/Settings";
 import Background from '../Components/Background'
 
 const defaultImage = require("../../assets/logo.png");
 
 export default function Automations() {
-  const { settings } = useContext(SettingsContext);
+  const { settings } = useSettings();
   const { colors } = useTheme();
   const navigation = useNavigation();
   const [autos, setAutos] = useState([]);

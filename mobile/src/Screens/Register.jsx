@@ -25,7 +25,7 @@ import Background from '../Components/Background'
 import Logo from '../Components/Logo'
 import TextInput from '../Components/TextInput'
 import Button from '../Components/Button'
-import SettingsContext from '../Contexts/Settings';
+import { useSettings } from '../Contexts/Settings';
 
 import { validateEmail, validatePassword } from '../Tests/Validators'
 
@@ -35,7 +35,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from '../Components/Icon';
 
 function RegisterScreen() {
-  const { settings, setSettings } = useContext(SettingsContext);
+  const { settings, setSettings } = useSettings();
   const navigation = useNavigation();
   const { colors } = useTheme();
   const [modalVisible, setModalVisible] = useState(false);
@@ -43,7 +43,7 @@ function RegisterScreen() {
   const [firstname, setFirstname] = useState({ value: 'test', error: '' })
   const [lastname, setLastname] = useState({ value: 'test', error: '' })
   const [email, setEmail] = useState({ value: 'test@gmail.com', error: '' })
-  const [password, setPassword] = useState({ value: '12345678', error: '' })
+  const [password, setPassword] = useState({ value: 'oui', error: '' })
   const [error, setError] = useState("")
 
 

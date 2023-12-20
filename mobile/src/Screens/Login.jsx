@@ -31,10 +31,10 @@ import { LoginEmailPass, GetUser } from '../Core/ServerCalls'
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from '../Components/Icon';
-import SettingsContext from '../Contexts/Settings';
+import { useSettings } from '../Contexts/Settings';
 
 function LoginScreen() {
-  const { settings, setSettings } = useContext(SettingsContext);
+  const { settings, setSettings } = useSettings();
   const navigation = useNavigation();
   const { colors } = useTheme();
   const [modalVisible, setModalVisible] = useState(false);

@@ -23,7 +23,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getImgByServiceId, getServices, getConnected, updateServiceToken, serviceOauth, deleteServiceConnexion } from '../Core/ServerCalls'
 
 import LinearGradient from 'react-native-linear-gradient';
-import SettingsContext from "../Contexts/Settings";
+import { useSettings } from "../Contexts/Settings";
 
 const defaultImage = require("../../assets/logo.png");
 
@@ -32,7 +32,7 @@ export default function Services() {
   const [imageUrls, setImageUrls] = useState({});
   const [services, setServices] = useState({ k: {} });
   const [connected, setConnected] = useState({ k: "" });
-  const { settings } = useContext(SettingsContext);
+  const { settings } = useSettings();
 
   const fetchServices = async () => {
     const data = await getServices(settings.apiLocation);

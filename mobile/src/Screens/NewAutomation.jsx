@@ -25,10 +25,10 @@ import { NewAutomation_Triggers1, NewAutomation_Triggers2 } from "./NewAutomatio
 import { NewAutomation_Reactions1, NewAutomation_Reactions2 } from "./NewAutomation_Reactions";
 import Button from "../Components/Button";
 import { useContext } from 'react';
-import SettingsContext from '../Contexts/Settings';
+import { useSettings } from '../Contexts/Settings';
 
 function NewAutomation_Submit({ route }) {
-  const { settings } = useContext(SettingsContext);
+  const { settings } = useSettings();
   const { colors } = useTheme();
   const navigation = useNavigation();
   const { serviceData, triggerServiceId, triggerId, triggerParams, reactionServiceId, reactionId, reactionParams } = route.params;
@@ -96,7 +96,7 @@ function NewAutomation_Submit({ route }) {
 }
 
 export default function NewAutomation() {
-  const { settings } = useContext(SettingsContext);
+  const { settings } = useSettings();
   const Stack = createNativeStackNavigator();
   const { colors } = useTheme();
   const navigation = useNavigation();
