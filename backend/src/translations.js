@@ -23,6 +23,8 @@ class Translation {
     }
 
     t(lang, key) {
+        if (lang === 'en')
+            return key;
         if (!this.languages[lang])
             throw new Error(`Translation error: Language ${lang} not found`);
         if (!this.languages[lang][key])
