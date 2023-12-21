@@ -1,6 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react"
 
-import en from './translations/en.json';
 import fr from './translations/fr.json';
 
 const SettingsContext = createContext();
@@ -9,7 +8,7 @@ export const SettingsProvider = ({ children }) => {
     const [settings, setSettings] = useState({
         language: "fr",
     });
-    const languages = { en, fr };
+    const languages = { fr };
 
     const setSettingsAndStore = (newSettings) => {
         setSettings(newSettings);
@@ -18,6 +17,8 @@ export const SettingsProvider = ({ children }) => {
 
     const translate = (key) => {
         const lang = settings.language || 'en';
+        if (lang === 'en')
+            return key;
         if (!languages[lang][key])
             throw new Error(`No translation found for key ${key}`);
         return languages[lang][key];
