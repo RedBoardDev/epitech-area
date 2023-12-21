@@ -7,8 +7,10 @@ import AddCategory from './addCategory';
 import PuzzlePiece from './components/PuzzlePiece';
 import Button from '@mui/material/Button';
 import ModalSettingsService from './components/ModalSettingsService';
+import { useSettings } from '../SettingsContext';
 
 export default function ServicesDash() {
+    const { t } = useSettings();
     const [services, setServices] = useState([]);
     const { getAllServices, addAutomation, serviceOauth } = useAuth();
     const [selectedTrigger, setSelectedTrigger] = useState(null);
@@ -83,7 +85,7 @@ export default function ServicesDash() {
                                 <PuzzlePiece name={selectedReaction.name} description={selectedReaction.description} />
                             )}
                             {selectedTrigger && selectedReaction && (
-                                <Button onClick={handleConfirm}>Confirm</Button>
+                                <Button onClick={handleConfirm}>{t("Confirm")}</Button>
                             )}
                         </div>
                         <ModalSettingsService isOpen={isModalOpen} closeModal={closeModal} data={modalData} onSubmit={submitSettings} />

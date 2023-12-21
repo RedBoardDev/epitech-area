@@ -11,6 +11,7 @@ import { PauseCircleOutline } from '@mui/icons-material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useAuth } from '../../AuthContext';
+import { useSettings } from '../../SettingsContext';
 
 function createData(id, serviceName, trigger, reaction, type, status, imageSrc) {
     return { id, serviceName, trigger, reaction, type, status, imageSrc };
@@ -33,6 +34,7 @@ const rows = [
 ];
 
 export default function ServicesDash() {
+    const { t } = useSettings();
     const [tableData, setTableData] = useState(rows);
     const { getAllServices, getAutomations, deleteAutomation } = useAuth();
 
@@ -94,12 +96,12 @@ export default function ServicesDash() {
             <Table>
                 <TableHead>
                     <TableRow>
-                        <TableCell>ID</TableCell>
-                        <TableCell>Services name</TableCell>
-                        <TableCell>Triggers</TableCell>
-                        <TableCell>Reactions</TableCell>
-                        <TableCell>Status</TableCell>
-                        <TableCell>Actions</TableCell>
+                        <TableCell>{t("ID")}</TableCell>
+                        <TableCell>{t("Services name")}</TableCell>
+                        <TableCell>{t("Trigger")}</TableCell>
+                        <TableCell>{t("Reaction")}</TableCell>
+                        <TableCell>{t("Status")}</TableCell>
+                        <TableCell>{t("Actions")}</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>

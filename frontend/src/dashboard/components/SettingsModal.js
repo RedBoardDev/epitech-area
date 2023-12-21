@@ -6,8 +6,10 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import { useAuth } from '../../AuthContext';
+import { useSettings } from '../../SettingsContext';
 
 export default function SettingsUserModal({ user, onUpdateUser }) {
+    const { t } = useSettings();
     const [open, setOpen] = useState(true);
     const [firstName, setFirstName] = useState(user.firstname);
     const [lastName, setLastName] = useState(user.lastname);
@@ -38,12 +40,12 @@ export default function SettingsUserModal({ user, onUpdateUser }) {
     return (
         <div>
             <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>Modify your informations</DialogTitle>
+                <DialogTitle>{t("Modify your informations")}</DialogTitle>
                 <DialogContent>
                     <TextField
                         autoFocus
                         margin="dense"
-                        label="First Name"
+                        label={t("First Name")}
                         type="text"
                         fullWidth
                         value={firstName}
@@ -51,7 +53,7 @@ export default function SettingsUserModal({ user, onUpdateUser }) {
                     />
                     <TextField
                         margin="dense"
-                        label="Last Name"
+                        label={t("Last Name")}
                         type="text"
                         fullWidth
                         value={lastName}
@@ -59,7 +61,7 @@ export default function SettingsUserModal({ user, onUpdateUser }) {
                     />
                     <TextField
                         margin="dense"
-                        label="Email"
+                        label={t("Email")}
                         type="email"
                         fullWidth
                         value={email}
@@ -67,7 +69,7 @@ export default function SettingsUserModal({ user, onUpdateUser }) {
                     />
                     <TextField
                         margin="dense"
-                        label="New Password"
+                        label={t("New Password")}
                         type="password"
                         fullWidth
                         value={newPassword}
@@ -75,7 +77,7 @@ export default function SettingsUserModal({ user, onUpdateUser }) {
                     />
                     <TextField
                         margin="dense"
-                        label="Confirm New Password"
+                        label={t("Confirm New Password")}
                         type="password"
                         fullWidth
                         value={confirmNewPassword}
@@ -83,8 +85,8 @@ export default function SettingsUserModal({ user, onUpdateUser }) {
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleSave}>Save</Button>
+                    <Button onClick={handleClose}>{t("Cancel")}</Button>
+                    <Button onClick={handleSave}>{t("Save")}</Button>
                 </DialogActions>
             </Dialog>
         </div>

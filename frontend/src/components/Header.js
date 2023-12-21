@@ -61,11 +61,10 @@ function HeaderComponent({ showButton }) {
                             color="primary"
                             sx={{
                                 marginLeft: '16px',
-                                width: '160px',
                                 height: '5vh',
                                 backgroundColor: '#4B4E6D',
                                 border: 'none',
-                                padding: '0 0%',
+                                paddingX: '15px',
                                 borderRadius: '10px',
                                 cursor: 'pointer',
                                 fontSize: '1.4rem',

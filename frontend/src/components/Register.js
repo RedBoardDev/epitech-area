@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography';
 import HeaderComponent from './Header';
 import backgroundImage from '../img/BgTop.png';
 import GitHubIcon from '@mui/icons-material/GitHub';
+import { useSettings } from '../SettingsContext';
 
 export const RegisterGithubCallback = () => {
     const navigate = useNavigate();
@@ -32,6 +33,7 @@ export const RegisterGithubCallback = () => {
 };
 
 const Register = () => {
+    const { t } = useSettings();
     const [username, setUsername] = useState('test@thomasott.com');
     const [password, setPassword] = useState('test123/');
     const [lastname, setLastname] = useState('Binder');
@@ -101,10 +103,10 @@ const Register = () => {
                     }}
                 >
                     <Typography variant="h4" sx={{ color: '#544d4d', marginBottom: '2rem' }}>
-                        S'inscire
+                        {t("Register")}
                     </Typography>
                     <TextField
-                        label="Email"
+                        label={t("Email")}
                         variant="outlined"
                         margin="normal"
                         fullWidth
@@ -113,7 +115,7 @@ const Register = () => {
                         sx={{ marginBottom: '1rem' }}
                     />
                     <TextField
-                        label="Lastname"
+                        label={t("Lastname")}
                         variant="outlined"
                         margin="normal"
                         fullWidth
@@ -122,7 +124,7 @@ const Register = () => {
                         sx={{ marginBottom: '1rem' }}
                     />
                     <TextField
-                        label="Firstname"
+                        label={t("Firstname")}
                         variant="outlined"
                         margin="normal"
                         fullWidth
@@ -131,7 +133,7 @@ const Register = () => {
                         sx={{ marginBottom: '1rem' }}
                     />
                     <TextField
-                        label="Mot de passe"
+                        label={t("Password")}
                         variant="outlined"
                         margin="normal"
                         type="password"
@@ -147,7 +149,7 @@ const Register = () => {
                         onClick={handleRegister}
                         sx={{ width: '200px' }}
                     >
-                        S'inscire
+                        {t("Register")}
                     </Button>
                     <Button
                         variant="contained"
@@ -157,7 +159,7 @@ const Register = () => {
                         onClick={handleRegisterGithub}
                         sx={{ width: '200px', marginTop: '1rem' }}
                     >
-                        S'inscrire avec GitHub
+                        {("Register with Github")}
                     </Button>
                     <Typography
                         component={Link}
@@ -165,9 +167,9 @@ const Register = () => {
                         color="primary"
                         size="large"
                         align='center'
-                        sx={{ width: '200px', marginTop: '1rem' }}
+                        sx={{ marginTop: '1rem' }}
                     >
-                        Login
+                        {t("Already have an account?")}
                     </Typography>
                 </div>
                 <div

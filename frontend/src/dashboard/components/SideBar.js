@@ -10,8 +10,10 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Logo from '../assets/logo.png';
+import { useSettings } from '../../SettingsContext';
 
 export default function SideBar() {
+    const { t } = useSettings();
     const location = useLocation();
     const [isSidebarOpen, setSidebarOpen] = useState(true);
 
@@ -41,17 +43,17 @@ export default function SideBar() {
                 <Box sx={{ marginTop: '2rem', marginLeft: '2.2rem' }}>
                     <Typography variant="h6" component="div">
                         <Link to="/dashboard" style={location.pathname === '/dashboard' ? activeStyle : inactiveStyle}>
-                            Dashboard
+                            {t("Dashboard")}
                         </Link>
                     </Typography>
                     <Typography variant="h6" component="div" sx={{ marginTop: '1rem' }}>
                         <Link to="/dashboard/services" style={location.pathname === '/dashboard/services' ? activeStyle : inactiveStyle}>
-                            Automations
+                            {t("Automations")}
                         </Link>
                     </Typography>
                     <Typography variant="h6" component="div" sx={{ marginTop: '1rem' }}>
                         <Link to="/dashboard/addservice" style={location.pathname === '/dashboard/addservice' ? activeStyle : inactiveStyle}>
-                            Create Automation
+                            {t("Create Automation")}
                         </Link>
                     </Typography>
                 </Box>
