@@ -18,6 +18,7 @@ import {
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSettings } from "../Contexts/Settings";
+import OptionSelect from "../Components/OptionSelect";
 
 export default function Settings() {
   const navigation = useNavigation();
@@ -36,10 +37,13 @@ export default function Settings() {
     navigateToLogin();
   };
 
+  const setSelectedLanguage = (index) => setSettings({ ...settings, language: (index === 0 ? 'en' : 'fr') });
+
   return (
     <SafeAreaView style={styles.container}>
       <Text style={{ color: "#fff", textAlign: "center", fontSize: 32, fontWeight: "bold" }}>{t("Settings")}</Text>
       <View style={{ flex: 1 }}/>
+      <OptionSelect title={t("Language")} list={["English", "Français"]} selected={settings.language === 'en' ? 0 : 1} setSelected={setSelectedLanguage} />
       <Button title={t("Help")} onPress={() => navigation.navigate("Help")} />
       <TouchableOpacity onPress={() => handleLogoutPress()} style={styles.logoutButton}>
         <Text style={ styles.textBtn }>{t("Logout")}</Text>
