@@ -33,7 +33,7 @@ CREATE TABLE `automation` (
   `reaction_params` TEXT DEFAULT '{}'
 );
 
-CREATE TABLE 'discord_channels_survey_ids' (
+CREATE TABLE `discord_channels_survey_ids` (
   `channel_id` VARCHAR(100) NOT NULL,
   PRIMARY KEY (`channel_id`)
 );
