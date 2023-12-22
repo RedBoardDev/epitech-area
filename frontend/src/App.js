@@ -18,6 +18,7 @@ const AppBody = () => {
   const { mainTheme } = useTheme();
   return (
     <ThemeProvider theme={mainTheme}>
+      <CssBaseline/>
       <AuthProvider>
         <Router>
           <Routes>

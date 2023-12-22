@@ -7,10 +7,12 @@ import AddCategory from './addCategory';
 import PuzzlePiece from './components/PuzzlePiece';
 import Button from '@mui/material/Button';
 import ModalSettingsService from './components/ModalSettingsService';
+import { useTheme } from '../themeContext';
 
 export default function ServicesDash() {
     const [services, setServices] = useState([]);
     const { getAllServices, addAutomation, serviceOauth } = useAuth();
+    const { mainTheme } = useTheme();
     const [selectedTriggers, setSelectedTriggers] = useState([]);
     const [selectedReaction, setSelectedReaction] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -94,7 +96,7 @@ export default function ServicesDash() {
                         <TopBar />
                     </Grid>
                     <Grid item xs={12} style={{ overflow: 'hidden' }}>
-                        <Grid container style={{ height: '93.6%', top: '6.4%', left: '15%', position: 'absolute', width: '85%', overflow: 'auto', backgroundColor: 'white' }}>
+                        <Grid container style={{ height: '93.6%', top: '6.4%', left: '15%', position: 'absolute', width: '85%', overflow: 'auto', backgroundColor: mainTheme.mode }}>
                             <Grid item xs={2} style={{ height: '100%', background: '#333448' }} className="no-overflow">
                             {!selectedReaction &&
                                 services.map((service) => (<AddCategory key={service.id} id={service.id} name={service.name} color={service.color} triggers={service.triggers} reactions={service.reactions} handleClick={openModal} />))
