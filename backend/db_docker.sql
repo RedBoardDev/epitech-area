@@ -25,11 +25,16 @@ CREATE TABLE `automation` (
   `active` BOOLEAN NOT NULL DEFAULT TRUE,
   `trigger_service_id` VARCHAR(100) NOT NULL,
   `trigger_id` INT UNSIGNED NOT NULL,
-  `trigger_params` TEXT DEFAULT '{}',
-  `trigger_check_data` TEXT DEFAULT '{}',
+  `trigger_params` VARCHAR(255) DEFAULT '{}',
+  `trigger_check_data` VARCHAR(255) DEFAULT '{}',
   `reaction_service_id` VARCHAR(100) NOT NULL,
   `reaction_id` INT UNSIGNED NOT NULL,
-  `reaction_params` TEXT DEFAULT '{}'
+  `reaction_params` VARCHAR(255) DEFAULT '{}'
+);
+
+CREATE TABLE `discord_channels_survey_ids` (
+  `channel_id` VARCHAR(100) NOT NULL,
+  PRIMARY KEY (`channel_id`)
 );
 
 ALTER TABLE `automation` ADD FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
