@@ -21,7 +21,7 @@ export const connect = async (userId) => {
             scope: 'user repo',
         };
         const query = Object.keys(params).map((key) => `${key}=${encodeURIComponent(params[key])}`).join('&');
-        return { status: "success", url: `${url}?${query}` };
+        return { status: "success", url: `${url}?${query}`, auth: true };
     } catch (error) {
         return { status: "error", msg: error };
     }
