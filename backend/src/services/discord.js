@@ -109,6 +109,15 @@ async function createChannelVoice(guild_id, channel_name) {
     });
 }
 
+export const connect = async (userId) => {
+    try {
+        const url = 'https://discord.com/api/oauth2/authorize?client_id=1188842990974799892&permissions=8&scope=bot';
+        return { status: "success", url: `${url}`, auth: false };
+    } catch (error) {
+        return { status: "error", msg: error };
+    }
+};
+
 export const triggers = [
     {
         id: 1,
