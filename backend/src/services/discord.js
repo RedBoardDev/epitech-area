@@ -39,7 +39,6 @@ async function getVariables() {
 
 
 // Discord bot
-
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMembers] });
 let chan_survery_list = [];
 
