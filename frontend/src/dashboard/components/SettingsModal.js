@@ -9,7 +9,7 @@ import { useAuth } from '../../AuthContext';
 import { useTheme } from '../../themeContext';
 import { Switch } from '@mui/material';
 
-export default function SettingsUserModal({ user, onUpdateUser }) {
+export default function SettingsUserModal({ isOpen, closeModal, onUpdateUser, user }) {
     const [open, setOpen] = useState(true);
     const [firstName, setFirstName] = useState(user.firstname);
     const [lastName, setLastName] = useState(user.lastname);
@@ -19,28 +19,25 @@ export default function SettingsUserModal({ user, onUpdateUser }) {
     const { updateUserById } = useAuth();
     const { toggleThemeMode, toggleSwitchTheme } =useTheme();
 
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
-
+    useEffect(() => {
+        setFirstName(user.firstname);
+        setLastName(user.lastname);
+        setEmail(user.email);
+    }, [user]);
 
     const handleSave = async () => {
         try {
-                await updateUserById(lastName, firstName);
-                onUpdateUser({ ...user, firstname: firstName, lastname: lastName });
+                await updateUserById(lastName, firstName, email);
+                onUpdateUser({ ...user, firstname: firstName, lastname: lastName, email: email });
         } catch (error) {
             console.error('Update user failed:', error);
         }
-        setOpen(false);
+        closeModal();
     };
 
     return (
         <div>
-            <Dialog open={open} onClose={handleClose}>
+            <Dialog open={isOpen} onClose={closeModal}>
                 <DialogTitle>Modify your informations</DialogTitle>
                 <DialogContent>
                     <TextField
@@ -90,7 +87,7 @@ export default function SettingsUserModal({ user, onUpdateUser }) {
                         Select Theme
                         <Switch checked={toggleThemeMode} onChange={toggleSwitchTheme} />
                     </div>
-                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button onClick={closeModal}>Cancel</Button>
                     <Button onClick={handleSave}>Save</Button>
                 </DialogActions>
             </Dialog>

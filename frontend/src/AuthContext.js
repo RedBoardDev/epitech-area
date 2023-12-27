@@ -197,10 +197,10 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
-    const updateUserById = async (lastname, firstname) => {
+    const updateUserById = async (lastname, firstname, email) => {
         const userID = localStorage.getItem('userID');
         try {
-            const response = await callApiWithToken('PUT', `/user/${userID}`, { lastname, firstname });
+            const response = await callApiWithToken('PUT', `/user/${userID}`, { lastname, firstname, email });
             setIsAuthenticated(true);
             return response;
         } catch (error) {

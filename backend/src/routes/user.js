@@ -160,7 +160,7 @@ router.get("/:id", verifyToken, (req, res) => {
  *       - bearerAuth: []
  */
 router.put("/:id", verifyToken, (req, res) => {
-    db.updateUser(req.params.id, req.body.lastname, req.body.firstname).then((result) => {
+    db.updateUser(req.params.id, req.body.lastname, req.body.firstname, req.body.email).then((result) => {
         res.status(200).json({ msg: 'User updated' });
     }).catch((err) => {
         // check user not found
