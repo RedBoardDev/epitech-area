@@ -62,7 +62,7 @@ class ServiceManager {
 
                         if (triggerServiceCheck) {
                             const reactionServiceToken = (await db.getServiceOauth(user.id, automation.reaction_service_id))[0].token;
-                            await this.getReaction(automation.reaction_service_id, automation.reaction_id).execute(user, JSON.parse(automation.reaction_params), reactionServiceToken, triggerServiceData);
+                            await this.getReaction(automation.reaction_service_id, automation.reaction_id).execute(user, JSON.parse(automation.reaction_params), reactionServiceToken, triggerServiceCheck);
                         }
                     } catch (error) {
                         console.error(error);
