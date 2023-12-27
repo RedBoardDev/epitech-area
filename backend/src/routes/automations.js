@@ -135,10 +135,10 @@ router.post('/', verifyToken, async (req, res) => {
         return;
     }
 
-    db.insertAutomation(userId, req.body.trigger_service_id, req.body.trigger_id, req.body.trigger_params, req.body.reaction_service_id, req.body.reaction_id, req.body.reaction_params)
-        .then((result) => {
-            res.status(201).json({ msg: 'Automation created' });
-        }).catch(async (error) => {
+    db.insertAutomation(userId, req.body.trigger_service_id, req.body.trigger_id, req.body.trigger_params, req.body.reaction_service_id, req.body.reaction_id, req.body.reaction_params, req.body.automation_name)
+    .then((result) => {
+        res.status(201).json({ msg: 'Automation created' });
+    }).catch(async (error) => {
             if (error.code === 'ER_NO_REFERENCED_ROW_2') {
                 const triggerServiceExists = await db.getServiceOauth(userId, trigger_service_id);
 

@@ -197,10 +197,10 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
-    const updateUserById = async (lastname, firstname) => {
+    const updateUserById = async (lastname, firstname, email) => {
         const userID = localStorage.getItem('userID');
         try {
-            const response = await callApiWithToken('PUT', `/user/${userID}`, { lastname, firstname });
+            const response = await callApiWithToken('PUT', `/user/${userID}`, { lastname, firstname, email });
             setIsAuthenticated(true);
             return response;
         } catch (error) {
@@ -210,9 +210,9 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
-    const addAutomation = async (trigger_service_id, trigger_id, trigger_params, reaction_service_id, reaction_id, reaction_params) => {
+    const addAutomation = async (trigger_service_id, trigger_id, trigger_params, reaction_service_id, reaction_id, reaction_params, automation_name) => {
         try {
-            const response = await callApiWithToken('POST', `/automations`, { trigger_service_id, trigger_id, trigger_params, reaction_service_id, reaction_id, reaction_params });
+            const response = await callApiWithToken('POST', `/automations`, { trigger_service_id, trigger_id, trigger_params, reaction_service_id, reaction_id, reaction_params, automation_name });
             setIsAuthenticated(true);
             return response;
         } catch (error) {

@@ -18,7 +18,7 @@ export default function TopBar() {
     const [time, setTime] = useState(new Date().toLocaleTimeString());
     const [openSettingsModal, setOpenSettingsModal] = useState(false);
     const [user, setUser] = useState();
-    const { logout, getUserById, verifyToken } = useAuth();
+    const { logout, getUserById } = useAuth();
     const { mainTheme } = useTheme();
     const navigate = useNavigate();
 
@@ -38,19 +38,25 @@ export default function TopBar() {
     }, []);
 
     useEffect(() => {
-      const getUser = async () => {
-        try {
-            const result = await getUserById();
-            setUser(result);
-        } catch (error) {
-            console.error('Error fetching automations:', error);
-        }
-      };
-      getUser();
-  }, [verifyToken, navigate, getUserById]);
+      if (!user) {
+        const getUser = async () => {
+          try {
+              const result = await getUserById();
+              setUser(result);
+          } catch (error) {
+              console.error('Error fetching automations:', error);
+          }
+        };
+        getUser();
+      }
+  }, [getUserById, user]);
 
   const updateUser = (updatedUserData) => {
     setUser(updatedUserData);
+  };
+
+  const closeModal = () => {
+    setOpenSettingsModal(false);
   };
 
     return (
@@ -74,7 +80,7 @@ export default function TopBar() {
             <IconButton color="inherit" sx={{ marginLeft: '10px' }} onClick={handleLogout}>
                 <LogoutIcon />
             </IconButton>
-            {openSettingsModal && <SettingsUserModal user={user} setOpen={setOpenSettingsModal} onUpdateUser={updateUser} />}
+            <SettingsUserModal isOpen={openSettingsModal} closeModal={closeModal} onUpdateUser={updateUser} user={user || ""} />
         </Toolbar>
       </AppBar>
     );

@@ -69,9 +69,9 @@ class DbManager {
         return this.executeQuery(query, values);
     }
 
-    updateUser(id, lastname, firstname) {
-        const query = `UPDATE user SET lastname = ?, firstname = ? WHERE id = ?;`;
-        const values = [lastname, firstname, id];
+    updateUser(id, lastname, firstname, email) {
+        const query = `UPDATE user SET lastname = ?, firstname = ?, email = ? WHERE id = ?;`;
+        const values = [lastname, firstname, email, id];
         return this.executeQuery(query, values);
     }
 
@@ -93,9 +93,9 @@ class DbManager {
         return this.executeQuery(query, values);
     }
 
-    insertAutomation(userId, triggerServiceId, triggerId, triggerParams, reactionServiceId, reactionId, reactionParams) {
-        const query = `INSERT INTO automation(user_id, trigger_service_id, trigger_id, trigger_params, reaction_service_id, reaction_id, reaction_params) VALUES (?, ?, ?, ?, ?, ?, ?);`;
-        const values = [userId, triggerServiceId, triggerId, triggerParams, reactionServiceId, reactionId, reactionParams];
+    insertAutomation(userId, triggerServiceId, triggerId, triggerParams, reactionServiceId, reactionId, reactionParams, automationName) {
+        const query = `INSERT INTO automation(user_id, trigger_service_id, trigger_id, trigger_params, reaction_service_id, reaction_id, reaction_params, automation_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?);`;
+        const values = [userId, triggerServiceId, triggerId, triggerParams, reactionServiceId, reactionId, reactionParams, automationName];
         return this.executeQuery(query, values);
     }
 

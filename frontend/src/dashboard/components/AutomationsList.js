@@ -18,19 +18,7 @@ function createData(id, serviceName, trigger, reaction, type, status, imageSrc, 
 }
 
 const rows = [
-    createData('1', 'Discord Spotify skipper', 'Discord', 'Running'),
-    createData('2', 'Ya un tweet', 'Twitter', 'Paused'),
-    createData('3', 'Sardoche est en live', 'Twitch', 'Idle'),
-    createData('4', 'Service 4', 'Platform', 'Status'),
-    createData('5', 'Service 5', 'Platform', 'Status'),
-    createData('6', 'Service 6', 'Platform', 'Status'),
-    createData('7', 'Service 7', 'Platform', 'Status'),
-    createData('8', 'Service 8', 'Platform', 'Status'),
-    createData('9', 'Service 9', 'Platform', 'Status'),
-    createData('10', 'Service 10', 'Platform', 'Status'),
-    createData('11', 'Service 11', 'Platform', 'Status'),
-    createData('12', 'Service 12', 'Platform', 'Status'),
-    createData('13', 'Service 13', 'Platform', 'Status'),
+    createData(''),
 ];
 
 export default function ServicesDash() {
