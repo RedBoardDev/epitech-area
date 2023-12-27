@@ -59,8 +59,6 @@ export default function TopBar() {
     setOpenSettingsModal(false);
   };
 
-  // console.log(user);
-
     return (
       <AppBar position="fixed" style={{ right: 0, width: 'calc(100%)', zIndex: -1 }}>
         <Toolbar style={{ background: '#222222'}} sx={{ boxShadow: 3 }}>
@@ -83,7 +81,6 @@ export default function TopBar() {
                 <LogoutIcon />
             </IconButton>
             <SettingsUserModal isOpen={openSettingsModal} closeModal={closeModal} onUpdateUser={updateUser} user={user || ""} />
-            {/* {console.log(user)}  */}
         </Toolbar>
       </AppBar>
     );

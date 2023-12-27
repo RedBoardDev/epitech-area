@@ -31,7 +31,7 @@ CREATE TABLE `automation` (
   `reaction_service_id` VARCHAR(100) NOT NULL,
   `reaction_id` INT UNSIGNED NOT NULL,
   `reaction_params` TEXT DEFAULT '{}',
-  `automation_name` VARCHAR(100)
+  `automation_name` VARCHAR(100) DEFAULT ''
 );
 
 CREATE TABLE `discord_channels_survey_ids` (
