@@ -11,6 +11,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import SettingsUserModal from './SettingsModal';
 import { useAuth } from '../../AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
+import { useTheme } from '../../themeContext';
 
 
 export default function TopBar() {
@@ -18,6 +19,7 @@ export default function TopBar() {
     const [openSettingsModal, setOpenSettingsModal] = useState(false);
     const [user, setUser] = useState();
     const { logout, getUserById, verifyToken } = useAuth();
+    const { mainTheme } = useTheme();
     const navigate = useNavigate();
 
     const handleLogout = () => {

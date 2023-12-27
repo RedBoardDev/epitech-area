@@ -6,6 +6,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import { useAuth } from '../../AuthContext';
+import { useTheme } from '../../themeContext';
+import { Switch } from '@mui/material';
 
 export default function SettingsUserModal({ user, onUpdateUser }) {
     const [open, setOpen] = useState(true);
@@ -15,6 +17,7 @@ export default function SettingsUserModal({ user, onUpdateUser }) {
     const [newPassword, setNewPassword] = useState("");
     const [confirmNewPassword, setConfirmNewPassword] = useState("");
     const { updateUserById } = useAuth();
+    const { toggleThemeMode, toggleSwitchTheme } =useTheme();
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -83,6 +86,10 @@ export default function SettingsUserModal({ user, onUpdateUser }) {
                     />
                 </DialogContent>
                 <DialogActions>
+                    <div style={{Display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                        Select Theme
+                        <Switch checked={toggleThemeMode} onChange={toggleSwitchTheme} />
+                    </div>
                     <Button onClick={handleClose}>Cancel</Button>
                     <Button onClick={handleSave}>Save</Button>
                 </DialogActions>

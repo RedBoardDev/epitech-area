@@ -1,5 +1,3 @@
-// Login.js
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
@@ -10,6 +8,7 @@ import Typography from '@mui/material/Typography';
 import HeaderComponent from './Header';
 import backgroundImage from '../img/BgTop.png';
 import GitHubIcon from '@mui/icons-material/GitHub';
+import {useTheme} from '../themeContext';
 
 export const LoginGithubCallback = () => {
     const navigate = useNavigate();
@@ -37,6 +36,7 @@ const Login = () => {
     const [username, setUsername] = useState('test@thomasott.com');
     const [password, setPassword] = useState('test123/');
     const { login, logout, verifyToken } = useAuth();
+    const { mainTheme } = useTheme();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -85,6 +85,7 @@ const Login = () => {
                     height: '100vh',
                     backgroundImage: `url(${backgroundImage})`,
                     backgroundRepeat: 'no-repeat',
+                    backgroundColor: mainTheme.palette.mainBackground.main,
                     backgroundPosition: 'right bottom',
                     backgroundSize: '60% 100%',
                 }}

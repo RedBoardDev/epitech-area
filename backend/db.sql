@@ -34,7 +34,7 @@ CREATE TABLE `automation` (
   `automation_name` VARCHAR(100) NOT NULL
 );
 
-CREATE TABLE 'discord_channels_survey_ids' (
+CREATE TABLE `discord_channels_survey_ids` (
   `channel_id` VARCHAR(100) NOT NULL,
   PRIMARY KEY (`channel_id`)
 );

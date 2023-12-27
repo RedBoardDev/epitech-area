@@ -36,7 +36,7 @@ const ContentBox = styled(Box)({
     background: '#333448',
 });
 
-function AddCategory({ id, name, color, triggers, reactions, handleClick }) {
+function AddCategory({ id, name, color, triggers, handleClick }) {
     const [isOpen, setIsOpen] = useState(false);
     return (
         <Box>
@@ -52,10 +52,7 @@ function AddCategory({ id, name, color, triggers, reactions, handleClick }) {
             <Collapse in={isOpen}>
                 <ContentBox>
                     {triggers.map((trigger) => (
-                        <SelectionCardService key={trigger.id} serviceId={id} obj={trigger} callback={handleClick} />
-                    ))}
-                    {reactions.map((reaction) => (
-                        <SelectionCardService key={reaction.id} serviceId={id} obj={reaction} callback={handleClick} />
+                        <SelectionCardService key={trigger.id} id={id} obj={trigger} callback={handleClick} />
                     ))}
                 </ContentBox>
             </Collapse>

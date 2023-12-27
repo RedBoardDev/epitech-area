@@ -5,6 +5,7 @@ import ServiceBlock from './ServiceBlock';
 import Logo from '../img/logo.png';
 import { useAuth } from '../AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { useTheme } from '../themeContext';
 
 const services = [
     {
@@ -43,7 +44,7 @@ const Services = () => {
     const navigate = useNavigate();
     const [allServices, setAllServices] = useState(services);
     const { verifyToken, getAllServices } = useAuth();
-
+    const { mainTheme } = useTheme();
 
     useEffect(() => {
         const getServices = async () => {
@@ -67,7 +68,7 @@ const Services = () => {
     }, [verifyToken, navigate, getAllServices]);
 
     return (
-        <Box style={{ backgroundColor: '#f2f2f2', minHeight: '100vh', overflow: 'hidden' }}>
+        <Box style={{ backgroundColor: mainTheme.palette.mode, minHeight: '100vh', overflow: 'hidden' }}>
             <HeaderComponent isLoggedIn={false} />
             <Box
                 style={{
