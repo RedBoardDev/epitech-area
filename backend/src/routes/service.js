@@ -241,7 +241,8 @@ router.get('/oauth/:id/callback', async (req, res) => {
     }
 
     const { code } = req.query;
-    const { userId } = req.query;
+    const userId = req.query ? req.query.userId || req.query.state : undefined;
+
     if (!code)
         return res.status(400).json({ msg: 'Bad parameter' });
 
