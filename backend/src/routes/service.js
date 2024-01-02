@@ -241,15 +241,16 @@ router.get('/oauth/:id/callback', async (req, res) => {
     }
 
     const { code } = req.query;
-    const { userId } = req.query;
-    if (!code)
-        return res.status(400).json({ msg: 'Bad parameter' });
+    const userId = req.query ? req.query.userId || req.query.state : undefined;
+
+    if (!code || !userId)
+        return res.status(400).json({ msg: 'Bad parameter1' });
 
     const ret = await service.callback(code);
     if (ret === "error")
         return res.status(400).json(ret.msg);
     if (!ret.token || !ret.action)
-        return res.status(400).json({ msg: 'Bad parameter' });
+        return res.status(400).json({ msg: 'Bad parameter2' });
 
     db.getServiceOauth(userId, service.id).then((rows) => {
         if (rows[0]) {
