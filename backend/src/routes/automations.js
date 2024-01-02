@@ -9,14 +9,14 @@ const router = express.Router();
  *   get:
  *     tags:
  *       - automations
- *     summary: Get all automations associated to the current user
- *     description: Get all automations associated to the current user
- *     operationId: getAllAutomations
+ *     summary: "Get all automations associated to the current user"
+ *     description: "Get all automations associated to the current user"
+ *     operationId: "getAllAutomations"
  *     produces:
  *       - application/json
  *     responses:
  *       '200':
- *         description: Successful operation
+ *         description: "Successful operation"
  *         content:
  *           application/json:
  *             schema:
@@ -24,11 +24,17 @@ const router = express.Router();
  *               items:
  *                 $ref: "#/components/schemas/automation"
  *       '403':
- *         description: Unauthorized
+ *         description: "Unauthorized - Invalid or missing authentication token"
  *         content:
  *           application/json:
  *             schema:
  *               $ref: "#/components/schemas/unauthorized"
+ *       '500':
+ *         description: "Internal server error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/internalServerError"
  *     security:
  *       - bearerAuth: []
  */
@@ -42,6 +48,46 @@ router.get('/', verifyToken, async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /automations/{id}:
+ *   get:
+ *     tags:
+ *       - automations
+ *     summary: "Get automation by ID"
+ *     description: "Get automation details by providing its ID"
+ *     operationId: "getAutomationById"
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: "ID of the automation to retrieve"
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       '200':
+ *         description: "Successful operation"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/automation"
+ *       '403':
+ *         description: "Unauthorized - Invalid or missing authentication token"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/unauthorized"
+ *       '500':
+ *         description: "Internal server error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/internalServerError"
+ *     security:
+ *       - bearerAuth: []
+ */
 router.get('/:id', verifyToken, async (req, res) => {
     try {
         const result = await db.getAutomationsById(req.params.id);
@@ -58,9 +104,9 @@ router.get('/:id', verifyToken, async (req, res) => {
  *   post:
  *     tags:
  *       - automations
- *     summary: Add an automation
- *     description: Add an automation
- *     operationId: addAutomation
+ *     summary: "Add an automation"
+ *     description: "Add an automation"
+ *     operationId: "addAutomation"
  *     consumes:
  *       - application/json
  *     produces:
@@ -68,7 +114,7 @@ router.get('/:id', verifyToken, async (req, res) => {
  *     parameters:
  *       - name: body
  *         in: body
- *         description: Automation
+ *         description: "Automation"
  *         required: true
  *         schema:
  *           type: object
@@ -93,7 +139,7 @@ router.get('/:id', verifyToken, async (req, res) => {
  *               description: JSON string
  *     responses:
  *       '201':
- *         description: Successful operation
+ *         description: "Successful operation"
  *         content:
  *           application/json:
  *             schema:
@@ -102,20 +148,29 @@ router.get('/:id', verifyToken, async (req, res) => {
  *                 msg:
  *                   type: string
  *       '400':
- *         description: Bad parameters
+ *         description: "Unauthorized - Invalid or missing authentication token"
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 msg:
- *                   type: string
+ *               $ref: "#/components/schemas/badRequest"
  *       '403':
- *         description: Unauthorized
+ *         description: "Unauthorized - Invalid or missing authentication token"
  *         content:
  *           application/json:
  *             schema:
  *               $ref: "#/components/schemas/unauthorized"
+ *       '401':
+ *         description: "Unauthorized - Invalid or missing service connection"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/unauthorizedService"
+ *       '500':
+ *         description: "Internal server error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/internalServerError"
  *     security:
  *       - bearerAuth: []
  */
@@ -163,9 +218,9 @@ router.post('/', verifyToken, async (req, res) => {
  *   put:
  *     tags:
  *       - automations
- *     summary: Update an automation
- *     description: Update an automation
- *     operationId: updateAutomation
+ *     summary: "Update an automation"
+ *     description: "Update an automation"
+ *     operationId: "updateAutomation"
  *     consumes:
  *       - application/json
  *     produces:
@@ -173,7 +228,7 @@ router.post('/', verifyToken, async (req, res) => {
  *     parameters:
  *       - name: body
  *         in: body
- *         description: Automation
+ *         description: "Automation details for update"
  *         required: true
  *         schema:
  *           type: object
@@ -201,7 +256,7 @@ router.post('/', verifyToken, async (req, res) => {
  *               description: JSON string
  *     responses:
  *       '200':
- *         description: Successful operation
+ *         description: "Successful operation"
  *         content:
  *           application/json:
  *             schema:
@@ -210,20 +265,23 @@ router.post('/', verifyToken, async (req, res) => {
  *                 msg:
  *                   type: string
  *       '400':
- *         description: Bad parameters
+ *         description: "Bad parameters"
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 msg:
- *                   type: string
+ *               $ref: "#/components/schemas/badRequest"
  *       '403':
- *         description: Unauthorized
+ *         description: "Unauthorized - Invalid or missing authentication token"
  *         content:
  *           application/json:
  *             schema:
  *               $ref: "#/components/schemas/unauthorized"
+ *       '500':
+ *         description: "Internal server error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/internalServerError"
  *     security:
  *       - bearerAuth: []
  */
@@ -258,6 +316,52 @@ router.put('/', verifyToken, async (req, res) => {
         });
 });
 
+/**
+ * @swagger
+ * /automations/{id}:
+ *   put:
+ *     tags:
+ *       - automations
+ *     summary: "Update an automation by ID"
+ *     description: "Update an automation by providing its ID"
+ *     operationId: "updateAutomationById"
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: "ID of the automation to update"
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           format: int64
+ *     requestBody:
+ *       description: "Automation details for update"
+ *       required: true
+ *       content:
+ *         application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *     responses:
+ *       '200':
+ *         description: "Successful operation"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *       '500':
+ *         description: "Internal server error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/internalServerError"
+ *     security:
+ *       - bearerAuth: []
+ */
 router.put('/:id', verifyToken, async (req, res) => {
     db.updateAutomationById(req.params.id, req.body.reaction_params, req.body.trigger_params, req.body.automation_name).then((result) => {
         res.status(200).json({ msg: 'Automation updated' });
@@ -273,27 +377,24 @@ router.put('/:id', verifyToken, async (req, res) => {
  *   delete:
  *     tags:
  *       - automations
- *     summary: Delete an automation
- *     description: Delete an automation
- *     operationId: deleteAutomation
+ *     summary: "Delete an automation"
+ *     description: "Delete an automation"
+ *     operationId: "deleteAutomation"
  *     consumes:
  *       - application/json
  *     produces:
  *       - application/json
  *     parameters:
- *       - name: "body"
- *         in: "body"
- *         description: Automation
+ *       - name: "id"
+ *         in: "query"
+ *         description: "ID of the automation to delete"
  *         required: true
  *         schema:
- *           type: "object"
- *           properties:
- *             id:
- *               type: "integer"
- *               format: "int64"
+ *           type: "integer"
+ *           format: "int64"
  *     responses:
  *       '200':
- *         description: Successful operation
+ *         description: "Successful operation"
  *         content:
  *           application/json:
  *             schema:
@@ -302,20 +403,23 @@ router.put('/:id', verifyToken, async (req, res) => {
  *                 msg:
  *                   type: "string"
  *       '400':
- *         description: Bad parameters
+ *         description: "Bad parameters"
  *         content:
  *           application/json:
  *             schema:
- *               type: "object"
- *               properties:
- *                 msg:
- *                   type: "string"
+ *               $ref: "#/components/schemas/badRequest"
  *       '403':
- *         description: Unauthorized
+ *         description: "Unauthorized - Invalid or missing authentication token"
  *         content:
  *           application/json:
  *             schema:
  *               $ref: "#/components/schemas/unauthorized"
+ *       '500':
+ *         description: "Internal server error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/internalServerError"
  *     security:
  *       - bearerAuth: []
  */

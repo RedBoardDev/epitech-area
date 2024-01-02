@@ -10,6 +10,30 @@ app.get("/", (req, res) => {
     res.status(200).json({ msg: "Area API" });
 });
 
+/**
+ * @swagger
+ * /about.json:
+ *   get:
+ *     tags:
+ *       - "about"
+ *     summary: "Get information about the application"
+ *     description: "Retrieve information about the client and server."
+ *     operationId: "getAboutInfo"
+ *     security: []
+ *     responses:
+ *       '200':
+ *         description: "About information retrieved successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/AboutInfoResponse"
+ *       '500':
+ *         description: "Internal server error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/internalServerError"
+ */
 app.get("/about.json", (req, res) => {
     const clientHost = req.ip;
     const serverTime = Math.floor(Date.now() / 1000);
