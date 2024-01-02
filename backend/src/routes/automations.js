@@ -42,6 +42,16 @@ router.get('/', verifyToken, async (req, res) => {
     }
 });
 
+router.get('/:id', verifyToken, async (req, res) => {
+    try {
+        const result = await db.getAutomationsById(req.params.id);
+        res.json(result);
+
+    } catch (error) {
+        res.status(500).json({ msg: "Internal server error", error: err });
+    }
+})
+
 /**
  * @swagger
  * /automations:
@@ -125,10 +135,10 @@ router.post('/', verifyToken, async (req, res) => {
         return;
     }
 
-    db.insertAutomation(userId, req.body.trigger_service_id, req.body.trigger_id, req.body.trigger_params, req.body.reaction_service_id, req.body.reaction_id, req.body.reaction_params)
-        .then((result) => {
-            res.status(201).json({ msg: 'Automation created' });
-        }).catch(async (error) => {
+    db.insertAutomation(userId, req.body.trigger_service_id, req.body.trigger_id, req.body.trigger_params, req.body.reaction_service_id, req.body.reaction_id, req.body.reaction_params, req.body.automation_name)
+    .then((result) => {
+        res.status(201).json({ msg: 'Automation created' });
+    }).catch(async (error) => {
             if (error.code === 'ER_NO_REFERENCED_ROW_2') {
                 const triggerServiceExists = await db.getServiceOauth(userId, trigger_service_id);
 
@@ -247,6 +257,15 @@ router.put('/', verifyToken, async (req, res) => {
             res.status(500).json({ msg: 'Internal server error', error: error });
         });
 });
+
+router.put('/:id', verifyToken, async (req, res) => {
+    db.updateAutomationById(req.params.id, req.body.reaction_params, req.body.trigger_params, req.body.automation_name).then((result) => {
+        res.status(200).json({ msg: 'Automation updated' });
+    }).catch((err) => {
+        res.status(500).json({ msg: "Internal server error", error: err });
+        console.error(err);
+    })
+})
 
 /**
  * @swagger

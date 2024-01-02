@@ -12,31 +12,22 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useAuth } from '../../AuthContext';
 import { useSettings } from '../../SettingsContext';
+import EditModalAutomations from './EditModalAutomations';
 
-function createData(id, serviceName, trigger, reaction, type, status, imageSrc) {
-    return { id, serviceName, trigger, reaction, type, status, imageSrc };
+function createData(id, serviceName, trigger, reaction, type, status, imageSrc, name) {
+    return { id, serviceName, trigger, reaction, type, status, imageSrc, name };
 }
 
 const rows = [
-    createData('1', 'Discord Spotify skipper', 'Discord', 'Running'),
-    createData('2', 'Ya un tweet', 'Twitter', 'Paused'),
-    createData('3', 'Sardoche est en live', 'Twitch', 'Idle'),
-    createData('4', 'Service 4', 'Platform', 'Status'),
-    createData('5', 'Service 5', 'Platform', 'Status'),
-    createData('6', 'Service 6', 'Platform', 'Status'),
-    createData('7', 'Service 7', 'Platform', 'Status'),
-    createData('8', 'Service 8', 'Platform', 'Status'),
-    createData('9', 'Service 9', 'Platform', 'Status'),
-    createData('10', 'Service 10', 'Platform', 'Status'),
-    createData('11', 'Service 11', 'Platform', 'Status'),
-    createData('12', 'Service 12', 'Platform', 'Status'),
-    createData('13', 'Service 13', 'Platform', 'Status'),
+    createData(''),
 ];
 
 export default function ServicesDash() {
     const { t } = useSettings();
     const [tableData, setTableData] = useState(rows);
-    const { getAllServices, getAutomations, deleteAutomation } = useAuth();
+    const [automation, setAutomation] = useState();
+    const [openEditModal, setOpenEditModal] = useState(false);
+    const { getAllServices, getAutomations, deleteAutomation, getAutomationsById } = useAuth();
 
     useEffect(() => {
         const getAllAutomations = async () => {
@@ -60,8 +51,9 @@ export default function ServicesDash() {
                         reaction,
                         'Automation',
                         'Status',
-                        triggerService.icon
-                    );
+                        triggerService.icon,
+                        automation.automation_name
+                        );
                     automationsMap[automation.id] = automationData;
                 });
                 const newData = Object.values(automationsMap);
@@ -73,6 +65,23 @@ export default function ServicesDash() {
         getAllAutomations();
     }, [getAllServices, getAutomations]);
 
+    const handleOpenEditModal = (row) => {
+        const getAutomation = async () => {
+            try {
+                const result = await getAutomationsById(row);
+                setAutomation(result);
+            } catch (error) {
+                console.error('Error fetching automation by id:', error);
+            }
+        }
+        getAutomation();
+        setOpenEditModal(true);
+    };
+
+    const closeModal = () => {
+        setOpenEditModal(false);
+    };
+
     const handleDeleteAutomation = async (id) => {
         try {
             await deleteAutomation(id);
@@ -80,6 +89,20 @@ export default function ServicesDash() {
             setTableData(updatedTableData);
         } catch (error) {
             console.error('delete automation failed:', error);
+        }
+    };
+
+    const updateAutomation = (updatedAutomationData) => {
+        if (updatedAutomationData && updatedAutomationData.id) {
+            setTableData((prevTableData) =>
+                prevTableData.map((row) =>
+                    row.id === updatedAutomationData.id
+                    ? { ...row, name: updatedAutomationData.automation_name }
+                    : row
+                )
+            );
+        } else {
+            console.error('Invalid data format for updating automation.');
         }
     };
 
@@ -98,6 +121,7 @@ export default function ServicesDash() {
                     <TableRow>
                         <TableCell>{t("ID")}</TableCell>
                         <TableCell>{t("Services name")}</TableCell>
+                        <TableCell>Automations name</TableCell>
                         <TableCell>{t("Trigger")}</TableCell>
                         <TableCell>{t("Reaction")}</TableCell>
                         <TableCell>{t("Status")}</TableCell>
@@ -118,6 +142,7 @@ export default function ServicesDash() {
                                 />
                                 {row.serviceName}
                             </TableCell>
+                            <TableCell {...TableCellChildrends}>{row.name}</TableCell>
                             <TableCell {...TableCellChildrends}>{row.trigger}</TableCell>
                             <TableCell {...TableCellChildrends}>{row.reaction}</TableCell>
                             <TableCell {...TableCellChildrends}>{row.status}</TableCell>
@@ -125,7 +150,7 @@ export default function ServicesDash() {
                                 <IconButton style={{ color: TableCell.defaultProps.style.color }} aria-label="play">
                                     <PlayCircleOutlineIcon />
                                 </IconButton>
-                                <IconButton style={{ color: TableCell.defaultProps.style.color }} aria-label="edit">
+                                <IconButton onClick={() => handleOpenEditModal(row.id)} style={{ color: TableCell.defaultProps.style.color }} aria-label="edit">
                                     <EditIcon />
                                 </IconButton>
                                 <IconButton onClick={() => handleDeleteAutomation(row.id)} style={{ color: TableCell.defaultProps.style.color }} aria-label="delete">
@@ -134,6 +159,7 @@ export default function ServicesDash() {
                             </TableCell>
                         </TableRow>
                     ))}
+                    <EditModalAutomations isOpen={openEditModal} closeModal={closeModal} selectedAutomation={automation} onUpdateAutomation={updateAutomation} />
                 </TableBody>
             </Table>
             <div style={{ height: '100px' }}></div>

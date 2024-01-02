@@ -38,7 +38,6 @@ const ContentBox = styled(Box)({
 
 function AddCategory({ id, name, color, triggers, handleClick }) {
     const [isOpen, setIsOpen] = useState(false);
-
     return (
         <Box>
             <MainBox color={color}>

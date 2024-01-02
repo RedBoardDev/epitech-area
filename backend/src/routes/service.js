@@ -139,19 +139,29 @@ router.get('/:id', verifyToken, async (req, res) => {
  *       - bearerAuth: []
  */
 router.get('/oauth/:id/connect', verifyToken, async (req, res) => {
-    const userId = getIdFromToken(req, res); if (userId === -1) return;
+    const userId = getIdFromToken(req, res);
+    if (userId === -1) return;
+
     const service = serviceManager.getService(req.params.id);
     if (!service) {
-        res.status(404).json({ msg: 'Service not found' });
-        return;
+        return res.status(404).json({ msg: 'Service not found' });
     }
     const ret = await service.connect(userId);
     if (ret === "error") {
-        res.status(400).json(msg.error);
-    } else {
-        // res.redirect(ret.url);
-        res.status(200).json({ url: ret.url });
+        return res.status(400).json({ msg: 'Error connecting to the service' });
     }
+
+
+    if (ret.auth === false) {
+        const rows = await db.getServiceOauth(userId, service.id);
+
+        if (rows[0]) {
+            await db.updateServiceOauth(userId, service.id, 'disable');
+        } else {
+            await db.insertServiceOauth(userId, service.id, 'disable');
+        }
+    }
+    return res.status(200).json({ url: ret.url });
 });
 
 /**
@@ -244,13 +254,13 @@ router.get('/oauth/:id/callback', async (req, res) => {
     db.getServiceOauth(userId, service.id).then((rows) => {
         if (rows[0]) {
             db.updateServiceOauth(userId, service.id, ret.token).then((result) => {
-                res.send(ret.action);
+                return res.send(ret.action);
             }).catch((err) => {
                 return res.status(500).json({ msg: 'Internal server error', error: err });
             });
         } else {
             db.insertServiceOauth(userId, service.id, ret.token).then((result) => {
-                res.send(ret.action);
+                return res.send(ret.action);
             }).catch((err) => {
                 return res.status(500).json({ msg: 'Internal server error', error: err });
             });

@@ -5,10 +5,12 @@ import Grid from '@mui/material/Grid';
 import ServicesList from './components/AutomationsList';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
+import { useTheme } from '../themeContext';
 
 export default function ServicesDash() {
     const navigate = useNavigate();
     const { verifyToken } = useAuth();
+    const { mainTheme } = useTheme();
 
     useEffect(() => {
         const checkToken = async () => {
@@ -30,7 +32,7 @@ export default function ServicesDash() {
                         <TopBar />
                     </Grid>
                     <Grid item xs={12} style={{overflow: 'hidden'}}>
-                        <div style={{backgroundColor: 'white', height: '93.5%', top: '6.5%', left: '15%', position: 'absolute', width: '85%', zIndex: '-1', overflow: 'auto', padding: '2%'}}>
+                        <div style={{backgroundColor: mainTheme.palette.mode, height: '93.5%', top: '6.5%', left: '15%', position: 'absolute', width: '85%', zIndex: '-1', overflow: 'auto', padding: '2%'}}>
                             <ServicesList />
                         </div>
                     </Grid>

@@ -9,6 +9,7 @@ import HeaderComponent from './Header';
 import backgroundImage from '../img/BgTop.png';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import { useSettings } from '../SettingsContext';
+import { useTheme } from '../themeContext';
 
 export const RegisterGithubCallback = () => {
     const navigate = useNavigate();
@@ -39,6 +40,7 @@ const Register = () => {
     const [lastname, setLastname] = useState('Binder');
     const [firstname, setFirstname] = useState('Lucas');
     const { register, logout, verifyToken } = useAuth();
+    const { mainTheme } = useTheme();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -86,6 +88,7 @@ const Register = () => {
                     width: '100%',
                     height: '100vh',
                     backgroundImage: `url(${backgroundImage})`,
+                    backgroundColor: mainTheme.palette.mainBackground.main,
                     backgroundRepeat: 'no-repeat',
                     backgroundPosition: 'right bottom',
                     backgroundSize: '60% 100%',

@@ -15,8 +15,10 @@ import Translation from "./translations.js";
 import { options_SwaggerJsdoc, options_SwaggerUI } from "./swaggerConfig.js";
 
 dotenv.config();
-if (!fs.existsSync(`${process.env.UPLOAD_DIRECTORY}/uploads`)) {
-    fs.mkdirSync(`${process.env.UPLOAD_DIRECTORY}/uploads`);
+const uploadDirectory = process.env.UPLOAD_DIRECTORY || '/tmp';
+
+if (!fs.existsSync(`${uploadDirectory}/uploads`)) {
+    fs.mkdirSync(`${uploadDirectory}/uploads`);
 }
 
 const storage = multer.diskStorage({

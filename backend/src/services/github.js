@@ -21,7 +21,7 @@ export const connect = async (userId) => {
             scope: 'user repo',
         };
         const query = Object.keys(params).map((key) => `${key}=${encodeURIComponent(params[key])}`).join('&');
-        return { status: "success", url: `${url}?${query}` };
+        return { status: "success", url: `${url}?${query}`, auth: true };
     } catch (error) {
         return { status: "error", msg: error };
     }
@@ -134,6 +134,46 @@ export const triggers = [
             console.log('token:', token);
             return null;
         }
+    },
+    {
+        id: 4,
+            name: 'New branch',
+            description: 'Triggers when a new branch is created to a repository',
+            fields: [
+                {
+                    id: 'repository_name',
+                    name: 'Repository name',
+                    description: 'The repository to watch',
+                    type: 'text'
+                }
+            ],
+            check: async (autoId, userData, params, checkData, token) => {
+                try {
+                    console.log(`${name} trigger 4 checking...`);
+                    const resp = await axios.get(`https://api.github.com/repos/${params.repository_name}/branches`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            Accept: 'application/vnd.github+json'
+                        }
+                    });
+                    const branches = resp.data;
+                    if (!branches || !branches.length)
+                    return null;
+                    const lastBranch = branches[0];
+                    console.log("lastbranch:", lastBranch);
+                    console.log("check data lastbranch:", checkData.lastBranch);
+                    if (checkData.lastBranch && lastBranch.name === checkData.lastBranch)
+                        return null;
+                    db.updateAutomation(userData.id, autoId, `trigger_check_data = '${JSON.stringify({ lastBranch: lastBranch.name })}'`);
+                    return {
+                        text: `New branch created: ${lastBranch.name} in the repository ${params.repository_name}`,
+                        data: lastBranch
+                    };
+                } catch (error) {
+                    console.error(error);
+                    return null;
+                }
+            }
     }
 ];
 

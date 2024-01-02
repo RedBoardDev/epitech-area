@@ -6,9 +6,14 @@ langRouter.use("/auth", authRouter);
 langRouter.use("/user", userRouter);
 
 app.get("/", (req, res) => {
-    res.send("Area API");
+    res.status(200).json({ msg: "Area API" });
 });
 
-app.listen(process.env.API_PORT, process.env.API_HOST_NAME, () => {
-    console.log(`App listening to http://${process.env.API_HOST_NAME}:${process.env.API_PORT}`);
+const port = process.env.API_PORT || 3000;
+const host = process.env.API_HOST_NAME || 'localhost';
+
+app.listen(port, host, () => {
+    console.log(`App listening to http://${host}:${port}`);
 });
+
+export const testApp = app;

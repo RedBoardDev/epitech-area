@@ -24,7 +24,7 @@ export default function ServicesDash() {
         }).catch((error) => {
             console.error('Error:', error);
         });
-    }, []);
+    }, [getAllServices]);
 
     const openModal = (choose) => {
         if (selectedTrigger && selectedReaction) return;
