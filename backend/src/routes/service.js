@@ -1,5 +1,5 @@
 import express from "express";
-import { db, serviceManager, verifyToken, getIdFromToken } from "../global.js";
+import { db, serviceManager, verifyToken, getIdFromToken, t } from "../global.js";
 
 const router = express.Router();
 
@@ -33,7 +33,7 @@ const router = express.Router();
  *       - bearerAuth: []
  */
 router.get('/', verifyToken, async (req, res) => {
-    const services = serviceManager.getServices();
+    const services = serviceManager.getServicesTranslated(t.getUrlLang(req));
     res.status(200).json(services);
 });
 
@@ -81,7 +81,7 @@ router.get('/', verifyToken, async (req, res) => {
  *       - bearerAuth: []
  */
 router.get('/:id', verifyToken, async (req, res) => {
-    const service = serviceManager.getService(req.params.id);
+    const service = serviceManager.getServiceTranslated(t.getUrlLang(req), req.params.id);
     if (!service) {
         res.status(404).json({ msg: 'Service not found' });
         return;
@@ -243,14 +243,14 @@ router.get('/oauth/:id/callback', async (req, res) => {
     const { code } = req.query;
     const userId = req.query ? req.query.userId || req.query.state : undefined;
 
-    if (!code)
-        return res.status(400).json({ msg: 'Bad parameter' });
+    if (!code || !userId)
+        return res.status(400).json({ msg: 'Bad parameter1' });
 
     const ret = await service.callback(code);
     if (ret === "error")
         return res.status(400).json(ret.msg);
     if (!ret.token || !ret.action)
-        return res.status(400).json({ msg: 'Bad parameter' });
+        return res.status(400).json({ msg: 'Bad parameter2' });
 
     db.getServiceOauth(userId, service.id).then((rows) => {
         if (rows[0]) {

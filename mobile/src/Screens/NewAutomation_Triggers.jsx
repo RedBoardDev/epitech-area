@@ -22,11 +22,11 @@ import {
 import { ScrollView } from "react-native-gesture-handler";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useContext } from 'react';
-import SettingsContext from '../Contexts/Settings';
+import { useSettings } from '../Contexts/Settings';
 import TextInput from "../Components/TextInput";
 
 export function NewAutomation_Triggers1({ route }) {
-  const { settings } = useContext(SettingsContext);
+  const { settings } = useSettings();
   const { colors } = useTheme();
   const navigation = useNavigation();
   const { serviceData } = route.params;
@@ -41,7 +41,7 @@ export function NewAutomation_Triggers1({ route }) {
       <ScrollView>
         {serviceData && serviceData.map(service => (
           <TouchableOpacity style={[styles.card, styles.cardService]} key={service.id} onPress={() => { navigateToTriggers2(service.id) }}>
-            <Image style={styles.image} source={{ uri: `${settings.apiLocation}/${service.icon}` }} />
+            <Image style={styles.image} source={{ uri: `${settings.apiBaseUrl}/${service.icon}` }} />
             <View style={styles.infoContainer}>
               <View style={styles.header}>
                 <Text style={styles.title}>{service.name}</Text>
@@ -56,6 +56,7 @@ export function NewAutomation_Triggers1({ route }) {
 }
 
 export function NewAutomation_Triggers2({ route }) {
+  const { t } = useSettings();
   const { colors } = useTheme();
   const navigation = useNavigation();
   const { serviceData, triggerServiceId } = route.params;
@@ -95,7 +96,7 @@ export function NewAutomation_Triggers2({ route }) {
     <Modal animationType="slide" transparent={false} visible={modalVisible} style={styles.modal}>
         <SafeAreaView style={styles.container}>
         <KeyboardAwareScrollView style={{ padding: 20 }}>
-          <Text style={{ fontSize: 30, marginBottom: 30 }}>Parameters</Text>
+          <Text style={{ fontSize: 30, marginBottom: 30 }}>{t("Parameters")}</Text>
           {selectedTrigger && selectedTrigger.fields.map(field => {
             if (field.type === 'text') {
               return RenderTextInput(field);
@@ -107,7 +108,6 @@ export function NewAutomation_Triggers2({ route }) {
         </KeyboardAwareScrollView>
         </SafeAreaView>
       </Modal>
-      <Text>Chose a trigger</Text>
       <ScrollView>
         {serviceData && serviceData.find(service => service.id === triggerServiceId).triggers.map(trigger => (
           <TouchableOpacity style={styles.card} key={trigger.id} onPress={() => { openModal(trigger.id) }}>

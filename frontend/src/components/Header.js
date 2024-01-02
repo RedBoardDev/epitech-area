@@ -8,8 +8,10 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Logo from '../img/logo.png';
+import { useSettings } from '../SettingsContext';
 
 function HeaderComponent({ showButton }) {
+    const { t } = useSettings();
     const { isAuthenticated, logout } = useAuth();
     const navigate = useNavigate();
 
@@ -38,7 +40,7 @@ function HeaderComponent({ showButton }) {
                             color: '#fff',
                         }}
                     >
-                        Home
+                        {t("Home")}
                     </Typography>
                     <Typography
                         component={Link}
@@ -51,7 +53,7 @@ function HeaderComponent({ showButton }) {
                             color: '#fff',
                         }}
                     >
-                        Services
+                        {t("Services")}
                     </Typography>
                     {isAuthenticated ? (
                         <Button
@@ -59,11 +61,10 @@ function HeaderComponent({ showButton }) {
                             color="primary"
                             sx={{
                                 marginLeft: '16px',
-                                width: '160px',
                                 height: '5vh',
                                 backgroundColor: '#4B4E6D',
                                 border: 'none',
-                                padding: '0 0%',
+                                paddingX: '15px',
                                 borderRadius: '10px',
                                 cursor: 'pointer',
                                 fontSize: '1.4rem',
@@ -79,7 +80,7 @@ function HeaderComponent({ showButton }) {
                             component={Link}
                             to="/dashboard"
                         >
-                            Dashboard
+                            {t("Dashboard")}
                         </Button>
                     ) : (
                         <Button
@@ -88,11 +89,10 @@ function HeaderComponent({ showButton }) {
                             color="primary"
                             sx={{
                                 marginLeft: '16px',
-                                width: '140px',
                                 height: '5vh',
                                 backgroundColor: '#4B4E6D',
                                 border: 'none',
-                                padding: '0 0%',
+                                paddingX: '15px',
                                 borderRadius: '10px',
                                 cursor: 'pointer',
                                 fontSize: '1.4rem',
@@ -106,9 +106,8 @@ function HeaderComponent({ showButton }) {
                                 },
                             }}
                         >
-                            Sign In
+                            {t("Sign In")}
                         </Button>
-
                     )}
                 </Toolbar>
             </AppBar>

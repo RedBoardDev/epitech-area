@@ -1,9 +1,11 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { callApi } from './ApiCaller';
+import { useSettings } from './SettingsContext';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+    const { settings } = useSettings();
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     useEffect(() => {
@@ -46,7 +48,7 @@ export const AuthProvider = ({ children }) => {
         try {
             const storedToken = localStorage.getItem('token');
             const authHeaders = { ...headers, Authorization: `Bearer ${storedToken}` };
-            const response = await callApi(method, endpoint, data, authHeaders);
+            const response = await callApi(method, settings.language, endpoint, data, authHeaders);
             return response;
         } catch (error) {
             if (error.response && error.response.status === 403) {
@@ -81,7 +83,7 @@ export const AuthProvider = ({ children }) => {
 
     const register = async (email, password, lastname, firstname) => {
         try {
-            const response = await callApi('POST', '/auth/register', { email, password, lastname, firstname });
+            const response = await callApi('POST', settings.language, '/auth/register', { email, password, lastname, firstname });
             saveData(response.token, response.id);
             setIsAuthenticated(true);
             return response;
@@ -94,7 +96,7 @@ export const AuthProvider = ({ children }) => {
 
     const registerGithub = async (code) => {
         try {
-            const response = await callApi('POST', `/auth/register/github/${code}`);
+            const response = await callApi('POST', settings.language, `/auth/register/github/${code}`);
             saveData(response.token, response.id);
             setIsAuthenticated(true);
             return response;
@@ -107,7 +109,7 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (email, password) => {
         try {
-            const response = await callApi('POST', '/auth/login', { email, password });
+            const response = await callApi('POST', settings.language, '/auth/login', { email, password });
             saveData(response.token, response.id);
             setIsAuthenticated(true);
             return response;
@@ -120,7 +122,7 @@ export const AuthProvider = ({ children }) => {
 
     const loginGithub = async (code) => {
         try {
-            const response = await callApi('POST', `/auth/login/github/${code}`);
+            const response = await callApi('POST', settings.language, `/auth/login/github/${code}`);
             saveData(response.token, response.id);
             setIsAuthenticated(true);
             return response;

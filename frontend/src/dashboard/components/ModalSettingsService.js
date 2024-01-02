@@ -5,8 +5,10 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import { useSettings } from '../../SettingsContext';
 
 const ModalSettingsService = ({ isOpen, closeModal, data, onSubmit }) => {
+    const { t } = useSettings();
     const [formValues, setFormValues] = useState({});
 
     const handleChange = (e) => {
@@ -32,7 +34,7 @@ const ModalSettingsService = ({ isOpen, closeModal, data, onSubmit }) => {
 
     return (
         <Dialog open={isOpen} onClose={closeModal}>
-            <DialogTitle>Settings</DialogTitle>
+            <DialogTitle>{t("Parameters")}</DialogTitle>
             <DialogContent>
                 <form onSubmit={handleSubmit}>
                     {data?.fields && data.fields.map((field) => (
@@ -48,9 +50,9 @@ const ModalSettingsService = ({ isOpen, closeModal, data, onSubmit }) => {
                         </div>
                     ))}
                     <DialogActions>
-                        <Button onClick={closeModal}>Cancel</Button>
+                        <Button onClick={closeModal}>{t("Cancel")}</Button>
                         <Button type="submit" variant="contained" color="primary">
-                            Submit
+                            {t("Submit")}
                         </Button>
                     </DialogActions>
                 </form>

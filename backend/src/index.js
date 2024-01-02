@@ -1,9 +1,9 @@
-import { app, db } from "./global.js";
+import { app, langRouter, db } from "./global.js";
 import authRouter from "./routes/auth.js";
 import userRouter from "./routes/user.js";
 
-app.use("/auth", authRouter);
-app.use("/user", userRouter);
+langRouter.use("/auth", authRouter);
+langRouter.use("/user", userRouter);
 
 app.get("/", (req, res) => {
     res.status(200).json({ msg: "Area API" });

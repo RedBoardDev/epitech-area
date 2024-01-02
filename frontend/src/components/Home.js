@@ -2,8 +2,10 @@ import React from 'react';
 import HeaderComponent from './Header';
 import backgroundImage from '../img/BgTop.png';
 import Button from '@mui/material/Button';
+import { useSettings } from '../SettingsContext';
 
 const Home = () => {
+    const { t } = useSettings();
 
     return (
         <div>
@@ -38,7 +40,7 @@ const Home = () => {
                             HarmonieWeb
                         </h1>
                         <p style={{ fontSize: '1.6rem', fontWeight: 400, marginBottom: '2rem', textShadow: '0px 4px 4px rgba(0, 0, 0, 0.85)', color: '#fff' }}>
-                            HarmonieWeb is an online and mobile platform.<br />It allows you to connect and harmonize your online actions in a simple and secure way !
+                            {t("HarmonieWeb is an online and mobile platform.")}<br />{t("It allows you to connect and harmonize your online actions in a simple and secure way!")}
                         </p>
 
                         <Button
@@ -64,7 +66,7 @@ const Home = () => {
                                 },
                             }}
                         >
-                            Learn More
+                            {t("Learn More")}
                         </Button>
                     </div>
                     <div
