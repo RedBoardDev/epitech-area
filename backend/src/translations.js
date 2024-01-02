@@ -27,8 +27,10 @@ class Translation {
             return key;
         if (!this.languages[lang])
             throw new Error(`Translation error: Language ${lang} not found`);
-        if (!this.languages[lang][key])
-            throw new Error(`Translation error: Key ${key} not found in language ${lang}`);
+        if (!this.languages[lang][key]) {
+            console.error(`Translation warning: Key "${key}" not found in language ${lang}`);
+            return key;
+        }
         return this.languages[lang][key];
     }
 }
