@@ -11,6 +11,7 @@ import { PauseCircleOutline } from '@mui/icons-material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useAuth } from '../../AuthContext';
+import { useSettings } from '../../SettingsContext';
 import EditModalAutomations from './EditModalAutomations';
 
 function createData(id, serviceName, trigger, reaction, type, status, imageSrc, name) {
@@ -22,6 +23,7 @@ const rows = [
 ];
 
 export default function ServicesDash() {
+    const { t } = useSettings();
     const [tableData, setTableData] = useState(rows);
     const [automation, setAutomation] = useState();
     const [openEditModal, setOpenEditModal] = useState(false);
@@ -117,13 +119,13 @@ export default function ServicesDash() {
             <Table>
                 <TableHead>
                     <TableRow>
-                        <TableCell>ID</TableCell>
-                        <TableCell>Services name</TableCell>
+                        <TableCell>{t("ID")}</TableCell>
+                        <TableCell>{t("Services name")}</TableCell>
                         <TableCell>Automations name</TableCell>
-                        <TableCell>Triggers</TableCell>
-                        <TableCell>Reactions</TableCell>
-                        <TableCell>Status</TableCell>
-                        <TableCell>Actions</TableCell>
+                        <TableCell>{t("Trigger")}</TableCell>
+                        <TableCell>{t("Reaction")}</TableCell>
+                        <TableCell>{t("Status")}</TableCell>
+                        <TableCell>{t("Actions")}</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>

@@ -23,11 +23,11 @@ import { ScrollView } from "react-native-gesture-handler";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getServices } from '../Core/ServerCalls';
 import { useContext } from 'react';
-import SettingsContext from '../Contexts/Settings';
+import { useSettings } from '../Contexts/Settings';
 import TextInput from "../Components/TextInput";
 
 export function NewAutomation_Reactions1({ route }) {
-  const { settings } = useContext(SettingsContext);
+  const { settings } = useSettings();
   const { colors } = useTheme();
   const navigation = useNavigation();
   const { serviceData, triggerServiceId, triggerId, triggerParams } = route.params;
@@ -41,7 +41,7 @@ export function NewAutomation_Reactions1({ route }) {
       <ScrollView>
         {serviceData && serviceData.map(service => (
           <TouchableOpacity style={[styles.card, styles.cardService]} key={service.id} onPress={() => { navigateToReactions2(service.id) }}>
-            <Image style={styles.image} source={{ uri: `${settings.apiLocation}/${service.icon}` }} />
+            <Image style={styles.image} source={{ uri: `${settings.apiBaseUrl}/${service.icon}` }} />
             <View style={styles.infoContainer}>
               <View style={styles.header}>
                 <Text style={styles.title}>{service.name}</Text>
@@ -56,6 +56,7 @@ export function NewAutomation_Reactions1({ route }) {
 }
 
 export function NewAutomation_Reactions2({ route }) {
+  const { t } = useSettings();
   const { colors } = useTheme();
   const navigation = useNavigation();
   const { serviceData, triggerServiceId, triggerId, triggerParams, reactionServiceId } = route.params;
@@ -96,7 +97,7 @@ export function NewAutomation_Reactions2({ route }) {
       <SafeAreaView style={styles.container}>
 
         <KeyboardAwareScrollView style={{ padding: 20 }}>
-          <Text style={{ fontSize: 30, marginBottom: 30 }}>Parameters</Text>
+          <Text style={{ fontSize: 30, marginBottom: 30 }}>{t("Parameters")}</Text>
           {selectedReaction && selectedReaction.fields.map(field => {
             if (field.type === 'text') {
               return RenderTextInput(field);
@@ -108,7 +109,6 @@ export function NewAutomation_Reactions2({ route }) {
         </KeyboardAwareScrollView>
         </SafeAreaView>
       </Modal>
-      <Text>Chose a reaction</Text>
       <ScrollView>
         {serviceData && serviceData.find(service => service.id === reactionServiceId).reactions.map(reaction => (
           <TouchableOpacity style={styles.card} key={reaction.id} onPress={() => { openModal(reaction.id) }}>

@@ -25,10 +25,10 @@ import { NewAutomation_Triggers1, NewAutomation_Triggers2 } from "./NewAutomatio
 import { NewAutomation_Reactions1, NewAutomation_Reactions2 } from "./NewAutomation_Reactions";
 import Button from "../Components/Button";
 import { useContext } from 'react';
-import SettingsContext from '../Contexts/Settings';
+import { useSettings } from '../Contexts/Settings';
 
 function NewAutomation_Submit({ route }) {
-  const { settings } = useContext(SettingsContext);
+  const { settings, t } = useSettings();
   const { colors } = useTheme();
   const navigation = useNavigation();
   const { serviceData, triggerServiceId, triggerId, triggerParams, reactionServiceId, reactionId, reactionParams } = route.params;
@@ -54,14 +54,14 @@ function NewAutomation_Submit({ route }) {
 
     const connect = async (service_id) => {
       try {
-        const response = await serviceOauth(settings.apiLocation, service_id);
+        const response = await serviceOauth(settings.apiBaseUrl, service_id);
         await Linking.openURL(response.url);
       } catch (error) {
         console.error('Service error:', error);
       }
     };
 
-    const resp = await addNewAutomation(settings.apiLocation, triggerServiceId, triggerId, triggerParams, reactionServiceId, reactionId, reactionParams);
+    const resp = await addNewAutomation(settings.apiBaseUrl, triggerServiceId, triggerId, triggerParams, reactionServiceId, reactionId, reactionParams);
     if (resp.status === 401) {
       await connect(resp.service_id);
     } else {
@@ -72,7 +72,7 @@ function NewAutomation_Submit({ route }) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={[styles.card, styles.cardService]}>
-        <Image style={styles.image} source={{ uri: `${settings.apiLocation}/${triggerService?.icon}` }} />
+        <Image style={styles.image} source={{ uri: `${settings.apiBaseUrl}/${triggerService?.icon}` }} />
         <View style={styles.infoContainer}>
           <View style={styles.header}>
             <Text style={styles.title}>{triggerService?.name}</Text>
@@ -82,7 +82,7 @@ function NewAutomation_Submit({ route }) {
       </View>
       <Image style={styles.arrow} source={require('../../assets/down_arrow.png')} tintColor={colors.text} />
       <View style={[styles.card, styles.cardService]}>
-        <Image style={styles.image} source={{ uri: `${settings.apiLocation}/${reactionService?.icon}` }} />
+        <Image style={styles.image} source={{ uri: `${settings.apiBaseUrl}/${reactionService?.icon}` }} />
         <View style={styles.infoContainer}>
           <View style={styles.header}>
             <Text style={styles.title}>{reactionService?.name}</Text>
@@ -90,13 +90,13 @@ function NewAutomation_Submit({ route }) {
           <Text style={styles.content}>{reaction?.name}</Text>
         </View>
       </View>
-      <Button onPress={submit}>Submit</Button>
+      <Button onPress={submit}>{t("Submit")}</Button>
     </SafeAreaView>
   );
 }
 
 export default function NewAutomation() {
-  const { settings } = useContext(SettingsContext);
+  const { settings, t } = useSettings();
   const Stack = createNativeStackNavigator();
   const { colors } = useTheme();
   const navigation = useNavigation();
@@ -104,7 +104,7 @@ export default function NewAutomation() {
 
   useEffect(() => {
     const fetchServices = async () => {
-      const data = await getServices(settings.apiLocation);
+      const data = await getServices(settings.apiBaseUrl);
       setServices(data);
     };
 
@@ -114,11 +114,11 @@ export default function NewAutomation() {
   return (
     services &&
     <Stack.Navigator>
-      <Stack.Screen name="Triggers1" options={{ title: "Chose a service for your trigger" }} component={NewAutomation_Triggers1} initialParams={{ serviceData: services }} />
-      <Stack.Screen name="Triggers2" options={{ title: "Chose a trigger" }} component={NewAutomation_Triggers2} initialParams={{ serviceData: services }} />
-      <Stack.Screen name="Reactions1" options={{ title: "Chose a service for your reaction" }} component={NewAutomation_Reactions1} initialParams={{ serviceData: services }} />
-      <Stack.Screen name="Reactions2" options={{ title: "Chose a reaction" }} component={NewAutomation_Reactions2} initialParams={{ serviceData: services }} />
-      <Stack.Screen name="Submit" options={{ title: "Submit" }} component={NewAutomation_Submit} initialParams={{ serviceData: services }} />
+      <Stack.Screen name="Triggers1" options={{ title: t("Chose a service for your trigger") }} component={NewAutomation_Triggers1} initialParams={{ serviceData: services }} />
+      <Stack.Screen name="Triggers2" options={{ title: t("Chose a trigger") }} component={NewAutomation_Triggers2} initialParams={{ serviceData: services }} />
+      <Stack.Screen name="Reactions1" options={{ title: t("Chose a service for your reaction") }} component={NewAutomation_Reactions1} initialParams={{ serviceData: services }} />
+      <Stack.Screen name="Reactions2" options={{ title: t("Chose a reaction") }} component={NewAutomation_Reactions2} initialParams={{ serviceData: services }} />
+      <Stack.Screen name="Submit" options={{ title: t("Submit") }} component={NewAutomation_Submit} initialParams={{ serviceData: services }} />
     </Stack.Navigator>
   );
 }

@@ -1,5 +1,5 @@
 import express from "express";
-import { db, serviceManager, verifyToken, getIdFromToken } from "../global.js";
+import { db, serviceManager, verifyToken, getIdFromToken, t } from "../global.js";
 
 const router = express.Router();
 
@@ -33,7 +33,7 @@ const router = express.Router();
  *       - bearerAuth: []
  */
 router.get('/', verifyToken, async (req, res) => {
-    const services = serviceManager.getServices();
+    const services = serviceManager.getServicesTranslated(t.getUrlLang(req));
     res.status(200).json(services);
 });
 
@@ -81,7 +81,7 @@ router.get('/', verifyToken, async (req, res) => {
  *       - bearerAuth: []
  */
 router.get('/:id', verifyToken, async (req, res) => {
-    const service = serviceManager.getService(req.params.id);
+    const service = serviceManager.getServiceTranslated(t.getUrlLang(req), req.params.id);
     if (!service) {
         res.status(404).json({ msg: 'Service not found' });
         return;

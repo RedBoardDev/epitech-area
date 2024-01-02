@@ -6,18 +6,18 @@ const api = axios.create({
     baseURL: API_BASE_URL,
 });
 
-export const callApi = (method, endpoint, data = null, headers = {}) => {
+export const callApi = (method, language, endpoint, data = null, headers = {}) => {
     return new Promise(async (resolve, reject) => {
         try {
             const response = await api({
                 method,
-                url: endpoint,
+                url: '/' + language + endpoint,
                 data,
                 headers,
             });
             resolve(response.data);
         } catch (error) {
-            console.error(`Error during API call to ${endpoint}:`, error);
+            console.error(`Error during API call to /${language + endpoint}:`, error);
             reject(error);
         }
     });
