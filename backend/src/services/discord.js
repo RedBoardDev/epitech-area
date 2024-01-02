@@ -37,11 +37,22 @@ async function getVariables() {
     }
 }
 
+async function getGuilds() {
+    const query = `SELECT * FROM discord_guilds_survey_ids`;
+    try {
+        const result = await db.executeQuery(query);
+        return result;
+    } catch (error) {
+        console.error(`Error getting guilds: ${error}`);
+    }
+}
+
 
 // Discord bot
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMembers] });
 let chan_survery_list = [];
+let guild_survery_list = [];
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
@@ -52,6 +63,14 @@ setInterval(() => {
         chan_survery_list = [];
         data.forEach(element => {
             chan_survery_list.push(element.channel_id);
+        });
+    }).catch((error) => {
+        console.error('Error:', error);
+    });
+    getGuilds().then((data) => {
+        guild_survery_list = [];
+        data.forEach(element => {
+            guild_survery_list.push(element.guild_id);
         });
     }).catch((error) => {
         console.error('Error:', error);
@@ -69,6 +88,12 @@ client.on('messageCreate', async (message) => {
         await message.react('🇹');
         await message.react('🇮');
         await message.react('🇴');
+    }
+});
+
+client.on('guildMemberAdd', async (member) => {
+    if (guild_survery_list.includes(member.guild.id)) {
+        await member.send('Welcome to the server!');
     }
 });
 

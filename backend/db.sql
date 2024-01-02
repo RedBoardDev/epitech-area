@@ -39,6 +39,11 @@ CREATE TABLE `discord_channels_survey_ids` (
   PRIMARY KEY (`channel_id`)
 );
 
+CREATE TABLE 'discord_guilds_survey_ids' (
+  `guild_id` VARCHAR(100) NOT NULL,
+  PRIMARY KEY (`guild_id`)
+);
+
 ALTER TABLE `automation` ADD FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
 ALTER TABLE `automation` ADD FOREIGN KEY (`user_id`, `trigger_service_id`) REFERENCES `service_oauth` (`user_id`, `service_id`);
 ALTER TABLE `automation` ADD FOREIGN KEY (`user_id`, `reaction_service_id`) REFERENCES `service_oauth` (`user_id`, `service_id`);
