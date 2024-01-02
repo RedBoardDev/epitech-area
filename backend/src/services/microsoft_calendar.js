@@ -14,12 +14,11 @@ export const connect = async (userId) => {
         const authorizeUrl = `https://login.microsoftonline.com/${microsoftCalendarTenantId}/oauth2/v2.0/authorize`;
         const authParams = {
             client_id: microsoftCalendarClientId,
-            redirect_uri: `${process.env.API_PUBLIC_URL}/service/oauth/${id}/callback`,
+            redirect_uri: `${process.env.API_PUBLIC_URL}/en/service/oauth/${id}/callback`,
             response_type: 'code',
             scope: 'Calendars.ReadWrite',
             state: userId,
         };
-        console.log(authParams);
         const url = Object.keys(authParams).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(authParams[key])}`).join('&');
         const authUrl = `${authorizeUrl}?${url}`;
         return { status: "success", url: authUrl, auth: true };
@@ -36,7 +35,7 @@ export const callback = async (code) => {
             client_id: microsoftCalendarClientId,
             client_secret: microsoftCalendarClientSecret,
             code: code,
-            redirect_uri: `${process.env.API_PUBLIC_URL}/service/oauth/${id}/callback`, // TO SEE IF IT WORKS
+            redirect_uri: `${process.env.API_PUBLIC_URL}/en/service/oauth/${id}/callback`, // TO SEE IF IT WORKS
             grant_type: 'authorization_code',
         };
 
@@ -97,19 +96,43 @@ export const reactions = [
         description: 'Creates a new event',
         fields: [
             {
-                id: 'calendar_id',
-                name: 'Calendar ID',
-                description: 'The ID of the calendar',
+                id: 'name',
+                name: 'Event name',
+                description: 'The name of the event',
+                type: 'text'
+            },
+            {
+                id: 'date_start',
+                name: 'Start date',
+                description: 'The start date of the event',
+                type: 'text'
+            },
+            {
+                id: 'date_end',
+                name: 'End date',
+                description: 'The end date of the event',
                 type: 'text'
             }
         ],
         execute: async (userData, params, token, triggerData) => {
             console.log(triggerData.text);
-            // console.log(`${name} reaction 1 execute`);
-            // console.log('userData:', userData);
-            // console.log('params:', params);
-            // console.log('token:', token);
-            // console.log('triggerData:', triggerData);
+            const eventParams = {
+                subject: params.name,
+                start: {
+                    dateTime: params.date_start,
+                    timeZone: 'UTC',
+                },
+                end: {
+                    dateTime: params.date_end,
+                    timeZone: 'UTC',
+                },
+            };
+            axios.post('https://graph.microsoft.com/v1.0/me/events', eventParams, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
         }
     }
 ];
