@@ -16,7 +16,7 @@ CREATE TABLE `user` (
 CREATE TABLE `service_oauth` (
   `user_id` INT UNSIGNED NOT NULL,
   `service_id` VARCHAR(100) NOT NULL,
-  `token` varchar(1024) NOT NULL,
+  `token` varchar(4096) NOT NULL,
   PRIMARY KEY (`user_id`, `service_id`)
 );
 

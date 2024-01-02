@@ -17,7 +17,7 @@ export const connect = async (userId) => {
         const url = 'https://github.com/login/oauth/authorize';
         const params = {
             client_id: githubClientId,
-            redirect_uri: `${process.env.API_PUBLIC_URL}/service/oauth/${id}/callback?userId=${userId}`,
+            redirect_uri: `${process.env.API_PUBLIC_URL}/en/service/oauth/${id}/callback?userId=${userId}`,
             scope: 'user repo',
         };
         const query = Object.keys(params).map((key) => `${key}=${encodeURIComponent(params[key])}`).join('&');

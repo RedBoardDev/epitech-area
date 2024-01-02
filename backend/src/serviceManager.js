@@ -12,6 +12,7 @@ class ServiceManager {
         this.app.use('/automations', automationsRouter);
 
         this.services = [];
+        this.serviceObject = [];
         this.importServices();
 
         this.intervalId = setInterval(() => this.checkTriggers(), 10000);
@@ -44,6 +45,32 @@ class ServiceManager {
             return value;
         };
         return JSON.parse(JSON.stringify(this.services, replacer));
+    }
+
+    generateServiceObject() {
+        const serviceData = this.services;
+        const serviceObject = serviceData.map(service => {
+            const { name, reactions, triggers } = service;
+
+            const serviceObject = {
+                name: name,
+                actions: reactions.map(reaction => ({
+                    name: reaction.name,
+                    description: reaction.description,
+                })),
+                reactions: triggers.map(trigger => ({
+                    name: trigger.name,
+                    description: trigger.description,
+                })),
+            };
+            return serviceObject;
+        });
+        this.serviceObject = serviceObject;
+    }
+
+    getServiceObject() {
+        if (!this.serviceObject || !this.serviceObject.length) this.generateServiceObject();
+        return this.serviceObject;
     }
 
     getService(id) {

@@ -5,7 +5,23 @@ export const id = '';
 export const name = '';
 export const description = '';
 export const color = '#000000';
-export const icon = '/serviceIcon.svg';
+export const icon = '/serviceIcon.png';
+
+export const connect = async (userId) => {
+    try {
+        return { status: "success", url: ``, auth: true };
+    } catch (error) {
+        return { status: "error", msg: error };
+    }
+};
+
+export const callback = async (code) => {
+    try {
+        return { status: "success", action: ``, token: `` };
+    } catch (error) {
+        return { status: "error", msg: error };
+    }
+};
 
 export const triggers = [
     {
