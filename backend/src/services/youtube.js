@@ -11,10 +11,10 @@ export const connect = async (userId) => {
     const { youtubeClientId, youtubeClientSecret } = process.env;
 
     try {
-        const scope = 'https://www.googleapis.com/auth/drive.metadata.readonly';
+        const scope = 'https://www.googleapis.com/auth/youtube';
         const params = {
             client_id: youtubeClientId,
-            redirect_uri: `http://localhost:6500/service/oauth/${id}/callback`,
+            redirect_uri: `http://localhost:6500/fr/service/oauth/${id}/callback`,
             response_type: 'code',
             scope: scope,
             state: userId,
@@ -36,7 +36,7 @@ export const callback = async (code) => {
                 code: code,
                 client_id: youtubeClientId,
                 client_secret: youtubeClientSecret,
-                redirect_uri: `http://localhost:6500/service/oauth/${id}/callback`,
+                redirect_uri: `http://localhost:6500/fr/service/oauth/${id}/callback`,
                 grant_type: 'authorization_code',
             },
             headers: {
