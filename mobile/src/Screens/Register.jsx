@@ -56,7 +56,7 @@ function RegisterScreen() {
       return
     }
     try {
-      const token = await RegisterEmailPass(settings.apiLocation, email.value, password.value, firstname.value, lastname.value);
+      const token = await RegisterEmailPass(settings.apiBaseUrl, email.value, password.value, firstname.value, lastname.value);
       if (token.length > 10) {
         await AsyncStorage.setItem('jwtToken', token);
         navigation.reset({

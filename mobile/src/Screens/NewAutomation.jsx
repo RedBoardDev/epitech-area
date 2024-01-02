@@ -54,14 +54,14 @@ function NewAutomation_Submit({ route }) {
 
     const connect = async (service_id) => {
       try {
-        const response = await serviceOauth(settings.apiLocation, service_id);
+        const response = await serviceOauth(settings.apiBaseUrl, service_id);
         await Linking.openURL(response.url);
       } catch (error) {
         console.error('Service error:', error);
       }
     };
 
-    const resp = await addNewAutomation(settings.apiLocation, triggerServiceId, triggerId, triggerParams, reactionServiceId, reactionId, reactionParams);
+    const resp = await addNewAutomation(settings.apiBaseUrl, triggerServiceId, triggerId, triggerParams, reactionServiceId, reactionId, reactionParams);
     if (resp.status === 401) {
       await connect(resp.service_id);
     } else {
@@ -72,7 +72,7 @@ function NewAutomation_Submit({ route }) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={[styles.card, styles.cardService]}>
-        <Image style={styles.image} source={{ uri: `${settings.apiLocation}/${triggerService?.icon}` }} />
+        <Image style={styles.image} source={{ uri: `${settings.apiBaseUrl}/${triggerService?.icon}` }} />
         <View style={styles.infoContainer}>
           <View style={styles.header}>
             <Text style={styles.title}>{triggerService?.name}</Text>
@@ -82,7 +82,7 @@ function NewAutomation_Submit({ route }) {
       </View>
       <Image style={styles.arrow} source={require('../../assets/down_arrow.png')} tintColor={colors.text} />
       <View style={[styles.card, styles.cardService]}>
-        <Image style={styles.image} source={{ uri: `${settings.apiLocation}/${reactionService?.icon}` }} />
+        <Image style={styles.image} source={{ uri: `${settings.apiBaseUrl}/${reactionService?.icon}` }} />
         <View style={styles.infoContainer}>
           <View style={styles.header}>
             <Text style={styles.title}>{reactionService?.name}</Text>
@@ -104,7 +104,7 @@ export default function NewAutomation() {
 
   useEffect(() => {
     const fetchServices = async () => {
-      const data = await getServices(settings.apiLocation);
+      const data = await getServices(settings.apiBaseUrl);
       setServices(data);
     };
 

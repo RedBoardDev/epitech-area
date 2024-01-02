@@ -41,7 +41,7 @@ export default function Automations() {
 
   useEffect(() => {
     const fetchAutos = async () => {
-      const data = await getAutos(settings.apiLocation);
+      const data = await getAutos(settings.apiBaseUrl);
       setAutos(data);
     };
 
@@ -55,14 +55,14 @@ export default function Automations() {
         let newImageUrls = {};
         for (let auto of autos) {
           try {
-            const imageUrl = await getImgByServiceId(settings.apiLocation, auto.trigger_service_id);
+            const imageUrl = await getImgByServiceId(settings.apiBaseUrl, auto.trigger_service_id);
             newImageUrls[auto.trigger_service_id] = imageUrl;
           } catch (error) {
             console.error('Error fetching image:', error);
             newImageUrls[auto.trigger_service_id] = null;
           }
           try {
-            const imageUrl = await getImgByServiceId(settings.apiLocation, auto.reaction_service_id);
+            const imageUrl = await getImgByServiceId(settings.apiBaseUrl, auto.reaction_service_id);
             newImageUrls[auto.reaction_service_id] = imageUrl;
           } catch (error) {
             console.error('Error fetching image:', error);
@@ -78,14 +78,14 @@ export default function Automations() {
         let newServices = {};
         for (let auto of autos) {
           try {
-            const json = await getService(settings.apiLocation, auto.trigger_service_id);
+            const json = await getService(settings.apiBaseUrl, auto.trigger_service_id);
             newServices[auto.trigger_service_id] = json;
           } catch (error) {
             console.error('Error fetching service:', error);
             newServices[auto.trigger_service_id] = null;
           }
           try {
-            const json = await getService(settings.apiLocation, auto.reaction_service_id);
+            const json = await getService(settings.apiBaseUrl, auto.reaction_service_id);
             newServices[auto.reaction_service_id] = json;
           } catch (error) {
             console.error('Error fetching service:', error);
@@ -105,8 +105,8 @@ export default function Automations() {
   };
 
   const rmOne = async (id) => {
-    removeAuto(settings.apiLocation, id);
-    const data = await getAutos(settings.apiLocation);
+    removeAuto(settings.apiBaseUrl, id);
+    const data = await getAutos(settings.apiBaseUrl);
     setAutos(data);
   }
 
@@ -141,7 +141,7 @@ export default function Automations() {
 
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
-    const data = await getAutos(settings.apiLocation);
+    const data = await getAutos(settings.apiBaseUrl);
     setAutos(data);
     setRefreshing(false);
   }, []);

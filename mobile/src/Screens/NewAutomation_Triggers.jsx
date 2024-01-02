@@ -41,7 +41,7 @@ export function NewAutomation_Triggers1({ route }) {
       <ScrollView>
         {serviceData && serviceData.map(service => (
           <TouchableOpacity style={[styles.card, styles.cardService]} key={service.id} onPress={() => { navigateToTriggers2(service.id) }}>
-            <Image style={styles.image} source={{ uri: `${settings.apiLocation}/${service.icon}` }} />
+            <Image style={styles.image} source={{ uri: `${settings.apiBaseUrl}/${service.icon}` }} />
             <View style={styles.infoContainer}>
               <View style={styles.header}>
                 <Text style={styles.title}>{service.name}</Text>

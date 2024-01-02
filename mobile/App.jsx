@@ -46,7 +46,7 @@ function Main() {
   React.useEffect(() => {
     const CheckConnected = async () => {
       try {
-        if (await WorkingToken(settings.apiLocation) == true) {
+        if (await WorkingToken(settings.apiBaseUrl) == true) {
           setInitialRouteName("NavBar");
         } else {
           setInitialRouteName("LoginScreen");

@@ -56,7 +56,7 @@ function LoginScreen() {
       return
     }
     try {
-      const token = await LoginEmailPass(settings.apiLocation, email.value, password.value);
+      const token = await LoginEmailPass(settings.apiBaseUrl, email.value, password.value);
       if (token.length > 10) {
         await AsyncStorage.setItem('jwtToken', token);
         navigation.reset({

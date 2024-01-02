@@ -37,8 +37,8 @@ export default function Home() {
 
   useEffect(() => {
     const fetchNbServicesAutos = async () => {
-      const data = await getNbServices(settings.apiLocation);
-      const autos = await getNbAutos(settings.apiLocation);
+      const data = await getNbServices(settings.apiBaseUrl);
+      const autos = await getNbAutos(settings.apiBaseUrl);
       setNbServices(data);
       setNbAutos(autos);
     };

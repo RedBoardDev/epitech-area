@@ -7,10 +7,15 @@ const SettingsContext = createContext();
 
 export const SettingsProvider = ({ children }) => {
     const [settings, setSettings] = useState({
-        apiLocation: "http://10.137.158.160:6500/fr",
+        apiLocation: `http://10.137.158.160:6500`,
+        apiBaseUrl: `http://10.137.158.160:6500/fr`,
         language: "fr",
     });
     const languages = { fr };
+
+    useEffect(() => {
+        setSettings(prev => ({ ...prev, apiBaseUrl: `${prev.apiLocation}/${prev.language}` }));
+    }, [settings.apiLocation, settings.language]);
 
     const setSettingsAndStore = (newSettings) => {
         setSettings(newSettings);

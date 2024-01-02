@@ -35,7 +35,7 @@ export default function Services() {
   const { settings, t } = useSettings();
 
   const fetchServices = async () => {
-    const data = await getServices(settings.apiLocation);
+    const data = await getServices(settings.apiBaseUrl);
     setServices(data);
   };
 
@@ -74,7 +74,7 @@ export default function Services() {
 
   const connectToService = async (service_id) => {
     try {
-      const response = await serviceOauth(settings.apiLocation, service_id);
+      const response = await serviceOauth(settings.apiBaseUrl, service_id);
       await Linking.openURL(response.url);
     } catch (error) {
       console.error('Service error:', error);
@@ -86,7 +86,7 @@ export default function Services() {
       let newCon = {};
       for (let service of services) {
         try {
-          const con = await getConnected(settings.apiLocation, service.id);
+          const con = await getConnected(settings.apiBaseUrl, service.id);
           newCon[service.id] = con;
         } catch (error) {
           console.log('Error fetching service:', error);
@@ -104,7 +104,7 @@ export default function Services() {
         let newImageUrls = {};
         for (let serv of services) {
           try {
-            const imageUrl = await getImgByServiceId(settings.apiLocation, serv.id);
+            const imageUrl = await getImgByServiceId(settings.apiBaseUrl, serv.id);
             newImageUrls[serv.id] = imageUrl;
           } catch (error) {
             console.error('Error fetching image:', error);
@@ -146,7 +146,7 @@ export default function Services() {
   }
 
   const rmService = async (id) => {
-    updateServiceToken(settings.apiLocation, id, "/");
+    updateServiceToken(settings.apiBaseUrl, id, "/");
     fetchServices();
   }
 
@@ -156,7 +156,7 @@ export default function Services() {
         text: 'Cancel',
         style: 'cancel',
       },
-      {text: 'Yes', onPress: () => deleteServiceConnexion(settings.apiLocation, id)},
+      {text: 'Yes', onPress: () => deleteServiceConnexion(settings.apiBaseUrl, id)},
     ]);
     fetchServices();
   };
