@@ -180,35 +180,35 @@ export const triggers = [
 export const reactions = [
     {
         id: 1,
-        name: 'Create issue',
-        description: 'Creates a new issue',
+        name: 'Create repository',
+        description: 'Creates a new repository in your personal account',
         fields: [
             {
-                id: 'repository_name',
-                name: 'Repository',
-                description: 'The repository to create the issue in',
-                type: 'text'
-            },
-            {
-                id: 'title',
-                name: 'Title',
-                description: 'The title of the issue',
-                type: 'text'
-            },
-            {
-                id: 'body',
-                name: 'Body',
-                description: 'The body of the issue',
+                id: 'name',
+                name: 'Name',
+                description: 'The name of the repository to create',
                 type: 'text'
             }
         ],
         execute: async (userData, params, token, triggerData) => {
             console.log(triggerData.text);
-            // console.log(`${name} reaction 1 execute`);
-            // console.log('userData:', userData);
-            // console.log('params:', params);
-            // console.log('token:', token);
-            // console.log('triggerData:', triggerData);
+
+            axios.post('https://api.github.com/user/repos', {
+                name: params.name,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    Accept: 'application/vnd.github+json',
+                    "X-GitHub-Api-Version": "2022-11-28"
+                }
+            }).then((response) => {
+                console.log("Repository created");
+            }).catch((error) => {
+                if (error.response.status === 422)
+                    console.log("Repository already exists");
+                else
+                    console.log("error:", error);
+            });
         }
     },
     {
