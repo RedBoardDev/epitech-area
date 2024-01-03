@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import axios from 'axios';
+import { db } from "../global.js";
 
 export const id = 'youtube';
 export const name = 'Youtube';
@@ -11,7 +12,7 @@ export const connect = async (userId) => {
     const { youtubeClientId, youtubeClientSecret } = process.env;
 
     try {
-        const scope = 'https://www.googleapis.com/auth/youtube';
+        const scope = 'https://www.googleapis.com/auth/youtube.readonly';
         const params = {
             client_id: youtubeClientId,
             redirect_uri: `http://localhost:6500/fr/service/oauth/${id}/callback`,
@@ -65,8 +66,8 @@ export const callback = async (code) => {
 export const triggers = [
     {
         id: 1,
-        name: '',
-        description: '',
+        name: 'New liked video',
+        description: 'Trigger when a new video is liked on youtube',
         fields: [
             {
                 id: '',
@@ -76,7 +77,30 @@ export const triggers = [
             }
         ],
         check: async (autoId, userData, params, checkData, token) => {
-            return null;
+            try {
+                console.log(`${name} trigger 1 checking...`);
+                const resp = await axios.get(`https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&myRating=like&maxResults=1`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        Accept: '*/*',
+                        'Content-Type': 'application/json',
+                    }
+                });
+                const likedVideo = resp.data.items[0];
+                if (!likedVideo)
+                    return null;
+                const lastLikedVideo = likedVideo.id;
+                if (checkData.lastLikedVideo && lastLikedVideo === checkData.lastLikedVideo)
+                    return null;
+                db.updateAutomation(userData.id, autoId, `trigger_check_data = '${JSON.stringify({ lastLikedVideo: lastLikedVideo })}'`);
+                return {
+                    text: `New video liked : ${lastLikedVideo} on youtube`,
+                    data: lastLikedVideo
+                };
+            } catch (error) {
+                console.error(error);
+                return null;
+            }
         }
     }
 ];

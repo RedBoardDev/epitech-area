@@ -158,10 +158,8 @@ export const triggers = [
                     });
                     const branches = resp.data;
                     if (!branches || !branches.length)
-                    return null;
+                        return null;
                     const lastBranch = branches[0];
-                    console.log("lastbranch:", lastBranch);
-                    console.log("check data lastbranch:", checkData.lastBranch);
                     if (checkData.lastBranch && lastBranch.name === checkData.lastBranch)
                         return null;
                     db.updateAutomation(userData.id, autoId, `trigger_check_data = '${JSON.stringify({ lastBranch: lastBranch.name })}'`);
