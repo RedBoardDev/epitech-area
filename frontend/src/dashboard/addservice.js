@@ -48,6 +48,7 @@ export default function ServicesDash() {
         try {
             await addAutomation(selectedTrigger.service_id, selectedTrigger.id, JSON.stringify(selectedTrigger.formValues),
                 selectedReaction.service_id, selectedReaction.id, JSON.stringify(selectedReaction.formValues));
+            window.location.href = '/dashboard/services';
         } catch (error) {
             const errData = error?.response?.data || null;
             if (!errData) return;
