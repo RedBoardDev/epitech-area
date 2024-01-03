@@ -106,7 +106,43 @@ export const triggers = [
         description: 'Triggers when any followed user starts streaming',
         fields: [],
         check: async (autoId, userData, params, checkData, token) => {
-            return null;
+            try {
+                if (!checkData.userId) {
+                    const userInfo = await axios.get('https://api.twitch.tv/helix/users', {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Client-Id": process.env.twitchClientId,
+                        },
+                    });
+                    const twitchUserId = userInfo.data.data[0].id;
+                    checkData.userId = twitchUserId;
+                    await db.updateAutomation(userData.id, autoId, `trigger_check_data = '${JSON.stringify(checkData)}'`);
+                }
+                const resp = await axios.get(`https://api.twitch.tv/helix/streams/followed?user_id=${checkData.userId}`, {
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                        'Client-ID': process.env.twitchClientId
+                    },
+                });
+                const data = resp.data.data;
+                for (const stream of data) {
+                    if (checkData && checkData.sentStreams && checkData.sentStreams.includes(stream.id))
+                        continue;
+
+                    if (!checkData.sentStreams)
+                        checkData.sentStreams = [];
+                    checkData.sentStreams.push(stream.id);
+                    db.updateAutomation(userData.id, autoId, `trigger_check_data = '${JSON.stringify(checkData)}'`);
+                    return {
+                        text: `${stream.user_name} is now live on twitch playing ${stream.game_name}! (https://twitch.tv/${stream.user_login})`,
+                        data: stream
+                    };
+                }
+                return null;
+            } catch (error) {
+                console.log(error);
+                return null;
+            }
         }
     }
 ];
