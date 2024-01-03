@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, response } from 'express';
 import axios from 'axios';
 import { db } from "../global.js";
 
@@ -12,12 +12,14 @@ export const connect = async (userId) => {
     const { youtubeClientId, youtubeClientSecret } = process.env;
 
     try {
-        const scope = 'https://www.googleapis.com/auth/youtube.readonly';
-        const params = {
+        const scopes = [
+            'https://www.googleapis.com/auth/youtube.readonly',
+            'https://www.googleapis.com/auth/youtube.force-ssl',
+        ];        const params = {
             client_id: youtubeClientId,
             redirect_uri: `http://localhost:6500/fr/service/oauth/${id}/callback`,
             response_type: 'code',
-            scope: scope,
+            scope: scopes.join(' '),
             state: userId,
         };
 
@@ -108,19 +110,53 @@ export const triggers = [
 export const reactions = [
     {
         id: 1,
-        name: '',
-        description: '',
+        name: 'Create a comment',
+        description: 'Create a comment on a youtube video',
         fields: [
             {
-                id: '',
-                name: '',
-                description: '',
+                id: 'id_video',
+                name: 'Video ID',
+                description: 'The id of video to create a comment',
                 type: 'text'
-            }
+            },
+            {
+                id: 'comment_text',
+                name: 'Text',
+                description: 'The text to comment the video',
+                type: 'text'
+            },
         ],
         execute: async (userData, params, token, triggerData) => {
+            try {
+                const options = {
+                    snippet: {
+                        videoId: params.id_video,
+                        topLevelComment: {
+                            snippet: {
+                                textOriginal: params.comment_text
+                            }
+                        }
+                    }
+                };
+                const headers = {
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        "Accept": 'application/json',
+                        "Content-Type": "application/json",
+                    }
+                };
+                axios.post(`https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet`, options, headers);
+                return {
+                    text: `New comment created : ${params.id_video} on youtube`,
+                    data: params.id_video
+                };
+            } catch(error) {
+                console.error(error);
+                console.log("ghezvfjkzhjkfmzrùlf,z");
+                return null;
+            }
         }
-    }
+    },
 ];
 
 export const router = Router();
