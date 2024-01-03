@@ -71,12 +71,6 @@ export const triggers = [
         name: 'New liked video',
         description: 'Trigger when a new video is liked on youtube',
         fields: [
-            {
-                id: '',
-                name: '',
-                description: '',
-                type: 'text'
-            }
         ],
         check: async (autoId, userData, params, checkData, token) => {
             try {
@@ -152,7 +146,6 @@ export const reactions = [
                 };
             } catch(error) {
                 console.error(error);
-                console.log("ghezvfjkzhjkfmzrùlf,z");
                 return null;
             }
         }
