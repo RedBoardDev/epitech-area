@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import axios from 'axios';
+import { db } from "../global.js";
 
 export const id = 'twitch';
 export const name = 'Twitch';
@@ -72,7 +73,31 @@ export const triggers = [
             }
         ],
         check: async (autoId, userData, params, checkData, token) => {
-            return null;
+            try {
+                const resp = await axios.get(`https://api.twitch.tv/helix/streams?user_login=${params.pseudo}`, {
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                        'Client-ID': process.env.twitchClientId
+                    },
+                });
+                const data = resp.data.data[0];
+                if (!data)
+                    return null;
+                if (checkData && checkData.sentStreams && checkData.sentStreams.includes(data.id))
+                    return null;
+
+                if (!checkData.sentStreams)
+                    checkData.sentStreams = [];
+                checkData.sentStreams.push(data.id);
+                db.updateAutomation(userData.id, autoId, `trigger_check_data = '${JSON.stringify(checkData)}'`);
+                return {
+                    text: `${data.user_name} is now live on twitch playing ${data.game_name}! (https://twitch.tv/${data.user_login})`,
+                    data: data
+                };
+            } catch (error) {
+                console.log(error);
+                return null;
+            }
         }
     },
     {
