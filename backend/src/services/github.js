@@ -7,7 +7,7 @@ export const router = Router();
 export const id = 'github';
 export const name = 'Github';
 export const description = 'Github service';
-export const color = '#6e5494';
+export const color = '#4078c0';
 export const icon = '/github.png';
 
 export const connect = async (userId) => {

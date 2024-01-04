@@ -5,7 +5,7 @@ import { db } from "../global.js";
 export const id = 'youtube';
 export const name = 'Youtube';
 export const description = 'Youtube service';
-export const color = 'black';
+export const color = '#ff0000';
 export const icon = '/youtube.png';
 
 export const connect = async (userId) => {
@@ -15,7 +15,8 @@ export const connect = async (userId) => {
         const scopes = [
             'https://www.googleapis.com/auth/youtube.readonly',
             'https://www.googleapis.com/auth/youtube.force-ssl',
-        ];        const params = {
+        ];        
+        const params = {
             client_id: youtubeClientId,
             redirect_uri: `http://localhost:6500/fr/service/oauth/${id}/callback`,
             response_type: 'code',

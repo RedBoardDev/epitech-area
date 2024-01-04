@@ -4,7 +4,7 @@ import axios from 'axios';
 export const id = 'microsoft_calendar';
 export const name = 'Microsoft Calendar';
 export const description = 'Microsoft Calendar service';
-export const color = '#4e2735';
+export const color = '#6264a7';
 export const icon = '/microsoft-calendar.png';
 
 export const connect = async (userId) => {
