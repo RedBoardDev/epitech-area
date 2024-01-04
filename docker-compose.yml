@@ -1,8 +1,8 @@
 version: "3"
 
 services:
-  db:
-    container_name: "area-db"
+  database:
+    container_name: "area-database"
     build:
       context: ./backend
       dockerfile: Dockerfile-db
@@ -25,15 +25,15 @@ services:
       timeout: 5s
       retries: 3
 
-  backend:
-    container_name: "area-backend"
+  server:
+    container_name: "area-server"
     build:
       context: ./backend
       dockerfile: Dockerfile-api
     env_file:
       - .env
     depends_on:
-      db:
+      database:
         condition: service_healthy
     networks:
       areaNetwork:
@@ -42,31 +42,35 @@ services:
       - "$API_PORT:$API_PORT"
     restart: always
 
-  webapp:
-    container_name: "area-webapp"
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    env_file:
-      - .env
-    depends_on:
-      - backend
-    networks:
-      areaNetwork:
-        ipv4_address: $WEBAPP_HOST_NAME
-    restart: on-failure
 
-  mobileapp-build:
-    container_name: "area-mobileapp"
+  client_mobile:
+    container_name: "area-client_mobile"
     build:
       context: ./mobile
       dockerfile: Dockerfile
     env_file:
       - .env
-    depends_on:
-      - webapp
     volumes:
-      - $PWD/apk-output:/output
+      - $PWD/client:/output
+
+  client_web:
+    container_name: "area-client_web"
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - $PWD/client/web:/app/build
+    depends_on:
+      - server
+      - client_mobile
+    networks:
+      areaNetwork:
+        ipv4_address: $WEBAPP_HOST_NAME
+    ports:
+      - "8081:80"
+    restart: on-failure
 
 networks:
   areaNetwork:
@@ -76,5 +80,3 @@ networks:
         - subnet: "192.168.50.0/24"
           gateway: "192.168.50.1"
 
-volumes:
-  area-db-data:

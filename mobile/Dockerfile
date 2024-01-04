@@ -11,4 +11,5 @@ RUN npm ci
 
 WORKDIR /app/android
 
-CMD ./gradlew clean build && mkdir -p /output && cp -R /app/android/app/build/outputs/apk/release /output
+RUN ./gradlew clean build
+CMD mkdir -p /output && cp /app/android/app/build/outputs/apk/release/app-release.apk /output
