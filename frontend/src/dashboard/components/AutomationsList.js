@@ -14,8 +14,8 @@ import { useAuth } from '../../AuthContext';
 import { useSettings } from '../../SettingsContext';
 import EditModalAutomations from './EditModalAutomations';
 
-function createData(id, serviceName, trigger, reaction, type, status, imageSrc, name) {
-    return { id, serviceName, trigger, reaction, type, status, imageSrc, name };
+function createData(id, trigger, reaction, type, status, imageSrcTrigger, imageSrcReaction, name) {
+    return { id, trigger, reaction, type, status, imageSrcTrigger, imageSrcReaction, name };
 }
 
 const rows = [
@@ -46,12 +46,12 @@ export default function ServicesDash() {
 
                     const automationData = createData(
                         automation.id,
-                        triggerService.name,
                         trigger,
                         reaction,
                         'Automation',
                         'Status',
                         triggerService.icon,
+                        reactionService.icon,
                         automation.automation_name
                         );
                     automationsMap[automation.id] = automationData;
@@ -120,7 +120,6 @@ export default function ServicesDash() {
                 <TableHead>
                     <TableRow>
                         <TableCell>{t("ID")}</TableCell>
-                        <TableCell>{t("Services name")}</TableCell>
                         <TableCell>Automations name</TableCell>
                         <TableCell>{t("Trigger")}</TableCell>
                         <TableCell>{t("Reaction")}</TableCell>
@@ -128,23 +127,33 @@ export default function ServicesDash() {
                         <TableCell>{t("Actions")}</TableCell>
                     </TableRow>
                 </TableHead>
-                <TableBody>
+                <TableBody sx={{ backgroundColor: '#222222' }}>
                     {tableData.map((row) => (
                         <TableRow key={row.id}>
                             <TableCell {...TableCellChildrends}>{row.id}</TableCell>
+                            <TableCell {...TableCellChildrends}>{row.name}</TableCell>
                             <TableCell {...TableCellChildrends}>
-                                <img
-                                  src={process.env.REACT_APP_API_URL + row.imageSrc}
-                                  alt="GitHub Logo"
+                                {<img
+                                  src={process.env.REACT_APP_API_URL + row.imageSrcTrigger}
+                                  alt="Logo"
                                   height="32"
                                   width="32"
                                   style={{ verticalAlign: 'middle', marginRight: '8px' }}
                                 />
-                                {row.serviceName}
+                                }
+                                {row.trigger}
                             </TableCell>
-                            <TableCell {...TableCellChildrends}>{row.name}</TableCell>
-                            <TableCell {...TableCellChildrends}>{row.trigger}</TableCell>
-                            <TableCell {...TableCellChildrends}>{row.reaction}</TableCell>
+                            <TableCell {...TableCellChildrends}>
+                                {<img
+                                  src={process.env.REACT_APP_API_URL + row.imageSrcReaction}
+                                  alt="Logo"
+                                  height="32"
+                                  width="32"
+                                  style={{ verticalAlign: 'middle', marginRight: '8px' }}
+                                />
+                                }
+                                {row.reaction}
+                            </TableCell>
                             <TableCell {...TableCellChildrends}>{row.status}</TableCell>
                             <TableCell {...TableCellChildrends}>
                                 <IconButton style={{ color: TableCell.defaultProps.style.color }} aria-label="play">
