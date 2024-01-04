@@ -11,14 +11,14 @@ const router = express.Router();
  *   get:
  *     tags:
  *       - user
- *     summary: Get all users
- *     description: Get all users
- *     operationId: getAllUsers
+ *     summary: "Get all users"
+ *     description: "Get all users"
+ *     operationId: "getAllUsers"
  *     produces:
  *       - application/json
  *     responses:
  *       '200':
- *         description: Successful operation
+ *         description: "Successful operation"
  *         content:
  *           application/json:
  *             schema:
@@ -26,15 +26,29 @@ const router = express.Router();
  *               items:
  *                 $ref: "#/components/schemas/user"
  *       '400':
- *         description: Invalid username supplied
+ *         description: "Bad request - Invalid username supplied"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/badRequest"
  *       '404':
- *         description: User not found
+ *         description: "User not found"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/notFound"
  *       '403':
- *         description: Unauthorized
+ *         description: "Unauthorized"
  *         content:
  *           application/json:
  *             schema:
  *               $ref: "#/components/schemas/unauthorized"
+ *       '500':
+ *         description: "Internal server error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/internalServerError"
  *     security:
  *       - bearerAuth: []
  */
@@ -61,32 +75,35 @@ router.get("/", verifyToken, (req, res) => {
  *     parameters:
  *       - name: id
  *         in: path
- *         description: The id that needs to be fetched.
+ *         description: "The id that needs to be fetched."
  *         required: true
  *         schema:
  *           type: string
  *     responses:
  *       '200':
- *         description: Successful operation
+ *         description: "Successful operation"
  *         content:
  *           application/json:
  *             schema:
  *               $ref: "#/components/schemas/user"
  *       '404':
- *         description: User not found
+ *         description: "User not found"
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 msg:
- *                   type: string
+ *               $ref: "#/components/schemas/notFound"
  *       '403':
- *         description: Unauthorized
+ *         description: "Unauthorized - Invalid or expired token"
  *         content:
  *           application/json:
  *             schema:
  *               $ref: "#/components/schemas/unauthorized"
+ *       '500':
+ *         description: "Internal server error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/internalServerError"
  *     security:
  *       - bearerAuth: []
  */
@@ -115,47 +132,47 @@ router.get("/:id", verifyToken, (req, res) => {
  *     parameters:
  *       - name: id
  *         in: path
- *         description: The id of the user to update.
+ *         description: "The id of the user to update."
  *         required: true
  *         schema:
  *           type: string
  *       - name: body
  *         in: body
- *         description: The updated user data.
+ *         description: "The updated user data."
  *         required: true
  *         schema:
  *           $ref: "#/components/schemas/user"
  *     responses:
  *       '200':
- *         description: User updated successfully
+ *         description: "User updated successfully"
  *         content:
  *           application/json:
  *             schema:
  *               $ref: "#/components/schemas/user"
  *       '400':
- *         description: Invalid request body
+ *         description: "Bad request - Invalid or missing parameters"
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 msg:
- *                   type: string
+ *               $ref: "#/components/schemas/badRequest"
  *       '404':
- *         description: User not found
+ *         description: "User not found"
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 msg:
- *                   type: string
+ *               $ref: "#/components/schemas/notFound"
  *       '403':
- *         description: Unauthorized
+ *         description: "Unauthorized - Invalid or missing authentication token"
  *         content:
  *           application/json:
  *             schema:
  *               $ref: "#/components/schemas/unauthorized"
+ *       '500':
+ *         description: "Internal server error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/internalServerError"
  *     security:
  *       - bearerAuth: []
  */
@@ -168,6 +185,7 @@ router.put("/:id", verifyToken, (req, res) => {
         console.error(err);
     })
 })
+
 /**
  * @swagger
  * /user/profile/{id}:
@@ -184,18 +202,18 @@ router.put("/:id", verifyToken, (req, res) => {
  *     parameters:
  *       - name: id
  *         in: path
- *         description: The id of the user.
+ *         description: "The id of the user."
  *         required: true
  *         schema:
  *           type: string
  *       - name: profileImage
  *         in: formData
- *         description: The profile image to upload.
+ *         description: "The profile image to upload."
  *         required: true
  *         type: file
  *     responses:
  *       '200':
- *         description: User updated successfully
+ *         description: "User updated successfully"
  *         content:
  *           application/json:
  *             schema:
@@ -204,14 +222,23 @@ router.put("/:id", verifyToken, (req, res) => {
  *                 msg:
  *                   type: string
  *       '400':
- *         description: Bad request
+ *         description: "Bad request - Invalid or missing parameters"
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 msg:
- *                   type: string
+ *               $ref: "#/components/schemas/badRequest"
+ *       '401':
+ *         description: "Unauthorized - Missing or invalid bearer token"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/unauthorized"
+ *       '500':
+ *         description: "Internal server error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/internalServerError"
  *     security:
  *       - bearerAuth: []
  */
@@ -254,26 +281,29 @@ router.post('/profile/:id', verifyToken, (req, res) => {
  *     parameters:
  *       - name: id
  *         in: path
- *         description: The id of the user.
+ *         description: "The id of the user."
  *         required: true
  *         schema:
  *           type: string
  *     responses:
  *       '200':
- *         description: User profile image retrieved successfully
+ *         description: "User profile image retrieved successfully"
  *         content:
  *           image/*:
  *             schema:
  *               type: file
  *       '404':
- *         description: User not found
+ *         description: "User not found"
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 msg:
- *                   type: string
+ *               $ref: "#/components/schemas/notFound"
+ *       '500':
+ *         description: "Internal server error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/internalServerError"
  */
 router.get("/profile/:id", (req, res) => {
     db.getUserById(req.params.id).then((rows) => {
