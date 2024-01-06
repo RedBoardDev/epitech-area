@@ -127,7 +127,7 @@ export default function ServicesDash() {
                         <TableCell>{t("Actions")}</TableCell>
                     </TableRow>
                 </TableHead>
-                <TableBody sx={{ backgroundColor: '#222222' }}>
+                <TableBody> 
                     {tableData.map((row) => (
                         <TableRow key={row.id}>
                             <TableCell {...TableCellChildrends}>{row.id}</TableCell>
