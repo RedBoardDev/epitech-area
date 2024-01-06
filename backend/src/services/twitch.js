@@ -8,6 +8,30 @@ export const description = 'Twitch service';
 export const color = '#000000';
 export const icon = '/serviceIcon.svg';
 
+async function refreshToken(userId, refreshToken) {
+    console.log('Refreshing token...');
+    const { twitchClientId, twitchClientSecret } = process.env;
+    try {
+        const response = await axios.post('https://id.twitch.tv/oauth2/token', {
+            client_id: twitchClientId,
+            client_secret: twitchClientSecret,
+            refresh_token: refreshToken,
+            grant_type: 'refresh_token',
+        }, {
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+        });
+        const newToken = JSON.stringify({ access_token: response?.data?.access_token || undefined, refresh_token: response?.data?.refresh_token || undefined, });
+        await db.updateServiceOauth(userId, id, newToken);
+        console.log('Token refreshed, trying next time.');
+        return newToken;
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
+
 export const connect = async (userId) => {
     const { twitchClientId } = process.env;
 
@@ -51,7 +75,7 @@ export const callback = async (code) => {
                 </body>
             </html>
         `;
-        return { status: "success", action: htmlResponse, token: response?.data?.access_token || undefined };
+        return { status: "success", action: htmlResponse, token: JSON.stringify({ access_token: response?.data?.access_token || undefined, refresh_token: response?.data?.refresh_token || undefined, }) };
     } catch (error) {
         console.log(error);
         return { status: "error", msg: error };
@@ -73,10 +97,11 @@ export const triggers = [
             }
         ],
         check: async (autoId, userData, params, checkData, token) => {
+            const { access_token, refresh_token } = JSON.parse(token);
             try {
                 const resp = await axios.get(`https://api.twitch.tv/helix/streams?user_login=${params.pseudo}`, {
                     headers: {
-                        'Authorization': 'Bearer ' + token,
+                        'Authorization': 'Bearer ' + access_token,
                         'Client-ID': process.env.twitchClientId
                     },
                 });
@@ -95,7 +120,10 @@ export const triggers = [
                     data: data
                 };
             } catch (error) {
-                console.log(error);
+                if (error.response.status === 401)
+                    await refreshToken(userData.id, refresh_token);
+                else
+                    console.log(error);
                 return null;
             }
         }
@@ -106,11 +134,12 @@ export const triggers = [
         description: 'Triggers when any followed user starts streaming',
         fields: [],
         check: async (autoId, userData, params, checkData, token) => {
+            const { access_token, refresh_token } = JSON.parse(token);
             try {
                 if (!checkData.userId) {
                     const userInfo = await axios.get('https://api.twitch.tv/helix/users', {
                         headers: {
-                            Authorization: `Bearer ${token}`,
+                            Authorization: `Bearer ${access_token}`,
                             "Client-Id": process.env.twitchClientId,
                         },
                     });
@@ -120,7 +149,7 @@ export const triggers = [
                 }
                 const resp = await axios.get(`https://api.twitch.tv/helix/streams/followed?user_id=${checkData.userId}`, {
                     headers: {
-                        'Authorization': 'Bearer ' + token,
+                        'Authorization': 'Bearer ' + access_token,
                         'Client-ID': process.env.twitchClientId
                     },
                 });
@@ -140,7 +169,10 @@ export const triggers = [
                 }
                 return null;
             } catch (error) {
-                console.log(error);
+                if (error.response.status === 401)
+                    await refreshToken(userData.id, refresh_token);
+                else
+                    console.log(error);
                 return null;
             }
         }
