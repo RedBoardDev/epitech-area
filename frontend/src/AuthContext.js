@@ -211,10 +211,10 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
-    const updateUserById = async (lastname, firstname, email) => {
+    const updateUserById = async (lastname, firstname, email, password) => {
         const userID = localStorage.getItem('userID');
         try {
-            const response = await callApiWithToken('PUT', `/user/${userID}`, { lastname, firstname, email });
+            const response = await callApiWithToken('PUT', `/user/${userID}`, { lastname, firstname, email, password });
             setIsAuthenticated(true);
             return response;
         } catch (error) {

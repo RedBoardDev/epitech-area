@@ -69,7 +69,13 @@ class DbManager {
         return this.executeQuery(query, values);
     }
 
-    updateUser(id, lastname, firstname, email) {
+    updateUser(id, lastname, firstname, email, passwordHash) {
+        const query = `UPDATE user SET lastname = ?, firstname = ?, email = ?, password = ? WHERE id = ?;`;
+        const values = [lastname, firstname, email, passwordHash, id];
+        return this.executeQuery(query, values);
+    }
+
+    partialUpdateUser(id, lastname, firstname, email) {
         const query = `UPDATE user SET lastname = ?, firstname = ?, email = ? WHERE id = ?;`;
         const values = [lastname, firstname, email, id];
         return this.executeQuery(query, values);
