@@ -75,8 +75,8 @@ export default function ServicesDash() {
                         <div style={{ height: '93.6%', top: '6.4%', left: '15%', position: 'absolute', width: '85%', overflow: 'auto', display: 'flex' }}>
                             <div style={{ width: '20rem', height: '100%', background: '#333448' }} className="no-overflow">
                                 {!selectedTrigger ?
-                                    services.map((service) => (<AddCategory key={service.id} id={service.id} name={service.name} color={service.color} triggers={service.triggers} handleClick={openModal} />))
-                                    : services.map((service) => (<AddCategory key={service.id} id={service.id} name={service.name} color={service.color} triggers={service.reactions} handleClick={openModal} />))
+                                    services.map((service) => (<AddCategory key={service.id} id={service.id} name={service.name} color={service.color} triggers={service.triggers} icon={service.icon} handleClick={openModal} />))
+                                    : services.map((service) => (<AddCategory key={service.id} id={service.id} name={service.name} color={service.color} triggers={service.reactions} icon={service.icon} handleClick={openModal} />))
                                 }
                             </div>
                             {selectedTrigger && (

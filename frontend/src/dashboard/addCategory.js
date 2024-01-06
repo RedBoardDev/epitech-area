@@ -36,13 +36,19 @@ const ContentBox = styled(Box)({
     background: '#333448',
 });
 
-function AddCategory({ id, name, color, triggers, handleClick }) {
+function AddCategory({ id, name, color, triggers, handleClick, icon }) {
     const [isOpen, setIsOpen] = useState(false);
     return (
         <Box>
             <MainBox color={color}>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <Circle></Circle>
+                <img
+                  src={process.env.REACT_APP_API_URL + icon}
+                  alt="Logo"
+                  height="28"
+                  width="28"
+                  style={{ verticalAlign: 'middle', marginRight: '8px' }}
+                />
                     <Typography variant="h6" sx={{ fontSize: '1.2rem', color: 'white' }}>{name}</Typography>
                 </div>
                 <div onClick={() => setIsOpen(!isOpen)} style={{ cursor: 'pointer' }}>

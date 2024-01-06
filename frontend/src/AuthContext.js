@@ -174,6 +174,18 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
+    const getServiceById = async (serviceId) => {
+        try {
+            const response = await callApiWithToken('GET', `/service/${serviceId}`);
+            setIsAuthenticated(true);
+            return response;
+        } catch (error) {
+            console.error('Service error:', error);
+            setIsAuthenticated(false);
+            throw error;
+        }
+    }
+
     const deleteAutomation = async (id) => {
         try {
             const response = await callApiWithToken('DELETE', `/automations`, { id });
@@ -265,7 +277,8 @@ export const AuthProvider = ({ children }) => {
             loginGithub,
             registerGithub,
             getAutomationsById,
-            updateAutomationById
+            updateAutomationById,
+            getServiceById
         }}>
             {children}
         </AuthContext.Provider>

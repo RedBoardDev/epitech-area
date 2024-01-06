@@ -14,6 +14,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { useTheme } from './themeContext';
 import { MyThemeProvider, ThemeContext } from './themeContext';
+import ServicesGithub from './components/service/ServiceInfo';
 
 const AppBody = () => {
   const { mainTheme } = useTheme();
@@ -30,6 +31,7 @@ const AppBody = () => {
               <Route path="/register/github/callback" element={<RegisterGithubCallback />} />
               <Route path="/login/github/callback" element={<LoginGithubCallback />} />
               <Route path="/services" element={<Services />} />
+              <Route path="/service/:serviceName" element={<ServicesGithub />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/dashboard/services" element={<ServicesDash />} />
               <Route path="/dashboard/addservice" element={<AddService />} />
