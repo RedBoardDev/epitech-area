@@ -31,7 +31,7 @@ export default function SettingsUserModal({ isOpen, closeModal, onUpdateUser, us
     const handleSave = async () => {
         try {
             if (confirmNewPassword !== newPassword || (confirmNewPassword == "" && newPassword != "") || (confirmNewPassword != "" && newPassword == "")) {
-                setError("test");
+                setError(t("Please confirm your password"));
                 return;
             }
             await updateUserById(lastName, firstName, email, confirmNewPassword);
@@ -48,7 +48,7 @@ export default function SettingsUserModal({ isOpen, closeModal, onUpdateUser, us
             <Dialog open={isOpen} onClose={closeModal}>
                 <DialogTitle>{t("Modify your informations")}</DialogTitle>
                 <DialogContent>
-                    {error ? <Alert severity="warning">Veuillez bien confirmer votre mot de passe</Alert> : ""}
+                    {error ? <Alert severity="warning">{error}</Alert> : ""}
                     <TextField
                         autoFocus
                         margin="dense"
