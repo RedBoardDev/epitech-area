@@ -225,7 +225,7 @@ export const reactions = [
             console.log(triggerData.text);
 
             axios.post(`https://api.github.com/repos/${params.repository_name}/issues`, {
-                title: params.title,
+                title: (params.title && params.title.length ? params.title : triggerData.text),
             }, {
                 headers: {
                     Authorization: `Bearer ${token}`,
