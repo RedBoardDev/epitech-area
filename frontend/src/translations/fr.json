@@ -41,5 +41,7 @@
     "Go back services": "Retourner aux services",
     "Visit": "Visite",
     "Invalid username or password": "Identifiant ou mot de passe incorect",
-    "Please confirm your password": "Veuillez bien confirmer votre mot de passe"
+    "Please confirm your password": "Veuillez bien confirmer votre mot de passe",
+    "Welcome": "Bienvenue",
+    "Your favorite automations": "Vos automatisations favorite"
 }
