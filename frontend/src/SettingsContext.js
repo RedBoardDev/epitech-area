@@ -6,7 +6,7 @@ const SettingsContext = createContext();
 
 export const SettingsProvider = ({ children }) => {
     const [settings, setSettings] = useState({
-        language: "fr",
+        language: "en",
     });
     const languages = { fr };
 
