@@ -390,6 +390,15 @@ router.put('/favorite/:id', verifyToken, async (req, res) => {
     })
 })
 
+router.put('/active/:id', verifyToken, async (req, res) => {
+    db.updateActive(req.params.id, req.body.active).then((result) => {
+        res.status(200).json({ msg: 'Automation active updated' });
+    }).catch((err) => {
+        res.status(500).json({ msg: "Internal server error", error: err });
+        console.error(err);
+    })
+})
+
 /**
  * @swagger
  * /automations:

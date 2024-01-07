@@ -15,6 +15,7 @@ import { useSettings } from '../../SettingsContext';
 import EditModalAutomations from './EditModalAutomations';
 import GradeIcon from '@mui/icons-material/Grade';
 import GradeOutlinedIcon from '@mui/icons-material/GradeOutlined';
+import StopCircleOutlinedIcon from '@mui/icons-material/StopCircleOutlined';
 
 function createData(id, trigger, reaction, type, status, imageSrcTrigger, imageSrcReaction, name, favorite) {
     return { id, trigger, reaction, type, status, imageSrcTrigger, imageSrcReaction, name, favorite };
@@ -29,7 +30,7 @@ export default function ServicesDash() {
     const [tableData, setTableData] = useState(rows);
     const [automation, setAutomation] = useState();
     const [openEditModal, setOpenEditModal] = useState(false);
-    const { getAllServices, getAutomations, deleteAutomation, getAutomationsById, updateFavById } = useAuth();
+    const { getAllServices, getAutomations, deleteAutomation, getAutomationsById, updateFavById, updateActiveById } = useAuth();
 
     useEffect(() => {
         const getAllAutomations = async () => {
@@ -51,11 +52,11 @@ export default function ServicesDash() {
                         trigger,
                         reaction,
                         'Automation',
-                        'Status',
+                        automation.active,
                         triggerService.icon,
                         reactionService.icon,
                         automation.automation_name,
-                        automation.favorite
+                        automation.favorite,
                         );
                     automationsMap[automation.id] = automationData;
                 });
@@ -107,6 +108,19 @@ export default function ServicesDash() {
         }
     };
 
+    const handleStartAutomation = async (id, status) => {
+        try {
+            console.log(status);
+            await updateActiveById(id, status);
+            const updateActive = ((prevTableData) => prevTableData.map((row) =>
+                row.id === id ? { ...row, active: status, status: status } : row
+            ));
+            setTableData(updateActive);
+        } catch (error) {
+            console.error('active automation failed:', error);
+        }
+    };
+
     const updateAutomation = (updatedAutomationData) => {
         if (updatedAutomationData && updatedAutomationData.id) {
             setTableData((prevTableData) =>
@@ -120,6 +134,13 @@ export default function ServicesDash() {
             console.error('Invalid data format for updating automation.');
         }
     };
+
+    const handleRenderStatus = (status) => {
+        if (status == 1)
+            return t("Active");
+        else
+            return t("Inactive");
+    }
 
     TableCell.defaultProps = {
         style: { fontSize: '1.2rem', color: '#4B4E6D' }
@@ -169,10 +190,14 @@ export default function ServicesDash() {
                                 }
                                 {row.reaction}
                             </TableCell>
-                            <TableCell {...TableCellChildrends}>{row.status}</TableCell>
+                            <TableCell {...TableCellChildrends}>{handleRenderStatus(row.status)}</TableCell>
                             <TableCell {...TableCellChildrends}>
-                                <IconButton style={{ color: TableCell.defaultProps.style.color }} aria-label="play">
-                                    <PlayCircleOutlineIcon />
+                                <IconButton onClick={() => handleStartAutomation(row.id, !row.status)} style={{ color: TableCell.defaultProps.style.color }} aria-label="play">
+                                    {row.status ? (
+                                        <StopCircleOutlinedIcon />
+                                    ) : (
+                                        <PlayCircleOutlineIcon />
+                                    )}
                                 </IconButton>
                                 <IconButton
                                     onClick={() => handleFavAutomation(row.id, !row.favorite)}

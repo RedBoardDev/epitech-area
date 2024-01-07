@@ -129,6 +129,12 @@ class DbManager {
         return this.executeQuery(query, values);
     }
 
+    updateActive(id, active) {
+        const query = `UPDATE automation SET active = ? WHERE id = ?;`;
+        const values = [active, id];
+        return this.executeQuery(query, values);
+    }
+
     deleteAutomation(userId, automationId) {
         const query = `DELETE FROM automation WHERE user_id = ? AND id = ?;`;
         const values = [userId, automationId];

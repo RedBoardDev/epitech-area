@@ -43,5 +43,7 @@
     "Invalid username or password": "Identifiant ou mot de passe incorect",
     "Please confirm your password": "Veuillez bien confirmer votre mot de passe",
     "Welcome": "Bienvenue",
-    "Your favorite automations": "Vos automatisations favorite"
+    "Your favorite automations": "Vos automatisations favorite",
+    "Active": "Actif",
+    "Inactive": "Inactif"
 }
