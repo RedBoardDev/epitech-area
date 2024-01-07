@@ -5,10 +5,28 @@ import { createTheme} from "@mui/material/styles";
 const ThemeContext = createContext();
 
 export const MyThemeProvider = ({ children }) => {
-    const [toggleThemeMode, setToggleThemeMode] = useState(true);
+    const [data, setData] = useState()
+    const getBooleanConvertedValue = (data) => {
+        return data ? JSON.parse(data) : null;
+    }
+    const [toggleThemeMode, setToggleThemeMode] = useState(getBooleanConvertedValue(data));
     
+    useEffect(() => {
+        const storedData = localStorage.getItem('themeData');
+        const convertedData = getBooleanConvertedValue(storedData);
+        if (convertedData != null) {
+            setData(convertedData);
+            setToggleThemeMode(convertedData);
+        }
+    }, []);
+    const UpdateThemeData = (data) => {
+        setToggleThemeMode(data);
+        setData(data);
+        localStorage.setItem('themeData', JSON.stringify(data));
+    }
     const toggleSwitchTheme = () => {
-        setToggleThemeMode((prevMode) => !prevMode);
+        UpdateThemeData(!toggleThemeMode);
+        console.log(toggleThemeMode);
     }
 
     const mainTheme = createTheme({
