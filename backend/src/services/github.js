@@ -148,17 +148,19 @@ export const triggers = [
                     });
                     const branches = resp.data;
                     if (!branches || !branches.length)
-                    return null;
-                    const lastBranch = branches[0];
-                    console.log("lastbranch:", lastBranch);
-                    console.log("check data lastbranch:", checkData.lastBranch);
-                    if (checkData.lastBranch && lastBranch.name === checkData.lastBranch)
                         return null;
-                    db.updateAutomation(userData.id, autoId, `trigger_check_data = '${JSON.stringify({ lastBranch: lastBranch.name })}'`);
-                    return {
-                        text: `New branch created: ${lastBranch.name} in the repository ${params.repository_name}`,
-                        data: lastBranch
-                    };
+                    if (!checkData.knownBranches)
+                        checkData.knownBranches = [];
+                    for (const branch of branches) {
+                        if (checkData.knownBranches.includes(branch.name))
+                            continue;
+                        checkData.knownBranches.push(branch.name);
+                        db.updateAutomation(userData.id, autoId, `trigger_check_data = '${JSON.stringify(checkData)}'`);
+                        return {
+                            text: `New branch created: ${branch.name} in the repository ${params.repository_name}`,
+                            data: branch
+                        };
+                    }
                 } catch (error) {
                     console.error(error);
                     return null;
