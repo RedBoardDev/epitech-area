@@ -9,67 +9,25 @@ export const description = 'Discord service';
 export const color = '#7289da';
 export const icon = '/discord.png';
 
-async function createVariable(channel_id) {
-    const query = `INSERT INTO discord_channels_survey_ids (channel_id) VALUES ('${channel_id}')`;
-    try {
-        await db.executeQuery(query);
-    } catch (error) {
-        console.error(`Error creating variable: ${error}`);
-    }
-}
-
-async function deleteVariable(channel_id) {
-    const query = `DELETE FROM discord_channels_survey_ids WHERE channel_id = '${channel_id}'`;
-    try {
-        await db.executeQuery(query);
-    } catch (error) {
-        console.error(`Error deleting variable: ${error}`);
-    }
-}
-
-async function getVariables() {
-    const query = `SELECT * FROM discord_channels_survey_ids`;
-    try {
-        const result = await db.executeQuery(query);
-        return result;
-    } catch (error) {
-        console.error(`Error getting variables: ${error}`);
-    }
-}
-
-
-// Discord bot
-
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMembers] });
-let chan_survery_list = [];
+const newMessages = {};
+const newMembers = {};
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 });
 
-setInterval(() => {
-    getVariables().then((data) => {
-        chan_survery_list = [];
-        data.forEach(element => {
-            chan_survery_list.push(element.channel_id);
-        });
-    }).catch((error) => {
-        console.error('Error:', error);
-    });
-}, 5000);
-
-
-
 client.on('messageCreate', async (message) => {
     if (message.author.bot) return;
-    console.log(message.channelId + ' ' + chan_survery_list.includes(message.channel.id));
-    if (chan_survery_list.includes(message.channel.id)) {
-        await message.react('🇷');
-        await message.react('🅰');
-        await message.react('🇹');
-        await message.react('🇮');
-        await message.react('🇴');
-    }
+    if (!newMessages[message.channel.id])
+        newMessages[message.channel.id] = [];
+    newMessages[message.channel.id].push(message);
+});
+
+client.on('guildMemberAdd', async (member) => {
+    if (!newMembers[member.guild.id])
+        newMembers[member.guild.id] = [];
+    newMembers[member.guild.id].push(member);
 });
 
 function sendMessages(channel_id, message) {
@@ -111,7 +69,7 @@ async function createChannelVoice(guild_id, channel_name) {
 
 export const connect = async (userId) => {
     try {
-        const url = 'https://discord.com/api/oauth2/authorize?client_id=1188842990974799892&permissions=8&scope=bot';
+        const url = 'https://discord.com/api/oauth2/authorize?client_id=1187073736449462342&permissions=8&scope=bot';
         return { status: "success", url: `${url}`, auth: false };
     } catch (error) {
         return { status: "error", msg: error };
@@ -126,11 +84,22 @@ export const triggers = [
         fields: [
             {
                 id: 'channel_id',
-                name: 'Channel name',
+                name: 'Channel ID',
                 description: 'Channel id to watch for new messages',
                 type: 'text'
             }
         ],
+        check: async (autoId, userData, params, checkData, token) => {
+            if (newMessages[params.channel_id] && newMessages[params.channel_id].length > 0) {
+                const message = newMessages[params.channel_id].shift();
+                console.log(`New message from ${message.author.username}: ${message.content}`);
+                return {
+                    text: `New message from ${message.author.username}: ${message.content}`,
+                    data: message
+                };
+            }
+            return null;
+        }
     },
     {
         id: 2,
@@ -139,11 +108,22 @@ export const triggers = [
         fields: [
             {
                 id: 'guild_id',
-                name: 'Guild name',
+                name: 'Guild ID',
                 description: 'Guild id to watch for new members',
                 type: 'text'
             }
         ],
+        check: async (autoId, userData, params, checkData, token) => {
+            if (newMembers[params.guild_id] && newMembers[params.guild_id].length > 0) {
+                const member = newMembers[params.guild_id].shift();
+                console.log(`New member: ${member.user.username}`);
+                return {
+                    text: `New member: ${member.user.username}`,
+                    data: member
+                };
+            }
+            return null;
+        }
     }
 ];
 
@@ -166,6 +146,9 @@ export const reactions = [
                 type: 'text'
             }
         ],
+        execute: async (userData, params, token, triggerData) => {
+            sendMessages(params.channel_id, params.message);
+        }
     },
     {
         id: 2,
@@ -185,6 +168,9 @@ export const reactions = [
                 type: 'text'
             }
         ],
+        execute: async (userData, params, token, triggerData) => {
+            createChannelText(params.guild_id, params.channel_name);
+        }
     },
     {
         id: 3,
@@ -204,6 +190,9 @@ export const reactions = [
                 type: 'text'
             }
         ],
+        execute: async (userData, params, token, triggerData) => {
+            createChannelVoice(params.guild_id, params.channel_name);
+        }
     },
 ];
 
