@@ -26,7 +26,6 @@ export const MyThemeProvider = ({ children }) => {
     }
     const toggleSwitchTheme = () => {
         UpdateThemeData(!toggleThemeMode);
-        console.log(toggleThemeMode);
     }
 
     const mainTheme = createTheme({
@@ -38,8 +37,17 @@ export const MyThemeProvider = ({ children }) => {
             secondary: {
                 main: '#155e31',
             },
-            TextField: {
-                main: '#0b7d68',
+            ForegroundItems: {
+                main: toggleThemeMode ? '#222222' : '#41445E',
+            },
+            SwitchStyle: {
+                main: toggleThemeMode ? '#FDFFF9' : '#121212',
+            },
+            TextField1: {
+                main: toggleThemeMode ? '#FDFFF9' : '#825D97',
+            },
+            TextStyle1: {
+                main: toggleThemeMode ? '#FDFFF9' : '#825D97',
             },
             mainBackground: {
                 main: toggleThemeMode ? '#212121' : '#FFF',

@@ -13,6 +13,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useAuth } from '../../AuthContext';
 import { useSettings } from '../../SettingsContext';
 import EditModalAutomations from './EditModalAutomations';
+import { useTheme } from '../../themeContext';
 
 function createData(id, trigger, reaction, type, status, imageSrcTrigger, imageSrcReaction, name) {
     return { id, trigger, reaction, type, status, imageSrcTrigger, imageSrcReaction, name };
@@ -28,6 +29,7 @@ export default function ServicesDash() {
     const [automation, setAutomation] = useState();
     const [openEditModal, setOpenEditModal] = useState(false);
     const { getAllServices, getAutomations, deleteAutomation, getAutomationsById } = useAuth();
+    const { mainTheme } = useTheme();
 
     useEffect(() => {
         const getAllAutomations = async () => {
@@ -119,12 +121,12 @@ export default function ServicesDash() {
             <Table>
                 <TableHead>
                     <TableRow>
-                        <TableCell>{t("ID")}</TableCell>
-                        <TableCell>Automations name</TableCell>
-                        <TableCell>{t("Trigger")}</TableCell>
-                        <TableCell>{t("Reaction")}</TableCell>
-                        <TableCell>{t("Status")}</TableCell>
-                        <TableCell>{t("Actions")}</TableCell>
+                        <TableCell style={{color: mainTheme.palette.TextField1.main}}>{t("ID")}</TableCell>
+                        <TableCell style={{color: mainTheme.palette.TextField1.main}}>Automations name</TableCell>
+                        <TableCell style={{color: mainTheme.palette.TextField1.main}}>{t("Trigger")}</TableCell>
+                        <TableCell style={{color: mainTheme.palette.TextField1.main}}>{t("Reaction")}</TableCell>
+                        <TableCell style={{color: mainTheme.palette.TextField1.main}}>{t("Status")}</TableCell>
+                        <TableCell style={{color: mainTheme.palette.TextField1.main}}>{t("Actions")}</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody> 
@@ -133,12 +135,12 @@ export default function ServicesDash() {
                             <TableCell {...TableCellChildrends}>{row.id}</TableCell>
                             <TableCell {...TableCellChildrends}>{row.name}</TableCell>
                             <TableCell {...TableCellChildrends}>
-                                {<img
+                                {<img 
                                   src={process.env.REACT_APP_API_URL + row.imageSrcTrigger}
                                   alt="Logo"
                                   height="32"
                                   width="32"
-                                  style={{ verticalAlign: 'middle', marginRight: '8px' }}
+                                  style={{color: mainTheme.palette.TextField1.main, verticalAlign: 'middle', marginRight: '8px' }}
                                 />
                                 }
                                 {row.trigger}
@@ -156,13 +158,13 @@ export default function ServicesDash() {
                             </TableCell>
                             <TableCell {...TableCellChildrends}>{row.status}</TableCell>
                             <TableCell {...TableCellChildrends}>
-                                <IconButton style={{ color: TableCell.defaultProps.style.color }} aria-label="play">
+                                <IconButton style={{ color: mainTheme.palette.TextField1.main }} aria-label="play">
                                     <PlayCircleOutlineIcon />
                                 </IconButton>
-                                <IconButton onClick={() => handleOpenEditModal(row.id)} style={{ color: TableCell.defaultProps.style.color }} aria-label="edit">
+                                <IconButton onClick={() => handleOpenEditModal(row.id)} style={{ color: mainTheme.palette.TextField1.main }} aria-label="edit">
                                     <EditIcon />
                                 </IconButton>
-                                <IconButton onClick={() => handleDeleteAutomation(row.id)} style={{ color: TableCell.defaultProps.style.color }} aria-label="delete">
+                                <IconButton onClick={() => handleDeleteAutomation(row.id)} style={{ color: mainTheme.palette.TextField1.main }} aria-label="delete">
                                     <DeleteIcon />
                                 </IconButton>
                             </TableCell>
