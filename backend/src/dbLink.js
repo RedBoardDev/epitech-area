@@ -99,6 +99,12 @@ class DbManager {
         return this.executeQuery(query, values);
     }
 
+    getAutomationsByFav(userId) {
+        const query = `SELECT * FROM automation WHERE user_id = ? AND favorite = 1;`;
+        const values = [userId];
+        return this.executeQuery(query, values);
+    }
+
     insertAutomation(userId, triggerServiceId, triggerId, triggerParams, reactionServiceId, reactionId, reactionParams, automationName) {
         const query = `INSERT INTO automation(user_id, trigger_service_id, trigger_id, trigger_params, reaction_service_id, reaction_id, reaction_params, automation_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?);`;
         const values = [userId, triggerServiceId, triggerId, triggerParams, reactionServiceId, reactionId, reactionParams, automationName];
@@ -114,6 +120,12 @@ class DbManager {
     updateAutomationById(id, reaction_params, trigger_params, automation_name) {
         const query = `UPDATE automation SET reaction_params = ?, trigger_params = ?, automation_name = ? WHERE id = ?;`;
         const values = [reaction_params, trigger_params, automation_name, id];
+        return this.executeQuery(query, values);
+    }
+
+    updateFavorite(id, fav) {
+        const query = `UPDATE automation SET favorite = ? WHERE id = ?;`;
+        const values = [fav, id];
         return this.executeQuery(query, values);
     }
 

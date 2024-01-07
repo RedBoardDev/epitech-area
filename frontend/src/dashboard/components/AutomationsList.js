@@ -13,9 +13,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useAuth } from '../../AuthContext';
 import { useSettings } from '../../SettingsContext';
 import EditModalAutomations from './EditModalAutomations';
+import GradeIcon from '@mui/icons-material/Grade';
+import GradeOutlinedIcon from '@mui/icons-material/GradeOutlined';
 
-function createData(id, trigger, reaction, type, status, imageSrcTrigger, imageSrcReaction, name) {
-    return { id, trigger, reaction, type, status, imageSrcTrigger, imageSrcReaction, name };
+function createData(id, trigger, reaction, type, status, imageSrcTrigger, imageSrcReaction, name, favorite) {
+    return { id, trigger, reaction, type, status, imageSrcTrigger, imageSrcReaction, name, favorite };
 }
 
 const rows = [
@@ -27,7 +29,7 @@ export default function ServicesDash() {
     const [tableData, setTableData] = useState(rows);
     const [automation, setAutomation] = useState();
     const [openEditModal, setOpenEditModal] = useState(false);
-    const { getAllServices, getAutomations, deleteAutomation, getAutomationsById } = useAuth();
+    const { getAllServices, getAutomations, deleteAutomation, getAutomationsById, updateFavById } = useAuth();
 
     useEffect(() => {
         const getAllAutomations = async () => {
@@ -52,7 +54,8 @@ export default function ServicesDash() {
                         'Status',
                         triggerService.icon,
                         reactionService.icon,
-                        automation.automation_name
+                        automation.automation_name,
+                        automation.favorite
                         );
                     automationsMap[automation.id] = automationData;
                 });
@@ -89,6 +92,18 @@ export default function ServicesDash() {
             setTableData(updatedTableData);
         } catch (error) {
             console.error('delete automation failed:', error);
+        }
+    };
+
+    const handleFavAutomation = async (id, fav) => {
+        try {
+            await updateFavById(id, fav);
+            const updateFav = ((prevTableData) => prevTableData.map((row) =>
+                row.id === id ? { ...row, favorite: fav, } : row
+            ));
+            setTableData(updateFav);
+        } catch (error) {
+            console.error('fav automation failed:', error);
         }
     };
 
@@ -158,6 +173,17 @@ export default function ServicesDash() {
                             <TableCell {...TableCellChildrends}>
                                 <IconButton style={{ color: TableCell.defaultProps.style.color }} aria-label="play">
                                     <PlayCircleOutlineIcon />
+                                </IconButton>
+                                <IconButton
+                                    onClick={() => handleFavAutomation(row.id, !row.favorite)}
+                                    style={{ color: TableCell.defaultProps.style.color }}
+                                    aria-label="favorite"
+                                >
+                                    {row.favorite ? (
+                                        <GradeIcon />
+                                    ) : (
+                                        <GradeOutlinedIcon />
+                                    )}
                                 </IconButton>
                                 <IconButton onClick={() => handleOpenEditModal(row.id)} style={{ color: TableCell.defaultProps.style.color }} aria-label="edit">
                                     <EditIcon />

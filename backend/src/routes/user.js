@@ -178,7 +178,7 @@ router.get("/:id", verifyToken, (req, res) => {
  *       - bearerAuth: []
  */
 router.put("/:id", verifyToken, (req, res) => {
-    if (req.body.password != undefined) {
+    if (req.body.password != "") {
         let passwordHash = bcrypt.hashSync(req.body.password);
 
         db.updateUser(req.params.id, req.body.lastname, req.body.firstname, req.body.email, passwordHash)
