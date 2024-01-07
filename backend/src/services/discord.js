@@ -11,6 +11,7 @@ export const icon = '/discord.png';
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMembers] });
 const newMessages = {};
+const newMembers = {};
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
@@ -21,6 +22,12 @@ client.on('messageCreate', async (message) => {
     if (!newMessages[message.channel.id])
         newMessages[message.channel.id] = [];
     newMessages[message.channel.id].push(message);
+});
+
+client.on('guildMemberAdd', async (member) => {
+    if (!newMembers[member.guild.id])
+        newMembers[member.guild.id] = [];
+    newMembers[member.guild.id].push(member);
 });
 
 function sendMessages(channel_id, message) {
@@ -77,7 +84,7 @@ export const triggers = [
         fields: [
             {
                 id: 'channel_id',
-                name: 'Channel name',
+                name: 'Channel ID',
                 description: 'Channel id to watch for new messages',
                 type: 'text'
             }
@@ -101,13 +108,20 @@ export const triggers = [
         fields: [
             {
                 id: 'guild_id',
-                name: 'Guild name',
+                name: 'Guild ID',
                 description: 'Guild id to watch for new members',
                 type: 'text'
             }
         ],
         check: async (autoId, userData, params, checkData, token) => {
-            // TODO
+            if (newMembers[params.guild_id] && newMembers[params.guild_id].length > 0) {
+                const member = newMembers[params.guild_id].shift();
+                console.log(`New member: ${member.user.username}`);
+                return {
+                    text: `New member: ${member.user.username}`,
+                    data: member
+                };
+            }
             return null;
         }
     }
