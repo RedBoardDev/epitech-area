@@ -9,17 +9,18 @@ import { useAuth } from '../../AuthContext';
 import { useSettings } from '../../SettingsContext';
 import { useTheme } from '../../themeContext';
 import { Switch } from '@mui/material';
+import Alert from '@mui/material/Alert';
 
 export default function SettingsUserModal({ isOpen, closeModal, onUpdateUser, user }) {
     const { t } = useSettings();
-    const [open, setOpen] = useState(true);
     const [firstName, setFirstName] = useState(user.firstname);
     const [lastName, setLastName] = useState(user.lastname);
     const [email, setEmail] = useState(user.email);
     const [newPassword, setNewPassword] = useState("");
     const [confirmNewPassword, setConfirmNewPassword] = useState("");
     const { updateUserById } = useAuth();
-    const { mainTheme, toggleThemeMode, toggleSwitchTheme } =useTheme();
+    const { mainTheme, toggleThemeMode, toggleSwitchTheme } = useTheme();
+    const [error, setError] = useState("");
 
     useEffect(() => {
         setFirstName(user.firstname);
@@ -29,8 +30,13 @@ export default function SettingsUserModal({ isOpen, closeModal, onUpdateUser, us
 
     const handleSave = async () => {
         try {
-                await updateUserById(lastName, firstName, email);
-                onUpdateUser({ ...user, firstname: firstName, lastname: lastName, email: email });
+            if (confirmNewPassword !== newPassword || (confirmNewPassword == "" && newPassword != "") || (confirmNewPassword != "" && newPassword == "")) {
+                setError(t("Please confirm your password"));
+                return;
+            }
+            await updateUserById(lastName, firstName, email, confirmNewPassword);
+            onUpdateUser({ ...user, firstname: firstName, lastname: lastName, email: email });
+
         } catch (error) {
             console.error('Update user failed:', error);
         }
@@ -42,6 +48,7 @@ export default function SettingsUserModal({ isOpen, closeModal, onUpdateUser, us
             <Dialog open={isOpen} onClose={closeModal}>
                 <DialogTitle>{t("Modify your informations")}</DialogTitle>
                 <DialogContent>
+                    {error ? <Alert severity="warning">{error}</Alert> : ""}
                     <TextField
                         autoFocus
                         margin="dense"
@@ -86,8 +93,8 @@ export default function SettingsUserModal({ isOpen, closeModal, onUpdateUser, us
                 </DialogContent>
                 <DialogActions>
                     <div style={{Display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                        Select Theme
-                        <Switch checked={toggleThemeMode} onChange={toggleSwitchTheme} style={{color: mainTheme.palette.SwitchStyle.main}}/>
+                        {t("Dark theme")}
+                        <Switch checked={toggleThemeMode} onChange={toggleSwitchTheme} style={{color: mainTheme.palette.SwitchStyle.main}} />
                     </div>
                     <Button onClick={closeModal} style={{color: mainTheme.palette.TextStyle1.main}}>{t("Cancel")}</Button>
                     <Button onClick={handleSave} style={{color: mainTheme.palette.TextStyle1.main}}>{t("Save")}</Button>

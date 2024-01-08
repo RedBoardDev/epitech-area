@@ -3,6 +3,25 @@ import { db, serviceManager, verifyToken, getIdFromToken } from "../global.js";
 
 const router = express.Router();
 
+router.get('/active', verifyToken, async (req, res) => {
+    try {
+        const userId = getIdFromToken(req, res); if (userId === -1) return;
+        const result = await db.getAutomationsByActive(userId);
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(500).json({ msg: "Internal server error", error: error });
+    }
+})
+router.get('/favorite', verifyToken, async (req, res) => {
+    try {
+        const userId = getIdFromToken(req, res); if (userId === -1) return;
+        const result = await db.getAutomationsByFav(userId);
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(500).json({ msg: "Internal server error", error: error });
+    }
+})
+
 /**
  * @swagger
  * /automations:
@@ -365,6 +384,24 @@ router.put('/', verifyToken, async (req, res) => {
 router.put('/:id', verifyToken, async (req, res) => {
     db.updateAutomationById(req.params.id, req.body.reaction_params, req.body.trigger_params, req.body.automation_name).then((result) => {
         res.status(200).json({ msg: 'Automation updated' });
+    }).catch((err) => {
+        res.status(500).json({ msg: "Internal server error", error: err });
+        console.error(err);
+    })
+})
+
+router.put('/favorite/:id', verifyToken, async (req, res) => {
+    db.updateFavorite(req.params.id, req.body.fav).then((result) => {
+        res.status(200).json({ msg: 'Automation fav updated' });
+    }).catch((err) => {
+        res.status(500).json({ msg: "Internal server error", error: err });
+        console.error(err);
+    })
+})
+
+router.put('/active/:id', verifyToken, async (req, res) => {
+    db.updateActive(req.params.id, req.body.active).then((result) => {
+        res.status(200).json({ msg: 'Automation active updated' });
     }).catch((err) => {
         res.status(500).json({ msg: "Internal server error", error: err });
         console.error(err);

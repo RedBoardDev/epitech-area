@@ -10,6 +10,7 @@ import backgroundImage from '../img/BgTop.png';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import { useSettings } from '../SettingsContext';
 import { useTheme } from '../themeContext';
+import Alert from '@mui/material/Alert';
 
 export const LoginGithubCallback = () => {
     const navigate = useNavigate();
@@ -40,6 +41,7 @@ const Login = () => {
     const { login, logout, verifyToken } = useAuth();
     const { mainTheme } = useTheme();
     const navigate = useNavigate();
+    const [error, setError] = useState("");
 
     useEffect(() => {
         const checkToken = async () => {
@@ -55,6 +57,7 @@ const Login = () => {
             await login(username, password);
             navigate('/');
         } catch (error) {
+            setError(t("Invalid username or password"));
             logout();
             console.error('Login failed:', error);
         }
@@ -106,6 +109,7 @@ const Login = () => {
                     <Typography variant="h4" sx={{ color: '#544d4d', marginBottom: '2rem' }}>
                         {t("Login")}
                     </Typography>
+                    {error ? <Alert severity="warning">{error}</Alert> : ""}
                     <TextField
                         label={t("Email")}
                         variant="outlined"

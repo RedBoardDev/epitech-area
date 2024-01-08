@@ -64,7 +64,7 @@ export const triggers = [
         fields: [
             {
                 id: 'repository_name',
-                name: 'Repository name',
+                name: 'Repository',
                 description: 'The repository to watch',
                 type: 'text'
             }
@@ -94,78 +94,78 @@ export const triggers = [
             }
         }
     },
-    {
-        id: 2,
-        name: 'New issue',
-        description: 'Triggers when a new issue is created',
-        fields: [
-            {
-                id: 'repository_name',
-                name: 'Repository name',
-                description: 'The repository to watch',
-                type: 'text'
-            }
-        ],
-        check: async (autoId, userData, params, checkData, token) => {
-            return null;
-        }
-    },
-    {
-        id: 3,
-        name: 'New pull request',
-        description: 'Triggers when a new pull request is created',
-        fields: [
-            {
-                id: 'repository_name',
-                name: 'Repository name',
-                description: 'The repository to watch',
-                type: 'text'
-            }
-        ],
-        check: async (autoId, userData, params, checkData, token) => {
-            return null;
-        }
-    },
+    // {
+    //     id: 2,
+    //     name: 'New issue',
+    //     description: 'Triggers when a new issue is created',
+    //     fields: [
+    //         {
+    //             id: 'repository_name',
+    //             name: 'Repository',
+    //             description: 'The repository to watch',
+    //             type: 'text'
+    //         }
+    //     ],
+    //     check: async (autoId, userData, params, checkData, token) => {
+    //         return null;
+    //     }
+    // },
+    // {
+    //     id: 3,
+    //     name: 'New pull request',
+    //     description: 'Triggers when a new pull request is created',
+    //     fields: [
+    //         {
+    //             id: 'repository_name',
+    //             name: 'Repository',
+    //             description: 'The repository to watch',
+    //             type: 'text'
+    //         }
+    //     ],
+    //     check: async (autoId, userData, params, checkData, token) => {
+    //         return null;
+    //     }
+    // },
     {
         id: 4,
-            name: 'New branch',
-            description: 'Triggers when a new branch is created to a repository',
-            fields: [
-                {
-                    id: 'repository_name',
-                    name: 'Repository name',
-                    description: 'The repository to watch',
-                    type: 'text'
-                }
-            ],
-            check: async (autoId, userData, params, checkData, token) => {
-                try {
-                    const resp = await axios.get(`https://api.github.com/repos/${params.repository_name}/branches`, {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                            Accept: 'application/vnd.github+json'
-                        }
-                    });
-                    const branches = resp.data;
-                    if (!branches || !branches.length)
-                        return null;
-                    if (!checkData.knownBranches)
-                        checkData.knownBranches = [];
-                    for (const branch of branches) {
-                        if (checkData.knownBranches.includes(branch.name))
-                            continue;
-                        checkData.knownBranches.push(branch.name);
-                        db.updateAutomation(userData.id, autoId, `trigger_check_data = '${JSON.stringify(checkData)}'`);
-                        return {
-                            text: `New branch created: ${branch.name} in the repository ${params.repository_name}`,
-                            data: branch
-                        };
-                    }
-                } catch (error) {
-                    console.error(error);
-                    return null;
-                }
+        name: 'New branch',
+        description: 'Triggers when a new branch is created to a repository',
+        fields: [
+            {
+                id: 'repository_name',
+                name: 'Repository',
+                description: 'The repository to watch',
+                type: 'text'
             }
+        ],
+        check: async (autoId, userData, params, checkData, token) => {
+            try {
+                const resp = await axios.get(`https://api.github.com/repos/${params.repository_name}/branches`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        Accept: 'application/vnd.github+json'
+                    }
+                });
+                const branches = resp.data;
+                if (!branches || !branches.length)
+                    return null;
+                if (!checkData.knownBranches)
+                    checkData.knownBranches = [];
+                for (const branch of branches) {
+                    if (checkData.knownBranches.includes(branch.name))
+                        continue;
+                    checkData.knownBranches.push(branch.name);
+                    db.updateAutomation(userData.id, autoId, `trigger_check_data = '${JSON.stringify(checkData)}'`);
+                    return {
+                        text: `New branch created: ${branch.name} in the repository ${params.repository_name}`,
+                        data: branch
+                    };
+                }
+            } catch (error) {
+                console.error(error);
+                return null;
+            }
+        }
     }
 ];
 

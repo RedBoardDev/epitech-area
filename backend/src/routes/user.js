@@ -2,6 +2,7 @@ import express from "express";
 import { db, upload, verifyToken } from "../global.js";
 import multer from "multer";
 import path from 'path';
+import bcrypt from "bcryptjs";
 
 const router = express.Router();
 
@@ -177,14 +178,35 @@ router.get("/:id", verifyToken, (req, res) => {
  *       - bearerAuth: []
  */
 router.put("/:id", verifyToken, (req, res) => {
-    db.updateUser(req.params.id, req.body.lastname, req.body.firstname, req.body.email).then((result) => {
-        res.status(200).json({ msg: 'User updated' });
-    }).catch((err) => {
-        // check user not found
-        res.status(500).json({ msg: "Internal server error", error: err });
-        console.error(err);
-    })
-})
+    if (req.body.password != "") {
+        let passwordHash = bcrypt.hashSync(req.body.password);
+
+        db.updateUser(req.params.id, req.body.lastname, req.body.firstname, req.body.email, passwordHash)
+            .then((rows) => {
+                if (rows[0])
+                    res.json(rows[0]);
+                else
+                    res.status(404).json({ msg: "User not found" });
+            })
+            .catch((err) => {
+                res.status(500).json({ msg: "Internal server error", error: err });
+                console.error(err);
+            });
+    } else {
+        db.partialUpdateUser(req.params.id, req.body.lastname, req.body.firstname, req.body.email)
+            .then((rows) => {
+                if (rows[0])
+                    res.json(rows[0]);
+                else
+                    res.status(404).json({ msg: "User not found" });
+            })
+            .catch((err) => {
+                res.status(500).json({ msg: "Internal server error", error: err });
+                console.error(err);
+            });
+    }
+});
+
 
 /**
  * @swagger
