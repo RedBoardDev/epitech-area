@@ -38,7 +38,7 @@
     "Go back home": "Retourner à l'accueil",
     "Reactions": "Réactions",
     "Triggers": "Actions",
-    "Automations name": "Nom de l'automatisation",
+    "Automations name": "Nom des automatisations",
     "Dark theme": "Thème sombre",
     "Go back services": "Retourner aux services",
     "Visit": "Visite",
@@ -47,5 +47,14 @@
     "Welcome": "Bienvenue",
     "Your favorite automations": "Vos automatisations favorite",
     "Active": "Actif",
-    "Inactive": "Inactif"
+    "Inactive": "Inactif",
+    "Here is your dashboard": "Voici votre tableau de bord",
+    "Total active automations": "Total des automatisations activées",
+    "Total connected services": "Total des services connectés",
+    "Enter Automation Name": "Entrez le nom de votre automatisation",
+    "Please enter a name for your automation": "Veuillez entrez un nom pour votre automatisation",
+    "Automation Name": "Nom de l'automatisation",
+    "Modify the automation informations": "Modifier les informations de l'automatisation",
+    "Trigger settings": "Paramètres de l'action",
+    "Reaction settings": "Paramètres de la réaction"
 }

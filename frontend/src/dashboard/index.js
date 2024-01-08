@@ -8,7 +8,7 @@ import { useAuth } from '../AuthContext';
 import ServicesList from './components/AutomationsList';
 import { useTheme } from '../themeContext';
 import FavAutomations from "./components/FavAutomationList"
-
+import { useSettings } from '../SettingsContext';
 
 export default function Dashboard() {
     const [isSidebarOpen] = React.useState(true);
@@ -18,6 +18,7 @@ export default function Dashboard() {
     const [user, setUser] = useState();
     const [activeAutomation, setActiveAutomation] = useState();
     const [activeService, setActiveService] = useState();
+    const { t } = useSettings();
 
     useEffect(() => {
         const checkToken = async () => {
@@ -56,16 +57,16 @@ export default function Dashboard() {
             </Grid>
             <div style={{paddingLeft: '2%', width: '80%', height: '100%', zIndex: '5', position: 'absolute', top: '6%', left: '15%'}}>
                 <Grid container spacing={2}>
-                    <h1>Welcome, {user && user.firstname}
-                    <h2>Here is your dashboard</h2>
+                    <h1>{t("Welcome")}, {user && user.firstname}
+                    <h2>{t("Here is your dashboard")}</h2>
                     </h1>
                     <Grid item xs={6}>
                     </Grid>
                     <Grid item xs={6}>
-                        <Card title="Total active automations" description={activeAutomation && activeAutomation.length} color="#cdb4db" icon="person" />
+                        <Card title={t("Total active automations")} description={activeAutomation && activeAutomation.length} color="#cdb4db" icon="person" />
                     </Grid>
                     <Grid item xs={6}>
-                        <Card title="Total connected services" description={activeService && activeService.length} color="#ffc8dd" />
+                        <Card title={t("Total connected services")} description={activeService && activeService.length} color="#ffc8dd" />
                     </Grid>
                     <Grid item xs={6}>
                         <Card title="Total Comments" description="100" color="#bde0fe" />
@@ -75,7 +76,7 @@ export default function Dashboard() {
                     </Grid>
                 </Grid>
             </div>
-            <h1 style={{position: 'absolute', top: '50%', left: '16%', fontWeight: '100'}}>Your favorite services</h1>
+            <h1 style={{position: 'absolute', top: '50%', left: '16%', fontWeight: '100'}}>{t("Your favorite automations")}</h1>
             <div style={{backgroundColor: mainTheme.palette.mode, height: '93.5%', top: '53.5%', left: '15%', position: 'absolute', width: '85%', zIndex: '-1', overflow: 'auto', padding: '2%'}}>
                 <FavAutomations />
             </div>

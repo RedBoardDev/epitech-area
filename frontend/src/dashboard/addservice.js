@@ -117,21 +117,21 @@ export default function ServicesDash() {
                                         },
                                     }}
                                 >
-                                    Confirm
+                                    {t("Confirm")}
                                 </Button>
                             )}
                         </div>
                         <ModalSettingsService isOpen={isModalOpen} closeModal={closeModal} data={modalData} onSubmit={submitSettings} />
                         <Dialog open={isDialogOpen} onClose={handleClose}>
-                            <DialogTitle>Enter Automation Name</DialogTitle>
+                            <DialogTitle>{t("Enter Automation Name")}</DialogTitle>
                             <DialogContent>
                                 <DialogContentText>
-                                    Please enter a name for your automation.
+                                    {t("Please enter a name for your automation")}
                                 </DialogContentText>
                                 <TextField
                                     autoFocus
                                     margin="dense"
-                                    label="Automation Name"
+                                    label={t("Automation Name")}
                                     type="text"
                                     fullWidth
                                     value={automationName}
@@ -139,8 +139,8 @@ export default function ServicesDash() {
                                 />
                             </DialogContent>
                             <DialogActions>
-                                <Button onClick={handleClose}>Cancel</Button>
-                                <Button onClick={handleSave}>Save</Button>
+                                <Button onClick={handleClose}>{t("Cancel")}</Button>
+                                <Button onClick={handleSave}>{t("Save")}</Button>
                             </DialogActions>
                         </Dialog>
                     </Grid>
