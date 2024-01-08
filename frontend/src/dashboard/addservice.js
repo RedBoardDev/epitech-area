@@ -8,6 +8,12 @@ import PuzzlePiece from './components/PuzzlePiece';
 import Button from '@mui/material/Button';
 import ModalSettingsService from './components/ModalSettingsService';
 import { useSettings } from '../SettingsContext';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import TextField from '@mui/material/TextField';
 
 export default function ServicesDash() {
     const { t } = useSettings();
@@ -17,6 +23,8 @@ export default function ServicesDash() {
     const [selectedReaction, setSelectedReaction] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalData, setModalData] = useState(null);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [automationName, setAutomationName] = useState('');
 
     useEffect(() => {
         getAllServices().then((data) => {
@@ -44,10 +52,19 @@ export default function ServicesDash() {
         }
     }
 
-    const handleConfirm = async () => {
+    const handleConfirm = () => {
+        setIsDialogOpen(true);
+    };
+
+    const handleClose = () => {
+        setIsDialogOpen(false);
+    };
+
+    const handleSave = async () => {
         try {
+            if (!automationName) return;
             await addAutomation(selectedTrigger.service_id, selectedTrigger.id, JSON.stringify(selectedTrigger.formValues),
-                selectedReaction.service_id, selectedReaction.id, JSON.stringify(selectedReaction.formValues));
+                selectedReaction.service_id, selectedReaction.id, JSON.stringify(selectedReaction.formValues), automationName);
             window.location.href = '/dashboard/services';
         } catch (error) {
             const errData = error?.response?.data || null;
@@ -59,6 +76,7 @@ export default function ServicesDash() {
                 console.error("Error during addAutomation:", error);
             }
         }
+        setIsDialogOpen(false);
     }
 
     return (
@@ -86,10 +104,45 @@ export default function ServicesDash() {
                                 <PuzzlePiece name={selectedReaction.name} description={selectedReaction.description} />
                             )}
                             {selectedTrigger && selectedReaction && (
-                                <Button onClick={handleConfirm}>{t("Confirm")}</Button>
+                                <Button 
+                                    onClick={handleConfirm} 
+                                    style={{
+                                        backgroundColor: '#2a9d8f', 
+                                        color: 'white', 
+                                        height: '50px', 
+                                        width: '100px', 
+                                        alignSelf: 'center',
+                                        '&:hover': {
+                                            backgroundColor: '#9d4edd',
+                                        },
+                                    }}
+                                >
+                                    Confirm
+                                </Button>
                             )}
                         </div>
                         <ModalSettingsService isOpen={isModalOpen} closeModal={closeModal} data={modalData} onSubmit={submitSettings} />
+                        <Dialog open={isDialogOpen} onClose={handleClose}>
+                            <DialogTitle>Enter Automation Name</DialogTitle>
+                            <DialogContent>
+                                <DialogContentText>
+                                    Please enter a name for your automation.
+                                </DialogContentText>
+                                <TextField
+                                    autoFocus
+                                    margin="dense"
+                                    label="Automation Name"
+                                    type="text"
+                                    fullWidth
+                                    value={automationName}
+                                    onChange={(e) => setAutomationName(e.target.value)}
+                                />
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={handleClose}>Cancel</Button>
+                                <Button onClick={handleSave}>Save</Button>
+                            </DialogActions>
+                        </Dialog>
                     </Grid>
                 </Grid>
             </Grid>

@@ -39,5 +39,13 @@
     "Reactions": "Réactions",
     "Triggers": "Actions",
     "Automations name": "Nom de l'automatisation",
-    "Dark theme": "Thème sombre"
+    "Dark theme": "Thème sombre",
+    "Go back services": "Retourner aux services",
+    "Visit": "Visite",
+    "Invalid username or password": "Identifiant ou mot de passe incorect",
+    "Please confirm your password": "Veuillez bien confirmer votre mot de passe",
+    "Welcome": "Bienvenue",
+    "Your favorite automations": "Vos automatisations favorite",
+    "Active": "Actif",
+    "Inactive": "Inactif"
 }
