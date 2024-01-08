@@ -3,6 +3,15 @@ import { db, serviceManager, verifyToken, getIdFromToken } from "../global.js";
 
 const router = express.Router();
 
+router.get('/active', verifyToken, async (req, res) => {
+    try {
+        const userId = getIdFromToken(req, res); if (userId === -1) return;
+        const result = await db.getAutomationsByActive(userId);
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(500).json({ msg: "Internal server error", error: error });
+    }
+})
 router.get('/favorite', verifyToken, async (req, res) => {
     try {
         const userId = getIdFromToken(req, res); if (userId === -1) return;

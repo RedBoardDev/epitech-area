@@ -105,6 +105,18 @@ class DbManager {
         return this.executeQuery(query, values);
     }
 
+    getAutomationsByActive(userId) {
+        const query = `SELECT * FROM automation WHERE user_id = ? AND active = 1;`;
+        const values = [userId];
+        return this.executeQuery(query, values);
+    }
+
+    getServiceByActive(userId) {
+        const query = `SELECT * FROM service_oauth WHERE user_id = ?;`;
+        const values = [userId];
+        return this.executeQuery(query, values);
+    }
+
     insertAutomation(userId, triggerServiceId, triggerId, triggerParams, reactionServiceId, reactionId, reactionParams, automationName) {
         const query = `INSERT INTO automation(user_id, trigger_service_id, trigger_id, trigger_params, reaction_service_id, reaction_id, reaction_params, automation_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?);`;
         const values = [userId, triggerServiceId, triggerId, triggerParams, reactionServiceId, reactionId, reactionParams, automationName];

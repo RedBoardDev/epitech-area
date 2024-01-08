@@ -283,6 +283,30 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
+    const getActiveAutomations = async () => {
+        try {
+            const response = await callApiWithToken('GET', `/automations/active`);
+            setIsAuthenticated(true);
+            return response;
+        } catch (error) {
+            console.error('Automations error:', error);
+            setIsAuthenticated(false);
+            throw error;
+        }
+    }
+
+    const getActiveServices = async () => {
+        try {
+            const response = await callApiWithToken('GET', `/service/active`);
+            setIsAuthenticated(true);
+            return response;
+        } catch (error) {
+            console.error('Automations error:', error);
+            setIsAuthenticated(false);
+            throw error;
+        }
+    }
+
     const serviceOauth = async (service_id) => {
         try {
             const response = await callApiWithToken('GET', `/service/oauth/${service_id}/connect`);
@@ -317,7 +341,9 @@ export const AuthProvider = ({ children }) => {
             getServiceById,
             updateFavById,
             getAutomationsByFav,
-            updateActiveById
+            updateActiveById,
+            getActiveAutomations,
+            getActiveServices
         }}>
             {children}
         </AuthContext.Provider>

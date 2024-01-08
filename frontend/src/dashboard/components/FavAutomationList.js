@@ -25,18 +25,18 @@ const rows = [
     createData(''),
 ];
 
-export default function ServicesDash() {
+export default function FavAutomations() {
     const { t } = useSettings();
     const [tableData, setTableData] = useState(rows);
     const [automation, setAutomation] = useState();
     const [openEditModal, setOpenEditModal] = useState(false);
-    const { getAllServices, getAutomations, deleteAutomation, getAutomationsById, updateFavById, updateActiveById } = useAuth();
+    const { getAllServices, getAutomationsByFav} = useAuth();
 
     useEffect(() => {
         const getAllAutomations = async () => {
             try {
                 const result = await getAllServices();
-                const userAutomations = await getAutomations();
+                const userAutomations = await getAutomationsByFav();
 
                 const automationsMap = {};
 
@@ -67,57 +67,10 @@ export default function ServicesDash() {
             }
         };
         getAllAutomations();
-    }, [getAllServices, getAutomations]);
-
-    const handleOpenEditModal = (row) => {
-        const getAutomation = async () => {
-            try {
-                const result = await getAutomationsById(row);
-                setAutomation(result);
-            } catch (error) {
-                console.error('Error fetching automation by id:', error);
-            }
-        }
-        getAutomation();
-        setOpenEditModal(true);
-    };
+    }, [getAllServices, getAutomationsByFav]);
 
     const closeModal = () => {
         setOpenEditModal(false);
-    };
-
-    const handleDeleteAutomation = async (id) => {
-        try {
-            await deleteAutomation(id);
-            const updatedTableData = tableData.filter(row => row.id !== id);
-            setTableData(updatedTableData);
-        } catch (error) {
-            console.error('delete automation failed:', error);
-        }
-    };
-
-    const handleFavAutomation = async (id, fav) => {
-        try {
-            await updateFavById(id, fav);
-            const updateFav = ((prevTableData) => prevTableData.map((row) =>
-                row.id === id ? { ...row, favorite: fav, } : row
-            ));
-            setTableData(updateFav);
-        } catch (error) {
-            console.error('fav automation failed:', error);
-        }
-    };
-
-    const handleStartAutomation = async (id, status) => {
-        try {
-            await updateActiveById(id, status);
-            const updateActive = ((prevTableData) => prevTableData.map((row) =>
-                row.id === id ? { ...row, active: status, status: status } : row
-            ));
-            setTableData(updateActive);
-        } catch (error) {
-            console.error('active automation failed:', error);
-        }
     };
 
     const updateAutomation = (updatedAutomationData) => {
@@ -159,7 +112,6 @@ export default function ServicesDash() {
                         <TableCell>{t("Trigger")}</TableCell>
                         <TableCell>{t("Reaction")}</TableCell>
                         <TableCell>{t("Status")}</TableCell>
-                        <TableCell>{t("Actions")}</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody> 
@@ -191,30 +143,6 @@ export default function ServicesDash() {
                             </TableCell>
                             <TableCell {...TableCellChildrends}>{handleRenderStatus(row.status)}</TableCell>
                             <TableCell {...TableCellChildrends}>
-                                <IconButton onClick={() => handleStartAutomation(row.id, !row.status)} style={{ color: TableCell.defaultProps.style.color }} aria-label="play">
-                                    {row.status ? (
-                                        <StopCircleOutlinedIcon />
-                                    ) : (
-                                        <PlayCircleOutlineIcon />
-                                    )}
-                                </IconButton>
-                                <IconButton
-                                    onClick={() => handleFavAutomation(row.id, !row.favorite)}
-                                    style={{ color: TableCell.defaultProps.style.color }}
-                                    aria-label="favorite"
-                                >
-                                    {row.favorite ? (
-                                        <GradeIcon />
-                                    ) : (
-                                        <GradeOutlinedIcon />
-                                    )}
-                                </IconButton>
-                                <IconButton onClick={() => handleOpenEditModal(row.id)} style={{ color: TableCell.defaultProps.style.color }} aria-label="edit">
-                                    <EditIcon />
-                                </IconButton>
-                                <IconButton onClick={() => handleDeleteAutomation(row.id)} style={{ color: TableCell.defaultProps.style.color }} aria-label="delete">
-                                    <DeleteIcon />
-                                </IconButton>
                             </TableCell>
                         </TableRow>
                     ))}

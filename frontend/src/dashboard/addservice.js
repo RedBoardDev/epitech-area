@@ -61,11 +61,10 @@ export default function ServicesDash() {
     };
 
     const handleSave = async () => {
-        alert("caca");
         try {
             if (!automationName) return;
-            await addAutomation(automationName, selectedTrigger.service_id, selectedTrigger.id, JSON.stringify(selectedTrigger.formValues),
-                selectedReaction.service_id, selectedReaction.id, JSON.stringify(selectedReaction.formValues));
+            await addAutomation(selectedTrigger.service_id, selectedTrigger.id, JSON.stringify(selectedTrigger.formValues),
+                selectedReaction.service_id, selectedReaction.id, JSON.stringify(selectedReaction.formValues), automationName);
             window.location.href = '/dashboard/services';
         } catch (error) {
             const errData = error?.response?.data || null;
