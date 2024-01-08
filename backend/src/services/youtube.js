@@ -25,7 +25,6 @@ async function refreshToken(userId, refreshToken) {
             },
         })
         const newToken = JSON.stringify({ access_token: response?.data?.access_token || undefined, refresh_token: response?.data?.refresh_token || refreshToken, });
-        console.log(newToken);
         await db.updateServiceOauth(userId, id, newToken);
         console.log('Token refreshed, trying next time.');
         return newToken;
@@ -104,10 +103,6 @@ export const triggers = [
         check: async (autoId, userData, params, checkData, token) => {
             const { access_token, refresh_token } = JSON.parse(token);
             try {   
-                console.log("token: ",token);
-                console.log("access_token: ", access_token);
-                console.log("refresh_token: ", refresh_token);
-
                 console.log(`${name} trigger 1 checking...`);
                 const resp = await axios.get(`https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&myRating=like&maxResults=1`, {
                     headers: {
@@ -120,8 +115,6 @@ export const triggers = [
                 if (!likedVideo)
                     return null;
                 const lastLikedVideo = likedVideo.id;
-                console.log(lastLikedVideo);
-                console.log(checkData.lastLikedVideo);
                 if (checkData.lastLikedVideo && lastLikedVideo === checkData.lastLikedVideo)
                     return null;
                 db.updateAutomation(userData.id, autoId, `trigger_check_data = '${JSON.stringify({ lastLikedVideo: lastLikedVideo })}'`);
