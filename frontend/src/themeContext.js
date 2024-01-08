@@ -5,15 +5,27 @@ import { createTheme} from "@mui/material/styles";
 const ThemeContext = createContext();
 
 export const MyThemeProvider = ({ children }) => {
-    const [toggleThemeMode, setToggleThemeMode] = useState(true);
-    
+    const [toggleThemeMode, setToggleThemeMode] = useState(false);
+
+    useEffect(() => {
+        const value = localStorage.getItem('settings');
+        const settings = JSON.parse(value);
+        if (settings && settings.theme) {
+            setToggleThemeMode(settings.theme === 'dark');
+        }
+    }, []);
+
     const toggleSwitchTheme = () => {
+        const value = localStorage.getItem('settings');
+        const settings = JSON.parse(value);
+        settings.theme = settings.theme === 'dark' ? 'light' : 'dark';
+        localStorage.setItem('settings', JSON.stringify(settings));
         setToggleThemeMode((prevMode) => !prevMode);
     }
 
     const mainTheme = createTheme({
         palette: {
-            mode: toggleThemeMode ? 'dark' : 'light', 
+            mode: toggleThemeMode ? 'dark' : 'light',
             primary: {
                 main: '#562075',
             },
@@ -27,7 +39,6 @@ export const MyThemeProvider = ({ children }) => {
                 main: toggleThemeMode ? '#212121' : '#FFF',
             },
         },
-        
     });
 
     const contextValue = {

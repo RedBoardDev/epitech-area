@@ -26,12 +26,10 @@ export const SettingsProvider = ({ children }) => {
 
     useEffect(() => {
         const value = localStorage.getItem('settings');
-        if (value !== null) {
-            if (settings)
-                setSettingsAndStore({ ...JSON.parse(value), ...settings });
-            else
-                setSettings(JSON.parse(value));
-        }
+        if (settings)
+            setSettingsAndStore({ ...JSON.parse(value), ...settings });
+        else
+            setSettings(JSON.parse(value));
     }, []);
 
     return (
