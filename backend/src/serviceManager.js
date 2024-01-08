@@ -83,6 +83,8 @@ class ServiceManager {
                 return t.t(lang, value);
             return value;
         };
+        const service = this.getService(id);
+        if (!service) return undefined;
         return JSON.parse(JSON.stringify(this.getService(id), replacer));
     }
 
