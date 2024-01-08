@@ -9,10 +9,11 @@ import { useAuth } from '../../AuthContext';
 import { useSettings } from '../../SettingsContext';
 import { useTheme } from '../../themeContext';
 import { Switch } from '@mui/material';
+import { ToggleButton, ToggleButtonGroup, Grid } from '@mui/material';
 import Alert from '@mui/material/Alert';
 
 export default function SettingsUserModal({ isOpen, closeModal, onUpdateUser, user }) {
-    const { t } = useSettings();
+    const { t, settings, setSettings } = useSettings();
     const [firstName, setFirstName] = useState(user.firstname);
     const [lastName, setLastName] = useState(user.lastname);
     const [email, setEmail] = useState(user.email);
@@ -27,6 +28,10 @@ export default function SettingsUserModal({ isOpen, closeModal, onUpdateUser, us
         setLastName(user.lastname);
         setEmail(user.email);
     }, [user]);
+
+    const handleLanguageChange = (event, newLanguage) => {
+        setSettings({ ...settings, language: newLanguage });
+    };
 
     const handleSave = async () => {
         try {
@@ -90,6 +95,19 @@ export default function SettingsUserModal({ isOpen, closeModal, onUpdateUser, us
                         value={confirmNewPassword}
                         onChange={(e) => setConfirmNewPassword(e.target.value)}
                     />
+                    <ToggleButtonGroup
+                        value={settings.language}
+                        exclusive
+                        onChange={handleLanguageChange}
+                        aria-label="select language"
+                    >
+                        <ToggleButton value="fr" aria-label="French">
+                            French
+                        </ToggleButton>
+                        <ToggleButton value="en" aria-label="English">
+                            English
+                        </ToggleButton>
+                    </ToggleButtonGroup>
                 </DialogContent>
                 <DialogActions>
                     <div style={{Display: 'flex', justifyContent: 'center', alignItems: 'center'}}>

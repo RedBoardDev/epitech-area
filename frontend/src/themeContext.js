@@ -5,32 +5,27 @@ import { createTheme} from "@mui/material/styles";
 const ThemeContext = createContext();
 
 export const MyThemeProvider = ({ children }) => {
-    const [data, setData] = useState()
-    const getBooleanConvertedValue = (data) => {
-        return data ? JSON.parse(data) : null;
-    }
-    const [toggleThemeMode, setToggleThemeMode] = useState(getBooleanConvertedValue(data));
-    
+    const [toggleThemeMode, setToggleThemeMode] = useState(false);
+
     useEffect(() => {
-        const storedData = localStorage.getItem('themeData');
-        const convertedData = getBooleanConvertedValue(storedData);
-        if (convertedData != null) {
-            setData(convertedData);
-            setToggleThemeMode(convertedData);
+        const value = localStorage.getItem('settings');
+        const settings = JSON.parse(value);
+        if (settings && settings.theme) {
+            setToggleThemeMode(settings.theme === 'dark');
         }
     }, []);
-    const UpdateThemeData = (data) => {
-        setToggleThemeMode(data);
-        setData(data);
-        localStorage.setItem('themeData', JSON.stringify(data));
-    }
+
     const toggleSwitchTheme = () => {
-        UpdateThemeData(!toggleThemeMode);
+        const value = localStorage.getItem('settings');
+        const settings = JSON.parse(value);
+        settings.theme = settings.theme === 'dark' ? 'light' : 'dark';
+        localStorage.setItem('settings', JSON.stringify(settings));
+        setToggleThemeMode((prevMode) => !prevMode);
     }
 
     const mainTheme = createTheme({
         palette: {
-            mode: toggleThemeMode ? 'dark' : 'light', 
+            mode: toggleThemeMode ? 'dark' : 'light',
             primary: {
                 main: '#562075',
             },
@@ -53,7 +48,6 @@ export const MyThemeProvider = ({ children }) => {
                 main: toggleThemeMode ? '#212121' : '#FFF',
             },
         },
-        
     });
 
     const contextValue = {
