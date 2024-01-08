@@ -4,7 +4,6 @@ import Avatar from '@mui/material/Avatar';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { ArrowDownwardTwoTone } from '@mui/icons-material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import HomeIcon from '@mui/icons-material/Home';
@@ -60,12 +59,12 @@ export default function TopBar() {
     };
 
     return (
-        <AppBar position="fixed" style={{ right: 0, width: 'calc(100%)', zIndex: -1 }}>
-            <Toolbar style={{ background: '#222222' }} sx={{ boxShadow: 3 }}>
-                <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginRight: 'auto', fontWeight: '100', fontSize: '18px' }}>
-                    {time}
-                </Typography>
-                <Typography variant="h6" component="div" sx={{ marginLeft: 'auto' }}>
+      <AppBar position="fixed" style={{ right: 0, width: 'calc(100%)', zIndex: -1 }}>
+        <Toolbar style={{ background: mainTheme.palette.ForegroundItems.main}} sx={{ boxShadow: 3 }}>
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginRight: 'auto', fontWeight: '100', fontSize: '18px' }}>
+              {time}
+            </Typography>
+            <Typography variant="h6" component="div" sx={{ marginLeft: 'auto' }}>
                     {user ? user.firstname + ' ' + user.lastname : ""}
                 </Typography>
                 <IconButton color="inherit" sx={{ marginLeft: '10px' }}>
