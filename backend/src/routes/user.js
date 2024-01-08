@@ -327,9 +327,11 @@ router.post('/profile/:id', verifyToken, (req, res) => {
  *             schema:
  *               $ref: "#/components/schemas/internalServerError"
  */
-router.get("/profile/:id", (req, res) => {
+router.get("/profile/:id", verifyToken, (req, res) => {
     db.getUserById(req.params.id).then((rows) => {
         if (rows[0]) {
+            if (!rows[0]['profile_img'])
+                return res.status(404).json({ msg: "User has no profile image" });
             const imagePath = path.join(process.env.UPLOAD_DIRECTORY, rows[0]['profile_img']);
             res.sendFile(imagePath);
         } else
