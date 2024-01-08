@@ -86,7 +86,21 @@ export default function ServicesDash() {
                                 <PuzzlePiece name={selectedReaction.name} description={selectedReaction.description} />
                             )}
                             {selectedTrigger && selectedReaction && (
-                                <Button onClick={handleConfirm}>{t("Confirm")}</Button>
+                                <Button 
+                                    onClick={handleConfirm} 
+                                    style={{
+                                        backgroundColor: '#2a9d8f', 
+                                        color: 'white', 
+                                        height: '50px', 
+                                        width: '100px', 
+                                        alignSelf: 'center',
+                                        '&:hover': {
+                                            backgroundColor: '#9d4edd',
+                                        },
+                                    }}
+                                >
+                                    Confirm
+                                </Button>
                             )}
                         </div>
                         <ModalSettingsService isOpen={isModalOpen} closeModal={closeModal} data={modalData} onSubmit={submitSettings} />
