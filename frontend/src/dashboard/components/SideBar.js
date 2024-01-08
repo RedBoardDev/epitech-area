@@ -11,12 +11,12 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Logo from '../assets/logo.png';
 import { useSettings } from '../../SettingsContext';
-
+import { useTheme } from '../../themeContext';
 export default function SideBar() {
     const { t } = useSettings();
     const location = useLocation();
     const [isSidebarOpen, setSidebarOpen] = useState(true);
-
+    const { mainTheme } = useTheme();
     const handleSidebarToggle = () => {
         setSidebarOpen(!isSidebarOpen);
     };
@@ -25,7 +25,7 @@ export default function SideBar() {
     const inactiveStyle = { color: '#808080', textDecoration: 'none' };
 
     return (
-        <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', position: 'fixed', height: '100%', width: isSidebarOpen ? '15%' : '5%', background: '#222222', transition: 'width 0.5s', boxShadow: '0px 8px 25px linear-gradient(to right, rgba(255, 0, 0, 1), rgba(0, 255, 0, 1))' }}>
+        <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', position: 'fixed', height: '100%', width: isSidebarOpen ? '15%' : '5%', background: mainTheme.palette.ForegroundItems.main, transition: 'width 0.5s', boxShadow: '0px 8px 25px linear-gradient(to right, rgba(255, 0, 0, 1), rgba(0, 255, 0, 1))' }}>
             <AppBar position="static" style={{ background: 'transparent', boxShadow: 'none' }}>
                 <Toolbar>
                     <Link to="/dashboard" style={{ textDecoration: 'none', color: '#fff' }}>

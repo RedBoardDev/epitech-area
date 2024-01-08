@@ -5,7 +5,7 @@ import { useSettings } from './SettingsContext';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const { settings } = useSettings();
+    const { settings, setSettings } = useSettings();
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     useEffect(() => {

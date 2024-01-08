@@ -13,6 +13,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useAuth } from '../../AuthContext';
 import { useSettings } from '../../SettingsContext';
 import EditModalAutomations from './EditModalAutomations';
+import { useTheme } from '../../themeContext';
 import GradeIcon from '@mui/icons-material/Grade';
 import GradeOutlinedIcon from '@mui/icons-material/GradeOutlined';
 import StopCircleOutlinedIcon from '@mui/icons-material/StopCircleOutlined';
@@ -30,6 +31,7 @@ export default function ServicesDash() {
     const [tableData, setTableData] = useState(rows);
     const [automation, setAutomation] = useState();
     const [openEditModal, setOpenEditModal] = useState(false);
+    const { mainTheme } = useTheme();
     const { getAllServices, getAutomations, deleteAutomation, getAutomationsById, updateFavById, updateActiveById } = useAuth();
 
     useEffect(() => {
@@ -146,7 +148,7 @@ export default function ServicesDash() {
     };
 
     let TableCellChildrends = {
-        style: { fontSize: '1rem', color: 'black' }
+        style: { color: mainTheme.palette.TextField1.main, fontSize: '1rem'}
     }
 
     return (
@@ -154,12 +156,12 @@ export default function ServicesDash() {
             <Table>
                 <TableHead>
                     <TableRow>
-                        <TableCell>{t("ID")}</TableCell>
-                        <TableCell>{t("Automations name")}</TableCell>
-                        <TableCell>{t("Trigger")}</TableCell>
-                        <TableCell>{t("Reaction")}</TableCell>
-                        <TableCell>{t("Status")}</TableCell>
-                        <TableCell>{t("Actions")}</TableCell>
+                        <TableCell style={{color: mainTheme.palette.TextField1.main}}>{t("ID")}</TableCell>
+                        <TableCell style={{color: mainTheme.palette.TextField1.main}}>{t("Automations name")}</TableCell>
+                        <TableCell style={{color: mainTheme.palette.TextField1.main}}>{t("Trigger")}</TableCell>
+                        <TableCell style={{color: mainTheme.palette.TextField1.main}}>{t("Reaction")}</TableCell>
+                        <TableCell style={{color: mainTheme.palette.TextField1.main}}>{t("Status")}</TableCell>
+                        <TableCell style={{color: mainTheme.palette.TextField1.main}}>{t("Actions")}</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -173,7 +175,7 @@ export default function ServicesDash() {
                                   alt="Logo"
                                   height="32"
                                   width="32"
-                                  style={{ verticalAlign: 'middle', marginRight: '8px' }}
+                                  style={{color: mainTheme.palette.TextField1.main, verticalAlign: 'middle', marginRight: '8px' }}
                                 />
                                 }
                                 {row.trigger}
@@ -191,7 +193,7 @@ export default function ServicesDash() {
                             </TableCell>
                             <TableCell {...TableCellChildrends}>{handleRenderStatus(row.status)}</TableCell>
                             <TableCell {...TableCellChildrends}>
-                                <IconButton onClick={() => handleStartAutomation(row.id, !row.status)} style={{ color: TableCell.defaultProps.style.color }} aria-label="play">
+                                <IconButton onClick={() => handleStartAutomation(row.id, !row.status)} style={{ color: mainTheme.palette.TextField1.main }} aria-label="play">
                                     {row.status ? (
                                         <StopCircleOutlinedIcon />
                                     ) : (
@@ -200,7 +202,7 @@ export default function ServicesDash() {
                                 </IconButton>
                                 <IconButton
                                     onClick={() => handleFavAutomation(row.id, !row.favorite)}
-                                    style={{ color: TableCell.defaultProps.style.color }}
+                                    style={{ color: mainTheme.palette.TextField1.main }}
                                     aria-label="favorite"
                                 >
                                     {row.favorite ? (
@@ -209,10 +211,10 @@ export default function ServicesDash() {
                                         <GradeOutlinedIcon />
                                     )}
                                 </IconButton>
-                                <IconButton onClick={() => handleOpenEditModal(row.id)} style={{ color: TableCell.defaultProps.style.color }} aria-label="edit">
+                                <IconButton onClick={() => handleOpenEditModal(row.id)} style={{ color: mainTheme.palette.TextField1.main }} aria-label="edit">
                                     <EditIcon />
                                 </IconButton>
-                                <IconButton onClick={() => handleDeleteAutomation(row.id)} style={{ color: TableCell.defaultProps.style.color }} aria-label="delete">
+                                <IconButton onClick={() => handleDeleteAutomation(row.id)} style={{ color: mainTheme.palette.TextField1.main }} aria-label="delete">
                                     <DeleteIcon />
                                 </IconButton>
                             </TableCell>
