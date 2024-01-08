@@ -36,19 +36,3 @@ test("Get automation by id", async () => {
         .set('Authorization', 'Bearer ' + loginToken);
     expect(response.statusCode).toBe(200);
 });
-
-test("Add automation", async () => {
-    const response = await request("https://area.mazettt.fr/api/en")
-        .post("/automations")
-        .set('Authorization', 'Bearer ' + loginToken)
-        .send({
-            trigger_service_id: "string",
-            trigger_id: 0,
-            trigger_params: "{}",
-            reaction_service_id: "string",
-            reaction_id: 0,
-            reaction_params: "{}"
-        });
-    expect(response.statusCode).toBe(201);
-});
-

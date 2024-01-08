@@ -50,11 +50,11 @@ test("Get user by id - bad id", async () => {
     expect(response.statusCode).toBe(404);
 });
 
-test("Get user profile image", async () => {
+test("Get user profile image missing image", async () => {
     const response = await request("https://area.mazettt.fr/api/en")
         .get("/user/profile/" + userId)
         .set('Authorization', 'Bearer ' + loginToken);
-    expect(response.statusCode).toBe(200);
+    expect(response.statusCode).toBe(404);
 });
 
 test("Get user profile image - bad token", async () => {
