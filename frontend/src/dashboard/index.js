@@ -9,6 +9,7 @@ import ServicesList from './components/AutomationsList';
 import { useTheme } from '../themeContext';
 import FavAutomations from "./components/FavAutomationList"
 import { useSettings } from '../SettingsContext';
+import { motion } from "framer-motion";
 
 export default function Dashboard() {
     const [isSidebarOpen] = React.useState(true);
@@ -63,16 +64,32 @@ export default function Dashboard() {
                     <Grid item xs={6}>
                     </Grid>
                     <Grid item xs={6}>
-                        <Card title={t("Total active automations")} description={activeAutomation && activeAutomation.length} color="#cdb4db" icon="person" />
+                        <motion.div
+                            className="box"
+                            initial={{ opacity: 0, scale: 0.5 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{
+                                duration: 0.8,
+                                delay: 0.2,
+                                ease: [0, 0.71, 0.2, 1.01]
+                            }}
+                        >
+                            <Card title={t("Total active automations")} description={activeAutomation && activeAutomation.length} color="#cdb4db" icon="person" />
+                        </motion.div>
                     </Grid>
                     <Grid item xs={6}>
-                        <Card title={t("Total connected services")} description={activeService && activeService.length} color="#ffc8dd" />
-                    </Grid>
-                    <Grid item xs={6}>
-                        <Card title="Total Comments" description="100" color="#bde0fe" />
-                    </Grid>
-                    <Grid item xs={6}>
-                        <Card title="Total Likes" description="100" color="#a2d2ff" />
+                        <motion.div
+                            className="box"
+                            initial={{ opacity: 0, scale: 0.5 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{
+                                duration: 0.8,
+                                delay: 0.2,
+                                ease: [0, 0.71, 0.2, 1.01]
+                            }}
+                        >
+                            <Card title={t("Total connected services")} description={activeService && activeService.length} color="#ffc8dd" />
+                        </motion.div>
                     </Grid>
                 </Grid>
             </div>

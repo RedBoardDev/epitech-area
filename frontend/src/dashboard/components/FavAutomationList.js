@@ -5,17 +5,10 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import IconButton from '@mui/material/IconButton';
-import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
-import { PauseCircleOutline } from '@mui/icons-material';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
 import { useAuth } from '../../AuthContext';
 import { useSettings } from '../../SettingsContext';
 import EditModalAutomations from './EditModalAutomations';
-import GradeIcon from '@mui/icons-material/Grade';
-import GradeOutlinedIcon from '@mui/icons-material/GradeOutlined';
-import StopCircleOutlinedIcon from '@mui/icons-material/StopCircleOutlined';
+import { useTheme } from '../../themeContext';
 
 function createData(id, trigger, reaction, type, status, imageSrcTrigger, imageSrcReaction, name, favorite) {
     return { id, trigger, reaction, type, status, imageSrcTrigger, imageSrcReaction, name, favorite };
@@ -31,6 +24,7 @@ export default function FavAutomations() {
     const [automation, setAutomation] = useState();
     const [openEditModal, setOpenEditModal] = useState(false);
     const { getAllServices, getAutomationsByFav} = useAuth();
+    const { mainTheme } = useTheme();
 
     useEffect(() => {
         const getAllAutomations = async () => {
@@ -107,19 +101,17 @@ export default function FavAutomations() {
             <Table>
                 <TableHead>
                     <TableRow>
-                        <TableCell>{t("ID")}</TableCell>
-                        <TableCell>{t("Automations name")}</TableCell>
-                        <TableCell>{t("Trigger")}</TableCell>
-                        <TableCell>{t("Reaction")}</TableCell>
-                        <TableCell>{t("Status")}</TableCell>
+                        <TableCell style={{color: mainTheme.palette.TextField1.main}}>{t("Automations name")}</TableCell>
+                        <TableCell style={{color: mainTheme.palette.TextField1.main}}>{t("Trigger")}</TableCell>
+                        <TableCell style={{color: mainTheme.palette.TextField1.main}}>{t("Reaction")}</TableCell>
+                        <TableCell style={{color: mainTheme.palette.TextField1.main}}>{t("Status")}</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody> 
                     {tableData.map((row) => (
                         <TableRow key={row.id}>
-                            <TableCell {...TableCellChildrends}>{row.id}</TableCell>
-                            <TableCell {...TableCellChildrends}>{row.name}</TableCell>
-                            <TableCell {...TableCellChildrends}>
+                            <TableCell {...TableCellChildrends} style={{color: mainTheme.palette.TextField1.main}}>{row.name}</TableCell>
+                            <TableCell {...TableCellChildrends} style={{color: mainTheme.palette.TextField1.main}}>
                                 {<img
                                   src={process.env.REACT_APP_API_URL + row.imageSrcTrigger}
                                   alt="Logo"
@@ -130,7 +122,7 @@ export default function FavAutomations() {
                                 }
                                 {row.trigger}
                             </TableCell>
-                            <TableCell {...TableCellChildrends}>
+                            <TableCell {...TableCellChildrends} style={{color: mainTheme.palette.TextField1.main}}>
                                 {<img
                                   src={process.env.REACT_APP_API_URL + row.imageSrcReaction}
                                   alt="Logo"
@@ -141,9 +133,7 @@ export default function FavAutomations() {
                                 }
                                 {row.reaction}
                             </TableCell>
-                            <TableCell {...TableCellChildrends}>{handleRenderStatus(row.status)}</TableCell>
-                            <TableCell {...TableCellChildrends}>
-                            </TableCell>
+                            <TableCell {...TableCellChildrends} style={{color: mainTheme.palette.TextField1.main}}>{handleRenderStatus(row.status)}</TableCell>
                         </TableRow>
                     ))}
                     <EditModalAutomations isOpen={openEditModal} closeModal={closeModal} selectedAutomation={automation} onUpdateAutomation={updateAutomation} />

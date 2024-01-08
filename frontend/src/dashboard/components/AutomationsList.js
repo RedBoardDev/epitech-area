@@ -156,7 +156,6 @@ export default function ServicesDash() {
             <Table>
                 <TableHead>
                     <TableRow>
-                        <TableCell style={{color: mainTheme.palette.TextField1.main}}>{t("ID")}</TableCell>
                         <TableCell style={{color: mainTheme.palette.TextField1.main}}>{t("Automations name")}</TableCell>
                         <TableCell style={{color: mainTheme.palette.TextField1.main}}>{t("Trigger")}</TableCell>
                         <TableCell style={{color: mainTheme.palette.TextField1.main}}>{t("Reaction")}</TableCell>
@@ -167,7 +166,6 @@ export default function ServicesDash() {
                 <TableBody>
                     {tableData.map((row) => (
                         <TableRow key={row.id}>
-                            <TableCell {...TableCellChildrends}>{row.id}</TableCell>
                             <TableCell {...TableCellChildrends}>{row.name}</TableCell>
                             <TableCell {...TableCellChildrends}>
                                 {<img

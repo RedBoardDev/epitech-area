@@ -1,20 +1,29 @@
 import React from 'react';
 import { Box, Typography, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../AuthContext';
+import { motion } from "framer-motion";
 
 const ServiceBlock = ({ imageSrc, title, backgroundColor }) => {
-    const { verifyToken } = useAuth();
     const navigate = useNavigate();
 
     const handleClick = async (e) => {
         navigate(`/service/${title}`);
     };
     return (
-        <Paper
-            elevation={3}
-            onClick={handleClick}
-            sx={{
+        <motion.div
+            className="box"
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{
+              duration: 0.8,
+              delay: 0.2,
+              ease: [0, 0.71, 0.2, 1.01]
+            }}
+        >
+            <Paper
+              elevation={3}
+              onClick={handleClick}
+              sx={{
                 position: 'relative',
                 cursor: 'pointer',
                 width: '200px',
@@ -26,29 +35,36 @@ const ServiceBlock = ({ imageSrc, title, backgroundColor }) => {
                         opacity: 0.2,
                     },
                 },
-            }}
-        >
-            <Box
-                sx={{
-                    position: 'absolute',
-                    top: '10%',
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    textAlign: 'center',
-                }}
+              }}
             >
-                <img
-                    src={process.env.REACT_APP_API_URL + imageSrc}
-                    alt={title}
-                    style={{ width: '100px', height: 'auto', borderRadius: '50%' }}
-                />
-                <Typography variant="h6" sx={{ color: '#fff', marginTop: '4px' }}>
-                    {title}
-                </Typography>
-            </Box>
-            <Box
-                className="overlay"
-                sx={{
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    textAlign: 'center',
+                  }}
+                >
+                    <img
+                      src={process.env.REACT_APP_API_URL + imageSrc}
+                      alt={title}
+                      style={{ width: '100px', height: 'auto', borderRadius: '50%' }}
+                    />
+                    <Typography variant="h6" sx={{ color: '#fff', marginTop: '4px' }}>
+                      {title}
+                    </Typography>
+                </Box>
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 260,
+                    damping: 20
+                  }}
+                  className="overlay"
+                  sx={{
                     position: 'absolute',
                     top: 0,
                     left: 0,
@@ -57,9 +73,10 @@ const ServiceBlock = ({ imageSrc, title, backgroundColor }) => {
                     backgroundColor: '#000',
                     opacity: 0,
                     transition: 'opacity 0.3s',
-                }}
-            ></Box>
-        </Paper>
+                  }}
+                />
+            </Paper>
+        </motion.div>
     );
 };
 
