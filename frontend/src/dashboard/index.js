@@ -5,12 +5,15 @@ import Grid from '@mui/material/Grid';
 import Card from "./components/Card"
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
+import ServicesList from './components/AutomationsList';
+import { useTheme } from '../themeContext';
 
 
 export default function Dashboard() {
     const [isSidebarOpen] = React.useState(true);
     const navigate = useNavigate();
     const { verifyToken } = useAuth();
+    const { mainTheme } = useTheme();
 
     useEffect(() => {
         const checkToken = async () => {
@@ -49,6 +52,10 @@ export default function Dashboard() {
                         <Card title="Total Likes" description="100" color="#a2d2ff" />
                     </Grid>
                 </Grid>
+            </div>
+            <h1 style={{position: 'absolute', top: '50%', left: '16%', fontWeight: '100'}}>Your favorite services</h1>
+            <div style={{backgroundColor: mainTheme.palette.mode, height: '93.5%', top: '53.5%', left: '15%', position: 'absolute', width: '85%', zIndex: '-1', overflow: 'auto', padding: '2%'}}>
+                <ServicesList />
             </div>
         </Grid>
     );
