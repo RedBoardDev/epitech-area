@@ -57,18 +57,21 @@ const ServicesGithub = () => {
     }, [verifyToken, getServiceById, navigate, serviceName]);
     
     return (
-        <Box style={{ backgroundColor: allServices.color, minHeight: '100vh', textAlign: 'center' }}>
+        <Box style={{ backgroundColor: allServices.color, minHeight: '100vh', textAlign: 'center'}}>
         <HeaderComponent isLoggedIn={false} />
             <Box
                 style={{
                     position: 'absolute',
+                    maxHeight: '100vh',
+                    overflowY: 'auto',
                     top: '50%',
                     left: '50%',
-                    transform: 'translate(-50%, -50%)',
+                    transform: 'translate(-50%, -40%)',
                     width: '50%',
                     backgroundColor: 'rgba(217, 217, 217, 0.4)',
                     padding: '20px',
                     borderRadius: '10px',
+                    height: '80%',
                 }}
             >
                 <IconButton 
