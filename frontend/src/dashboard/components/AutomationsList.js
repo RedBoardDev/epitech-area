@@ -148,7 +148,7 @@ export default function ServicesDash() {
     };
 
     let TableCellChildrends = {
-        style: { fontSize: '1rem', color: 'black' }
+        style: { color: mainTheme.palette.TextField1.main, fontSize: '1rem'}
     }
 
     return (
