@@ -64,14 +64,13 @@ export const triggers = [
         fields: [
             {
                 id: 'repository_name',
-                name: 'Repository name',
+                name: 'Repository',
                 description: 'The repository to watch',
                 type: 'text'
             }
         ],
         check: async (autoId, userData, params, checkData, token) => {
             try {
-                console.log(`${name} trigger 1 checking...`);
                 const resp = await axios.get(`https://api.github.com/repos/${params.repository_name}/commits`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -95,96 +94,124 @@ export const triggers = [
             }
         }
     },
-    {
-        id: 2,
-        name: 'New issue',
-        description: 'Triggers when a new issue is created',
-        fields: [
-            {
-                id: 'repository_name',
-                name: 'Repository name',
-                description: 'The repository to watch',
-                type: 'text'
-            }
-        ],
-        check: async (autoId, userData, params, checkData, token) => {
-            console.log(`${name} trigger 2 check`);
-            console.log('userData:', userData);
-            console.log('params:', params);
-            console.log('token:', token);
-            return null;
-        }
-    },
-    {
-        id: 3,
-        name: 'New pull request',
-        description: 'Triggers when a new pull request is created',
-        fields: [
-            {
-                id: 'repository_name',
-                name: 'Repository name',
-                description: 'The repository to watch',
-                type: 'text'
-            }
-        ],
-        check: async (autoId, userData, params, checkData, token) => {
-            console.log(`${name} trigger 3 check`);
-            console.log('userData:', userData);
-            console.log('params:', params);
-            console.log('token:', token);
-            return null;
-        }
-    },
+    // {
+    //     id: 2,
+    //     name: 'New issue',
+    //     description: 'Triggers when a new issue is created',
+    //     fields: [
+    //         {
+    //             id: 'repository_name',
+    //             name: 'Repository',
+    //             description: 'The repository to watch',
+    //             type: 'text'
+    //         }
+    //     ],
+    //     check: async (autoId, userData, params, checkData, token) => {
+    //         return null;
+    //     }
+    // },
+    // {
+    //     id: 3,
+    //     name: 'New pull request',
+    //     description: 'Triggers when a new pull request is created',
+    //     fields: [
+    //         {
+    //             id: 'repository_name',
+    //             name: 'Repository',
+    //             description: 'The repository to watch',
+    //             type: 'text'
+    //         }
+    //     ],
+    //     check: async (autoId, userData, params, checkData, token) => {
+    //         return null;
+    //     }
+    // },
     {
         id: 4,
-            name: 'New branch',
-            description: 'Triggers when a new branch is created to a repository',
-            fields: [
-                {
-                    id: 'repository_name',
-                    name: 'Repository name',
-                    description: 'The repository to watch',
-                    type: 'text'
-                }
-            ],
-            check: async (autoId, userData, params, checkData, token) => {
-                try {
-                    console.log(`${name} trigger 4 checking...`);
-                    const resp = await axios.get(`https://api.github.com/repos/${params.repository_name}/branches`, {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                            Accept: 'application/vnd.github+json'
-                        }
-                    });
-                    const branches = resp.data;
-                    if (!branches || !branches.length)
-                        return null;
-                    const lastBranch = branches[0];
-                    if (checkData.lastBranch && lastBranch.name === checkData.lastBranch)
-                        return null;
-                    db.updateAutomation(userData.id, autoId, `trigger_check_data = '${JSON.stringify({ lastBranch: lastBranch.name })}'`);
-                    return {
-                        text: `New branch created: ${lastBranch.name} in the repository ${params.repository_name}`,
-                        data: lastBranch
-                    };
-                } catch (error) {
-                    console.error(error);
-                    return null;
-                }
+        name: 'New branch',
+        description: 'Triggers when a new branch is created to a repository',
+        fields: [
+            {
+                id: 'repository_name',
+                name: 'Repository',
+                description: 'The repository to watch',
+                type: 'text'
             }
+        ],
+        check: async (autoId, userData, params, checkData, token) => {
+            try {
+                const resp = await axios.get(`https://api.github.com/repos/${params.repository_name}/branches`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        Accept: 'application/vnd.github+json'
+                    }
+                });
+                const branches = resp.data;
+                if (!branches || !branches.length)
+                    return null;
+                if (!checkData.knownBranches)
+                    checkData.knownBranches = [];
+                for (const branch of branches) {
+                    if (checkData.knownBranches.includes(branch.name))
+                        continue;
+                    checkData.knownBranches.push(branch.name);
+                    db.updateAutomation(userData.id, autoId, `trigger_check_data = '${JSON.stringify(checkData)}'`);
+                    return {
+                        text: `New branch created: ${branch.name} in the repository ${params.repository_name}`,
+                        data: branch
+                    };
+                }
+            } catch (error) {
+                console.error(error);
+                return null;
+            }
+        }
     }
 ];
 
 export const reactions = [
     {
         id: 1,
+        name: 'Create repository',
+        description: 'Creates a new repository in your personal account',
+        fields: [
+            {
+                id: 'name',
+                name: 'Name',
+                description: 'The name of the repository to create',
+                type: 'text'
+            }
+        ],
+        execute: async (userData, params, token, triggerData) => {
+            console.log(triggerData.text);
+
+            axios.post('https://api.github.com/user/repos', {
+                name: params.name,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    Accept: 'application/vnd.github+json',
+                    "X-GitHub-Api-Version": "2022-11-28"
+                }
+            }).then((response) => {
+                console.log("Repository created");
+            }).catch((error) => {
+                if (error.response.status === 422)
+                    console.log("Repository already exists");
+                else
+                    console.log("error:", error);
+            });
+        }
+    },
+    {
+        id: 2,
         name: 'Create issue',
-        description: 'Creates a new issue',
+        description: 'Creates a new issue in a repository',
         fields: [
             {
                 id: 'repository_name',
                 name: 'Repository',
-                description: 'The repository to create the issue in',
+                description: 'The repository to create the branch in',
                 type: 'text'
             },
             {
@@ -192,54 +219,24 @@ export const reactions = [
                 name: 'Title',
                 description: 'The title of the issue',
                 type: 'text'
-            },
-            {
-                id: 'body',
-                name: 'Body',
-                description: 'The body of the issue',
-                type: 'text'
             }
         ],
         execute: async (userData, params, token, triggerData) => {
             console.log(triggerData.text);
-            // console.log(`${name} reaction 1 execute`);
-            // console.log('userData:', userData);
-            // console.log('params:', params);
-            // console.log('token:', token);
-            // console.log('triggerData:', triggerData);
-        }
-    },
-    {
-        id: 2,
-        name: 'Create pull request',
-        description: 'Creates a new pull request',
-        fields: [
-            {
-                id: 'repository_name',
-                name: 'Repository',
-                description: 'The repository to create the pull request in',
-                type: 'text'
-            },
-            {
-                id: 'title',
-                name: 'Title',
-                description: 'The title of the pull request',
-                type: 'text'
-            },
-            {
-                id: 'body',
-                name: 'Body',
-                description: 'The body of the pull request',
-                type: 'text'
-            }
-        ],
-        execute: async (userData, params, token, triggerData) => {
-            console.log(triggerData.text);
-            // console.log(`${name} reaction 2 execute`);
-            // console.log('userData:', userData);
-            // console.log('params:', params);
-            // console.log('token:', token);
-            // console.log('triggerData:', triggerData);
+
+            axios.post(`https://api.github.com/repos/${params.repository_name}/issues`, {
+                title: (params.title && params.title.length ? params.title : triggerData.text),
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    Accept: 'application/vnd.github+json',
+                    "X-GitHub-Api-Version": "2022-11-28"
+                }
+            }).then((response) => {
+                console.log("Issue created");
+            }).catch((error) => {
+                console.log("error when creating issue:", error);
+            });
         }
     },
     {

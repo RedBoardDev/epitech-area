@@ -93,7 +93,7 @@ export default function SettingsUserModal({ isOpen, closeModal, onUpdateUser, us
                 </DialogContent>
                 <DialogActions>
                     <div style={{Display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                        Select Theme
+                        {t("Dark theme")}
                         <Switch checked={toggleThemeMode} onChange={toggleSwitchTheme} />
                     </div>
                     <Button onClick={closeModal}>{t("Cancel")}</Button>

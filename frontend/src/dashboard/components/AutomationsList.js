@@ -155,14 +155,14 @@ export default function ServicesDash() {
                 <TableHead>
                     <TableRow>
                         <TableCell>{t("ID")}</TableCell>
-                        <TableCell>Automations name</TableCell>
+                        <TableCell>{t("Automations name")}</TableCell>
                         <TableCell>{t("Trigger")}</TableCell>
                         <TableCell>{t("Reaction")}</TableCell>
                         <TableCell>{t("Status")}</TableCell>
                         <TableCell>{t("Actions")}</TableCell>
                     </TableRow>
                 </TableHead>
-                <TableBody> 
+                <TableBody>
                     {tableData.map((row) => (
                         <TableRow key={row.id}>
                             <TableCell {...TableCellChildrends}>{row.id}</TableCell>
