@@ -1,4 +1,4 @@
-name: CI/CD - backend
+name: CI/CD - Mobile
 on:
   pull_request:
     branches:
@@ -7,11 +7,8 @@ on:
   push:
     branches:
       - CI/CD
-      - Tests
 jobs:
   build:
-    env:
-        DATABASE_CONFIG: ${{ secrets.DATABASE_CONFIG }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -22,8 +19,4 @@ jobs:
     - name: Install dependencies
       run: npm ci
       continue-on-error: false
-      working-directory: backend
-    - name: Testing backend
-      run: npm run test
-      continue-on-error: false
-      working-directory: backend
+      working-directory: mobile
