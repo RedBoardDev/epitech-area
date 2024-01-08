@@ -19,7 +19,7 @@ export default function SettingsUserModal({ isOpen, closeModal, onUpdateUser, us
     const [newPassword, setNewPassword] = useState("");
     const [confirmNewPassword, setConfirmNewPassword] = useState("");
     const { updateUserById } = useAuth();
-    const { toggleThemeMode, toggleSwitchTheme } =useTheme();
+    const { mainTheme, toggleThemeMode, toggleSwitchTheme } = useTheme();
     const [error, setError] = useState("");
 
     useEffect(() => {
@@ -94,10 +94,10 @@ export default function SettingsUserModal({ isOpen, closeModal, onUpdateUser, us
                 <DialogActions>
                     <div style={{Display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                         {t("Dark theme")}
-                        <Switch checked={toggleThemeMode} onChange={toggleSwitchTheme} />
+                        <Switch checked={toggleThemeMode} onChange={toggleSwitchTheme} style={{color: mainTheme.palette.SwitchStyle.main}} />
                     </div>
-                    <Button onClick={closeModal}>{t("Cancel")}</Button>
-                    <Button onClick={handleSave}>{t("Save")}</Button>
+                    <Button onClick={closeModal} style={{color: mainTheme.palette.TextStyle1.main}}>{t("Cancel")}</Button>
+                    <Button onClick={handleSave} style={{color: mainTheme.palette.TextStyle1.main}}>{t("Save")}</Button>
                 </DialogActions>
             </Dialog>
         </div>
