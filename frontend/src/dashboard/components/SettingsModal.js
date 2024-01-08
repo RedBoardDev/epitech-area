@@ -9,9 +9,10 @@ import { useAuth } from '../../AuthContext';
 import { useSettings } from '../../SettingsContext';
 import { useTheme } from '../../themeContext';
 import { Switch } from '@mui/material';
+import { ToggleButton, ToggleButtonGroup, Grid } from '@mui/material';
 
 export default function SettingsUserModal({ isOpen, closeModal, onUpdateUser, user }) {
-    const { t } = useSettings();
+    const { t, settings, setSettings } = useSettings();
     const [open, setOpen] = useState(true);
     const [firstName, setFirstName] = useState(user.firstname);
     const [lastName, setLastName] = useState(user.lastname);
@@ -19,7 +20,7 @@ export default function SettingsUserModal({ isOpen, closeModal, onUpdateUser, us
     const [newPassword, setNewPassword] = useState("");
     const [confirmNewPassword, setConfirmNewPassword] = useState("");
     const { updateUserById } = useAuth();
-    const { toggleThemeMode, toggleSwitchTheme } =useTheme();
+    const { toggleThemeMode, toggleSwitchTheme } = useTheme();
 
     useEffect(() => {
         setFirstName(user.firstname);
@@ -27,10 +28,14 @@ export default function SettingsUserModal({ isOpen, closeModal, onUpdateUser, us
         setEmail(user.email);
     }, [user]);
 
+    const handleLanguageChange = (event, newLanguage) => {
+        setSettings({ ...settings, language: newLanguage });
+    };
+
     const handleSave = async () => {
         try {
-                await updateUserById(lastName, firstName, email);
-                onUpdateUser({ ...user, firstname: firstName, lastname: lastName, email: email });
+            await updateUserById(lastName, firstName, email);
+            onUpdateUser({ ...user, firstname: firstName, lastname: lastName, email: email });
         } catch (error) {
             console.error('Update user failed:', error);
         }
@@ -83,12 +88,29 @@ export default function SettingsUserModal({ isOpen, closeModal, onUpdateUser, us
                         value={confirmNewPassword}
                         onChange={(e) => setConfirmNewPassword(e.target.value)}
                     />
+                    <ToggleButtonGroup
+                        value={settings.language}
+                        exclusive
+                        onChange={handleLanguageChange}
+                        aria-label="select language"
+                    >
+                        <ToggleButton value="fr" aria-label="French">
+                            French
+                        </ToggleButton>
+                        <ToggleButton value="en" aria-label="English">
+                            English
+                        </ToggleButton>
+                    </ToggleButtonGroup>
                 </DialogContent>
                 <DialogActions>
-                    <div style={{Display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                        {t("Dark theme")}
-                        <Switch checked={toggleThemeMode} onChange={toggleSwitchTheme} />
-                    </div>
+                    <Grid container justifyContent="flex-start" alignItems="center" marginLeft="20px">
+                        <Grid item>
+                            {t("Dark theme")}
+                        </Grid>
+                        <Grid item>
+                            <Switch checked={toggleThemeMode} onChange={toggleSwitchTheme} />
+                        </Grid>
+                    </Grid>
                     <Button onClick={closeModal}>{t("Cancel")}</Button>
                     <Button onClick={handleSave}>{t("Save")}</Button>
                 </DialogActions>

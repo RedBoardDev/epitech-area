@@ -7,6 +7,7 @@ const api = axios.create({
 });
 
 export const callApi = (method, language, endpoint, data = null, headers = {}) => {
+    if (!language) language = 'en';
     return new Promise(async (resolve, reject) => {
         try {
             const response = await api({
