@@ -4,8 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import FavAutomations from "./components/FavAutomationList";
 import Grid from '@mui/material/Grid';
+import { useTheme } from '../themeContext';
 
 export default function Dashboard() {
+    const { mainTheme } = useTheme();
     const navigate = useNavigate();
     const { verifyToken, getUserById, getActiveAutomations, getActiveServices } = useAuth();
     const [user, setUser] = useState();
@@ -43,7 +45,7 @@ export default function Dashboard() {
     return (
         <div style={{ width: '100%', height: '100%' }}>
             <div>
-                <h1>Welcome, {user && user.firstname}</h1>
+                <h1 style={{ color: mainTheme.palette.primary.main }}>Welcome, {user && user.firstname}</h1>
             </div>
 
             <Grid container spacing={3}>
