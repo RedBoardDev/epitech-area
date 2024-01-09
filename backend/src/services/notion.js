@@ -10,10 +10,6 @@ export const icon = '/NotionLogo.png';
 export const connect = async (userId) => {
     const redirectUri = `${process.env.API_PUBLIC_URL}/en/service/oauth/${id}/callback`;
     const clientId = process.env.NOTION_API_CLIENT_ID;
-    
-    console.log(userId.toString());
-    console.log(JSON.stringify(userId));
-    console.log(JSON.stringify(`${userId}`));
 
     try {
 
@@ -93,17 +89,103 @@ export const triggers = [
 export const reactions = [
     {
         id: 1,
-        name: '',
-        description: '',
+        name: 'Create a new database',
+        description: 'Create a new database',
         fields: [
             {
-                id: '',
-                name: '',
-                description: '',
+                id: 'page_id',
+                name: 'Parent page ID',
+                description: 'The ID of the parent page',
                 type: 'text'
-            }
+            },
+            {
+                id: 'title',
+                name: 'Database Title',
+                description: 'the title of your brand new database',
+                type: 'text'
+            },
         ],
         execute: async (userData, params, token, triggerData) => {
+            const apiKey = process.env.NOTION_API_CLIENT_ID;
+            try {
+                const resp = await axios.post('https://api.notion.com/v1/databases', {
+                title: [
+                        {
+                            text: {
+                                content: `${params.title}`,
+                            }
+                        },
+                    ],
+                parent: {
+                    type: "page_id",
+                    page_id: params.page_id,
+                },
+                properties: {
+                    Name: {
+                      title: {},
+                    },
+                    Description: {
+                      rich_text: {},
+                    },
+                }
+                }, {    
+                headers: {
+                        'Content-Type': 'application/json',
+                        'Notion-Version': '2021-08-16',
+                        'Authorization': 'Bearer ' + token,
+                    },
+                });
+            } catch (error) {
+                console.log(error);
+                return null;
+            }
+        }
+    },
+    {
+        id: 2,
+        name: 'Create a new page',
+        description: 'Create a new page',
+        fields: [
+            {
+                id: 'page_id',
+                name: 'Parent page ID',
+                description: 'The ID of the parent page',
+                type: 'text'
+            },
+            {
+                id: 'title',
+                name: 'Page Title',
+                description: 'the title of your brand new database',
+                type: 'text'
+            },
+        ],
+        execute: async (userData, params, token, triggerData) => {
+            try {
+                const resp = await axios.post('https://api.notion.com/v1/pages', {
+                parent: {
+                    type: "page_id",
+                    page_id: params.page_id,
+                },
+                properties: {
+                    "title": [
+                        {
+                            "text": {
+                                "content": `${params.title}`,
+                            }
+                        }
+                    ]
+                }
+                }, {    
+                headers: {
+                        'Content-Type': 'application/json',
+                        'Notion-Version': '2021-08-16',
+                        'Authorization': 'Bearer ' + token,
+                    },
+                });
+            } catch (error) {
+                console.log(error);
+                return null;
+            }
         }
     }
 ];
