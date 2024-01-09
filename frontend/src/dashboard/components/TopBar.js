@@ -4,7 +4,6 @@ import Avatar from '@mui/material/Avatar';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { ArrowDownwardTwoTone } from '@mui/icons-material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import HomeIcon from '@mui/icons-material/Home';
@@ -23,8 +22,8 @@ export default function TopBar() {
     const navigate = useNavigate();
 
     const handleLogout = () => {
-      logout();
-      navigate('/');
+        logout();
+        navigate('/');
     };
 
     useEffect(() => {
@@ -38,50 +37,50 @@ export default function TopBar() {
     }, []);
 
     useEffect(() => {
-      if (!user) {
-        const getUser = async () => {
-          try {
-              const result = await getUserById();
-              setUser(result);
-          } catch (error) {
-              console.error('Error fetching automations:', error);
-          }
-        };
-        getUser();
-      }
-  }, [getUserById, user]);
+        if (!user) {
+            const getUser = async () => {
+                try {
+                    const result = await getUserById();
+                    setUser(result);
+                } catch (error) {
+                    console.error('Error fetching automations:', error);
+                }
+            };
+            getUser();
+        }
+    }, [getUserById, user]);
 
-  const updateUser = (updatedUserData) => {
-    setUser(updatedUserData);
-  };
+    const updateUser = (updatedUserData) => {
+        setUser(updatedUserData);
+    };
 
-  const closeModal = () => {
-    setOpenSettingsModal(false);
-  };
+    const closeModal = () => {
+        setOpenSettingsModal(false);
+    };
 
     return (
       <AppBar position="fixed" style={{ right: 0, width: 'calc(100%)', zIndex: -1 }}>
-        <Toolbar style={{ background: '#222222'}} sx={{ boxShadow: 3 }}>
+        <Toolbar style={{ background: mainTheme.palette.ForegroundItems.main}} sx={{ boxShadow: 3 }}>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginRight: 'auto', fontWeight: '100', fontSize: '18px' }}>
               {time}
             </Typography>
             <Typography variant="h6" component="div" sx={{ marginLeft: 'auto' }}>
                     {user ? user.firstname + ' ' + user.lastname : ""}
-            </Typography>
-            <IconButton color="inherit" sx={{ marginLeft: '10px' }}>
-              <Avatar alt="User Avatar" src="https://image.shutterstock.com/image-vector/dotted-spiral-vortex-royaltyfree-images-600w-2227567913.jpg" />
-            </IconButton>
-            <IconButton color="inherit" sx={{ marginLeft: '10px' }} component={Link} to="/">
-                <HomeIcon />
-            </IconButton>
-            <IconButton color="inherit" sx={{ marginLeft: '10px' }} onClick={() => setOpenSettingsModal(true)}>
-                <SettingsIcon />
-            </IconButton>
-            <IconButton color="inherit" sx={{ marginLeft: '10px' }} onClick={handleLogout}>
-                <LogoutIcon />
-            </IconButton>
-            <SettingsUserModal isOpen={openSettingsModal} closeModal={closeModal} onUpdateUser={updateUser} user={user || ""} />
-        </Toolbar>
-      </AppBar>
+                </Typography>
+                <IconButton color="inherit" sx={{ marginLeft: '10px' }}>
+                    <Avatar alt="User Avatar" src="https://image.shutterstock.com/image-vector/dotted-spiral-vortex-royaltyfree-images-600w-2227567913.jpg" />
+                </IconButton>
+                <IconButton color="inherit" sx={{ marginLeft: '10px' }} component={Link} to="/">
+                    <HomeIcon />
+                </IconButton>
+                <IconButton color="inherit" sx={{ marginLeft: '10px' }} onClick={() => setOpenSettingsModal(true)}>
+                    <SettingsIcon />
+                </IconButton>
+                <IconButton color="inherit" sx={{ marginLeft: '10px' }} onClick={handleLogout}>
+                    <LogoutIcon />
+                </IconButton>
+                <SettingsUserModal isOpen={openSettingsModal} closeModal={closeModal} onUpdateUser={updateUser} user={user || ""} />
+            </Toolbar>
+        </AppBar>
     );
-  }
+}

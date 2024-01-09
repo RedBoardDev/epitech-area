@@ -12,7 +12,7 @@ export const options_SwaggerJsdoc = {
         },
         servers: [
             {
-                url: process.env.API_PUBLIC_URL,
+                url: process.env.API_PUBLIC_URL + '/en',
             },
         ],
         tags: [
@@ -43,11 +43,61 @@ export const options_SwaggerJsdoc = {
                 },
             },
             schemas: {
+                internalServerError: {
+                    type: 'object',
+                    properties: {
+                        msg: {
+                            type: 'string',
+                            example: 'Internal server error',
+                        },
+                    },
+                },
                 unauthorized: {
                     type: 'object',
                     properties: {
                         msg: {
                             type: 'string',
+                        },
+                    },
+                },
+                notFound: {
+                    type: 'object',
+                    properties: {
+                        msg: {
+                            type: 'string',
+                        },
+                    },
+                },
+                badRequest: {
+                    type: 'object',
+                    properties: {
+                        msg: {
+                            type: 'string',
+                        },
+                    },
+                },
+                AboutInfoResponse: {
+                    type: 'object',
+                    properties: {
+                        client: {
+                            type: 'object',
+                            properties: {
+                                host: {
+                                    type: 'string',
+                                },
+                            },
+                        },
+                        server: {
+                            type: 'object',
+                            properties: {
+                                current_time: {
+                                    type: 'integer',
+                                    format: 'int64',
+                                },
+                                services: {
+                                    type: 'object',
+                                },
+                            },
                         },
                     },
                 },
@@ -71,6 +121,23 @@ export const options_SwaggerJsdoc = {
                         id: {
                             type: 'integer',
                             format: 'int64',
+                        },
+                    },
+                },
+                registerParams: {
+                    type: 'object',
+                    properties: {
+                        email: {
+                            type: 'string',
+                        },
+                        password: {
+                            type: 'string',
+                        },
+                        lastname: {
+                            type: 'string',
+                        },
+                        firstname: {
+                            type: 'string',
                         },
                     },
                 },
@@ -262,7 +329,7 @@ export const options_SwaggerJsdoc = {
             },
         ],
     },
-    apis: ['./src/routes/**/*.js'],
+    apis: ['./src/routes/**/*.js', './src/index.js'],
 };
 
 export const options_SwaggerUI = {

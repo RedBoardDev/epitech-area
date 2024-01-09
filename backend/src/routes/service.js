@@ -3,20 +3,30 @@ import { db, serviceManager, verifyToken, getIdFromToken, t } from "../global.js
 
 const router = express.Router();
 
+router.get('/active', verifyToken, async (req, res) => {
+    try {
+        const userId = getIdFromToken(req, res); if (userId === -1) return;
+        const result = await db.getServiceByActive(userId);
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(500).json({ msg: "Internal server error", error: error });
+    }
+});
+
 /**
  * @swagger
  * /service:
  *   get:
  *     tags:
  *       - service
- *     summary: Get all services
- *     description: Get all services
- *     operationId: getAllServices
+ *     summary: "Get all services"
+ *     description: "Get all services"
+ *     operationId: "getAllServices"
  *     produces:
  *       - application/json
  *     responses:
  *       '200':
- *         description: Successful operation
+ *         description: "Successful operation"
  *         content:
  *           application/json:
  *             schema:
@@ -24,17 +34,27 @@ const router = express.Router();
  *               items:
  *                 $ref: "#/components/schemas/service"
  *       '403':
- *         description: Unauthorized
+ *         description: "Unauthorized - Invalid or missing authentication token"
  *         content:
  *           application/json:
  *             schema:
  *               $ref: "#/components/schemas/unauthorized"
+ *       '500':
+ *         description: "Internal server error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/internalServerError"
  *     security:
  *       - bearerAuth: []
  */
 router.get('/', verifyToken, async (req, res) => {
-    const services = serviceManager.getServicesTranslated(t.getUrlLang(req));
-    res.status(200).json(services);
+    try {
+        const services = serviceManager.getServicesTranslated(t.getUrlLang(req));
+        res.status(200).json(services);
+    } catch (error) {
+        res.status(500).json({ msg: 'Internal server error', error: error });
+    }
 });
 
 /**
@@ -43,50 +63,57 @@ router.get('/', verifyToken, async (req, res) => {
  *   get:
  *     tags:
  *       - service
- *     summary: Get service by id
- *     description: Get service by id
- *     operationId: getServiceById
+ *     summary: "Get service by id"
+ *     description: "Get service by id"
+ *     operationId: "getServiceById"
  *     produces:
  *       - application/json
  *     parameters:
  *       - name: id
  *         in: path
- *         description: The id that needs to be fetched.
+ *         description: "The id that needs to be fetched."
  *         required: true
  *         schema:
  *           type: string
  *     responses:
  *       '200':
- *         description: Successful operation
+ *         description: "Successful operation"
  *         content:
  *           application/json:
  *             schema:
  *               $ref: "#/components/schemas/service"
  *       '404':
- *         description: Service not found
+ *         description: "Service not found"
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 msg:
- *                   type: string
+ *               $ref: "#/components/schemas/notFound"
  *       '403':
- *         description: Unauthorized
+ *         description: "Unauthorized - Invalid or missing authentication token"
  *         content:
  *           application/json:
  *             schema:
  *               $ref: "#/components/schemas/unauthorized"
+ *       '500':
+ *         description: "Internal server error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/internalServerError"
  *     security:
  *       - bearerAuth: []
  */
 router.get('/:id', verifyToken, async (req, res) => {
-    const service = serviceManager.getServiceTranslated(t.getUrlLang(req), req.params.id);
-    if (!service) {
-        res.status(404).json({ msg: 'Service not found' });
-        return;
+    try {
+        const service = serviceManager.getServiceTranslated(t.getUrlLang(req), req.params.id);
+        if (!service) {
+            res.status(404).json({ msg: 'Service not found' });
+            return;
+        }
+        res.status(200).json(service);
+    } catch (error) {
+        res.status(500).json({ msg: 'Internal server error', error: error });
     }
-    res.status(200).json(service);
 });
 
 /**
@@ -95,21 +122,21 @@ router.get('/:id', verifyToken, async (req, res) => {
  *   get:
  *     tags:
  *       - service
- *     summary: Connect to service
- *     description: Connect to a service using OAuth
- *     operationId: connectToService
+ *     summary: "Connect to service"
+ *     description: "Connect to a service using OAuth"
+ *     operationId: "connectToService"
  *     produces:
  *       - application/json
  *     parameters:
  *       - name: id
  *         in: path
- *         description: The id of the service.
+ *         description: "The id of the service."
  *         required: true
  *         schema:
  *           type: string
  *     responses:
  *       '200':
- *         description: Successful connection
+ *         description: "Successful connection"
  *         content:
  *           application/json:
  *             schema:
@@ -118,50 +145,60 @@ router.get('/:id', verifyToken, async (req, res) => {
  *                 url:
  *                   type: string
  *       '400':
- *         description: Bad request
+ *         description: "Bad request"
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
+ *               $ref: "#/components/schemas/badRequest"
  *       '404':
- *         description: Service not found
+ *         description: "Service not found"
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 msg:
- *                   type: string
+ *               $ref: "#/components/schemas/notFound"
+ *       '403':
+ *         description: "Unauthorized - Invalid or missing authentication token"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/unauthorized"
+ *       '500':
+ *         description: "Internal server error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/internalServerError"
  *     security:
  *       - bearerAuth: []
  */
 router.get('/oauth/:id/connect', verifyToken, async (req, res) => {
-    const userId = getIdFromToken(req, res);
-    if (userId === -1) return;
+    try {
+        const userId = getIdFromToken(req, res);
+        if (userId === -1) return;
 
-    const service = serviceManager.getService(req.params.id);
-    if (!service) {
-        return res.status(404).json({ msg: 'Service not found' });
-    }
-    const ret = await service.connect(userId);
-    if (ret === "error") {
-        return res.status(400).json({ msg: 'Error connecting to the service' });
-    }
-
-
-    if (ret.auth === false) {
-        const rows = await db.getServiceOauth(userId, service.id);
-
-        if (rows[0]) {
-            await db.updateServiceOauth(userId, service.id, 'disable');
-        } else {
-            await db.insertServiceOauth(userId, service.id, 'disable');
+        const service = serviceManager.getService(req.params.id);
+        if (!service) {
+            return res.status(404).json({ msg: 'Service not found' });
         }
+
+        const ret = await service.connect(userId);
+        if (ret === "error") {
+            return res.status(400).json({ msg: 'Error connecting to the service' });
+        }
+
+        if (ret.auth === false) {
+            const rows = await db.getServiceOauth(userId, service.id);
+
+            if (rows[0]) {
+                await db.updateServiceOauth(userId, service.id, 'disable');
+            } else {
+                await db.insertServiceOauth(userId, service.id, 'disable');
+            }
+        }
+        return res.status(200).json({ url: ret.url });
+    } catch (error) {
+        res.status(500).json({ msg: 'Internal server error', error: error });
     }
-    return res.status(200).json({ url: ret.url });
 });
 
 /**
@@ -170,33 +207,33 @@ router.get('/oauth/:id/connect', verifyToken, async (req, res) => {
  *   get:
  *     tags:
  *       - service
- *     summary: OAuth callback
- *     description: Callback endpoint for OAuth authentication
- *     operationId: oauthCallback
+ *     summary: "OAuth callback"
+ *     description: "Callback endpoint for OAuth authentication"
+ *     operationId: "oauthCallback"
  *     produces:
  *       - application/json
  *     parameters:
  *       - name: id
  *         in: path
- *         description: The id of the service.
+ *         description: "The id of the service."
  *         required: true
  *         schema:
  *           type: string
  *       - name: code
  *         in: query
- *         description: The authentication code.
+ *         description: "The authentication code."
  *         required: true
  *         schema:
  *           type: string
  *       - name: userId
  *         in: query
- *         description: The user id.
+ *         description: "The user id."
  *         required: true
  *         schema:
  *           type: string
  *     responses:
  *       '200':
- *         description: Successful callback
+ *         description: "Successful callback"
  *         content:
  *           application/json:
  *             schema:
@@ -205,34 +242,23 @@ router.get('/oauth/:id/connect', verifyToken, async (req, res) => {
  *                 url:
  *                   type: string
  *       '400':
- *         description: Bad request
+ *         description: "Bad request - Invalid or missing parameters"
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 msg:
- *                   type: string
+ *               $ref: "#/components/schemas/badRequest"
  *       '404':
- *         description: Service not found
+ *         description: "Service not found"
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 msg:
- *                   type: string
+ *               $ref: "#/components/schemas/notFound"
  *       '500':
- *         description: Internal server error
+ *         description: "Internal server error"
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 msg:
- *                   type: string
- *                 error:
- *                   type: string
+ *               $ref: "#/components/schemas/internalServerError"
  */
 router.get('/oauth/:id/callback', async (req, res) => {
     const service = serviceManager.getService(req.params.id);
@@ -275,22 +301,22 @@ router.get('/oauth/:id/callback', async (req, res) => {
  * @swagger
  * /service/oauth/{id}:
  *   delete:
- *     summary: Delete service OAuth
- *     description: Deletes the OAuth credentials for a specific service.
+ *     summary: "Delete service OAuth"
+ *     description: "Deletes the OAuth credentials for a specific service."
  *     tags:
  *       - service
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: The ID of the service.
+ *         description: "The ID of the service."
  *         schema:
  *           type: string
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       '200':
- *         description: Successful deletion
+ *         description: "Successful deletion"
  *         content:
  *           application/json:
  *             schema:
@@ -300,35 +326,23 @@ router.get('/oauth/:id/callback', async (req, res) => {
  *                   type: string
  *                   description: Success message
  *       '400':
- *         description: Bad request
+ *         description: "Bad request - Invalid or missing parameters"
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   description: Error message
+ *               $ref: "#/components/schemas/badRequest"
  *       '404':
- *         description: Service not found
+ *         description: "Service not found"
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 msg:
- *                   type: string
- *                   description: Error message
+ *               $ref: "#/components/schemas/notFound"
  *       '401':
- *         description: Unauthorized
+ *         description: "Unauthorized"
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 msg:
- *                   type: string
- *                   description: Error message
+ *               $ref: "#/components/schemas/unauthorized"
  */
 router.delete('/oauth/:id', verifyToken, async (req, res) => {
     const userId = getIdFromToken(req, res); if (userId === -1) return;
@@ -348,22 +362,22 @@ router.delete('/oauth/:id', verifyToken, async (req, res) => {
  * @swagger
  * /service/oauth/{id}/connected:
  *   get:
- *     summary: Check if service is connected
- *     description: Checks if a specific service is connected for the user.
+ *     summary: "Check if service is connected"
+ *     description: "Checks if a specific service is connected for the user."
  *     tags:
  *       - service
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: The ID of the service.
+ *         description: "The ID of the service."
  *         schema:
  *           type: string
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       '200':
- *         description: Success
+ *         description: "Success"
  *         content:
  *           application/json:
  *             schema:
@@ -373,35 +387,23 @@ router.delete('/oauth/:id', verifyToken, async (req, res) => {
  *                   type: boolean
  *                   description: Indicates if the service is connected or not.
  *       '400':
- *         description: Bad request
+ *         description: "Bad request - Invalid or missing parameters"
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   description: Error message
+ *               $ref: "#/components/schemas/badRequest"
  *       '404':
- *         description: Service not found
+ *         description: "Service not found"
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 msg:
- *                   type: string
- *                   description: Error message
+ *               $ref: "#/components/schemas/notFound"
  *       '401':
- *         description: Unauthorized
+ *         description: "Unauthorized - Missing or invalid token"
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 msg:
- *                   type: string
- *                   description: Error message
+ *               $ref: "#/components/schemas/unauthorized"
  */
 router.get('/oauth/:id/connected', verifyToken, async (req, res) => {
     const userId = getIdFromToken(req, res); if (userId === -1) return;

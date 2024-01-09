@@ -13,7 +13,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useAuth } from '../../AuthContext';
 import { useSettings } from '../../SettingsContext';
 import EditModalAutomations from './EditModalAutomations';
-import { useTheme } from '../../themeContext';
 import GradeIcon from '@mui/icons-material/Grade';
 import GradeOutlinedIcon from '@mui/icons-material/GradeOutlined';
 import StopCircleOutlinedIcon from '@mui/icons-material/StopCircleOutlined';
@@ -26,19 +25,18 @@ const rows = [
     createData(''),
 ];
 
-export default function ServicesDash() {
+export default function FavAutomations() {
     const { t } = useSettings();
     const [tableData, setTableData] = useState(rows);
     const [automation, setAutomation] = useState();
     const [openEditModal, setOpenEditModal] = useState(false);
-    const { mainTheme } = useTheme();
-    const { getAllServices, getAutomations, deleteAutomation, getAutomationsById, updateFavById, updateActiveById } = useAuth();
+    const { getAllServices, getAutomationsByFav} = useAuth();
 
     useEffect(() => {
         const getAllAutomations = async () => {
             try {
                 const result = await getAllServices();
-                const userAutomations = await getAutomations();
+                const userAutomations = await getAutomationsByFav();
 
                 const automationsMap = {};
 
@@ -69,57 +67,10 @@ export default function ServicesDash() {
             }
         };
         getAllAutomations();
-    }, [getAllServices, getAutomations]);
-
-    const handleOpenEditModal = (row) => {
-        const getAutomation = async () => {
-            try {
-                const result = await getAutomationsById(row);
-                setAutomation(result);
-            } catch (error) {
-                console.error('Error fetching automation by id:', error);
-            }
-        }
-        getAutomation();
-        setOpenEditModal(true);
-    };
+    }, [getAllServices, getAutomationsByFav]);
 
     const closeModal = () => {
         setOpenEditModal(false);
-    };
-
-    const handleDeleteAutomation = async (id) => {
-        try {
-            await deleteAutomation(id);
-            const updatedTableData = tableData.filter(row => row.id !== id);
-            setTableData(updatedTableData);
-        } catch (error) {
-            console.error('delete automation failed:', error);
-        }
-    };
-
-    const handleFavAutomation = async (id, fav) => {
-        try {
-            await updateFavById(id, fav);
-            const updateFav = ((prevTableData) => prevTableData.map((row) =>
-                row.id === id ? { ...row, favorite: fav, } : row
-            ));
-            setTableData(updateFav);
-        } catch (error) {
-            console.error('fav automation failed:', error);
-        }
-    };
-
-    const handleStartAutomation = async (id, status) => {
-        try {
-            await updateActiveById(id, status);
-            const updateActive = ((prevTableData) => prevTableData.map((row) =>
-                row.id === id ? { ...row, active: status, status: status } : row
-            ));
-            setTableData(updateActive);
-        } catch (error) {
-            console.error('active automation failed:', error);
-        }
     };
 
     const updateAutomation = (updatedAutomationData) => {
@@ -148,7 +99,7 @@ export default function ServicesDash() {
     };
 
     let TableCellChildrends = {
-        style: { color: mainTheme.palette.TextField1.main, fontSize: '1rem'}
+        style: { fontSize: '1rem', color: 'black' }
     }
 
     return (
@@ -156,15 +107,14 @@ export default function ServicesDash() {
             <Table>
                 <TableHead>
                     <TableRow>
-                        <TableCell style={{color: mainTheme.palette.TextField1.main}}>{t("ID")}</TableCell>
-                        <TableCell style={{color: mainTheme.palette.TextField1.main}}>{t("Automations name")}</TableCell>
-                        <TableCell style={{color: mainTheme.palette.TextField1.main}}>{t("Trigger")}</TableCell>
-                        <TableCell style={{color: mainTheme.palette.TextField1.main}}>{t("Reaction")}</TableCell>
-                        <TableCell style={{color: mainTheme.palette.TextField1.main}}>{t("Status")}</TableCell>
-                        <TableCell style={{color: mainTheme.palette.TextField1.main}}>{t("Actions")}</TableCell>
+                        <TableCell>{t("ID")}</TableCell>
+                        <TableCell>Automations name</TableCell>
+                        <TableCell>{t("Trigger")}</TableCell>
+                        <TableCell>{t("Reaction")}</TableCell>
+                        <TableCell>{t("Status")}</TableCell>
                     </TableRow>
                 </TableHead>
-                <TableBody>
+                <TableBody> 
                     {tableData.map((row) => (
                         <TableRow key={row.id}>
                             <TableCell {...TableCellChildrends}>{row.id}</TableCell>
@@ -175,7 +125,7 @@ export default function ServicesDash() {
                                   alt="Logo"
                                   height="32"
                                   width="32"
-                                  style={{color: mainTheme.palette.TextField1.main, verticalAlign: 'middle', marginRight: '8px' }}
+                                  style={{ verticalAlign: 'middle', marginRight: '8px' }}
                                 />
                                 }
                                 {row.trigger}
@@ -193,30 +143,6 @@ export default function ServicesDash() {
                             </TableCell>
                             <TableCell {...TableCellChildrends}>{handleRenderStatus(row.status)}</TableCell>
                             <TableCell {...TableCellChildrends}>
-                                <IconButton onClick={() => handleStartAutomation(row.id, !row.status)} style={{ color: mainTheme.palette.TextField1.main }} aria-label="play">
-                                    {row.status ? (
-                                        <StopCircleOutlinedIcon />
-                                    ) : (
-                                        <PlayCircleOutlineIcon />
-                                    )}
-                                </IconButton>
-                                <IconButton
-                                    onClick={() => handleFavAutomation(row.id, !row.favorite)}
-                                    style={{ color: mainTheme.palette.TextField1.main }}
-                                    aria-label="favorite"
-                                >
-                                    {row.favorite ? (
-                                        <GradeIcon />
-                                    ) : (
-                                        <GradeOutlinedIcon />
-                                    )}
-                                </IconButton>
-                                <IconButton onClick={() => handleOpenEditModal(row.id)} style={{ color: mainTheme.palette.TextField1.main }} aria-label="edit">
-                                    <EditIcon />
-                                </IconButton>
-                                <IconButton onClick={() => handleDeleteAutomation(row.id)} style={{ color: mainTheme.palette.TextField1.main }} aria-label="delete">
-                                    <DeleteIcon />
-                                </IconButton>
                             </TableCell>
                         </TableRow>
                     ))}

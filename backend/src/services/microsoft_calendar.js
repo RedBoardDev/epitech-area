@@ -1,10 +1,11 @@
 import { Router } from 'express';
 import axios from 'axios';
+import { db } from "../global.js";
 
 export const id = 'microsoft_calendar';
 export const name = 'Microsoft Calendar';
 export const description = 'Microsoft Calendar service';
-export const color = '#4e2735';
+export const color = '#6264a7';
 export const icon = '/microsoft-calendar.png';
 
 export const connect = async (userId) => {
@@ -80,7 +81,23 @@ export const triggers = [
         ],
         check: async (autoId, userData, params, checkData, token) => {
             try {
+                const apiUrl = 'https://graph.microsoft.com/v1.0/me/events?$top=1&$orderby=createdDateTime desc';
 
+                const rsp = await axios.get(apiUrl, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                const events = rsp.data
+                if (!events || !events.value || !events.value.length) return null;
+                const latestEvent = events.value[0];
+                if (checkData.latestEventID && latestEvent.id === checkData.latestEventID)
+                    return null;
+                db.updateAutomation(userData.id, autoId, `trigger_check_data = '${JSON.stringify({ latestEventID: latestEvent.id })}'`);
+                return {
+                    text: `New event created: ${latestEvent.subject} by ${latestEvent.organizer}`,
+                    data: latestEvent,
+                };
             } catch (error) {
                 console.error(error);
                 return null;
