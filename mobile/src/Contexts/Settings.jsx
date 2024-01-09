@@ -7,9 +7,9 @@ const SettingsContext = createContext();
 
 export const SettingsProvider = ({ children }) => {
     const [settings, setSettings] = useState({
-        apiLocation: `http://10.137.158.160:6500`,
-        apiBaseUrl: `http://10.137.158.160:6500/fr`,
-        language: "fr",
+        apiLocation: `http://localhost:3000`,
+        apiBaseUrl: `http://localhost:3000/en`,
+        language: "en",
     });
     const languages = { fr };
 
