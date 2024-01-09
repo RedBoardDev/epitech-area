@@ -4,12 +4,21 @@ import SideBar from './components/SideBar';
 
 const Layout = ({ children }) => {
     return (
-        <div style={{ zIndex: 100, display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', overflow: 'hidden' }}>
             <TopBar />
             <div style={{ display: 'flex', flex: 1 }}>
                 <SideBar />
-                <div style={{ flex: 1, padding: '20px', overflowX: 'hidden', overflowY: 'auto' }}>
-                    {children}
+                <div style={{ flex: 1, padding: 0, marginLeft: '0%', marginRight: '0%', overflowY: 'auto' }}>
+                    <div style={{
+                        paddingLeft: '17%',
+                        paddingTop: '5rem',
+                        paddingRight: '2%',
+                        width: '100%',
+                        maxHeight: `calc(100vh)`,
+                        overflowY: 'auto',
+                    }}>
+                        {children}
+                    </div>
                 </div>
             </div>
         </div>
