@@ -34,7 +34,7 @@ const ModalSettingsService = ({ isOpen, closeModal, data, onSubmit }) => {
 
     return (
         <Dialog open={isOpen} onClose={closeModal}>
-            <DialogTitle>{t("Parameters")}</DialogTitle>
+            <DialogTitle sx={{ textAlign: 'center' }}>{t("Parameters")}</DialogTitle>
             <DialogContent>
                 <form onSubmit={handleSubmit}>
                     {data?.fields && data.fields.map((field) => (
@@ -49,14 +49,16 @@ const ModalSettingsService = ({ isOpen, closeModal, data, onSubmit }) => {
                             />
                         </div>
                     ))}
-                    <DialogActions>
-                        <Button onClick={closeModal}>{t("Cancel")}</Button>
-                        <Button type="submit" variant="contained" color="primary">
-                            {t("Submit")}
-                        </Button>
-                    </DialogActions>
                 </form>
             </DialogContent>
+            <DialogActions style={{ justifyContent: 'space-between', marginLeft: '20px', marginRight: '20px', marginTop: '-1.5rem' }}>
+                <Button onClick={closeModal} color="primary">
+                    {t("Cancel")}
+                </Button>
+                <Button type="submit" variant="contained" color="primary" onClick={handleSubmit}>
+                    {t("Submit")}
+                </Button>
+            </DialogActions>
         </Dialog>
     );
 };

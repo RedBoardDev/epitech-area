@@ -50,16 +50,18 @@ export default function ChooseArea({ data, type, serviceName, onSelected }) {
             </div>
 
             <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '20px', maxWidth: '700px' }}>
-                {data && data.map((object) => (
-                    <ServiceBox
-                        key={object.id}
-                        id={object.id}
-                        name={object.name}
-                        color={object.color || 'grey'}
-                        description={object.description}
-                        onClick={handleSelection}
-                    />
-                ))}
+                {data && data.length > 0 && data
+                    .filter((object) => object.name.toLowerCase().includes(searchTerm.toLowerCase()))
+                    .map((object) => (
+                        <ServiceBox
+                            key={object.id}
+                            id={object.id}
+                            name={object.name}
+                            color={object.color || 'grey'}
+                            description={object.description}
+                            onClick={handleSelection}
+                        />
+                    ))}
             </div>
         </>
     );

@@ -3,13 +3,27 @@ import { useAuth } from '../AuthContext';
 import { Grid, Box } from '@mui/material';
 import ChooseService from './components/ChooseService';
 import ChooseArea from './components/ChooseArea';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import ModalSettingsService from './components/ModalSettingsService';
 
 export default function AddService() {
     const [services, setServices] = useState([]);
-    const [serviceChoose, setServiceChoose] = useState(null); // true for active / false for inactive
+    const [serviceChoose, setServiceChoose] = useState(null); // null for active / not null for inactive
     const [selectionState, setSelectionState] = useState('triggers'); // triggers or reactions
+    const [selectedTriggerData, setSelectedTriggerData] = useState(null);
+    const [selectedReactionData, setSelectedReactionData] = useState(null);
 
     const { getAllServices, addAutomation, serviceOauth } = useAuth();
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalData, setModalData] = useState(null);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     useEffect(() => {
         getAllServices()
@@ -22,14 +36,59 @@ export default function AddService() {
     };
 
     const handleTriggerSelect = (selectedTrigger) => {
-        console.log("oui", selectedTrigger);
-        setSelectionState('reactions');
-        setServiceChoose(null);
+        console.log("trigger", selectedTrigger);
+        openModal(selectedTrigger);
     };
 
     const handleReactionSelect = (selectedReaction) => {
-        console.log("non", selectedReaction);
+        console.log("reaction", selectedReaction);
+        openModal(selectedReaction);
     };
+
+
+    const submitSettings = (data) => {
+        setSelectionState('reactions');
+        setServiceChoose(null);
+        if (selectionState === 'triggers') {
+            setSelectedTriggerData(data);
+        }
+        if (selectionState === 'reactions') {
+            setSelectedReactionData(data);
+        }
+        console.log("submit data modal", data);
+    }
+
+    const openModal = (selected) => {
+        if (serviceChoose === null) return;
+        setModalData(selected);
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+    };
+    // const handleClose = () => {
+    //     setIsDialogOpen(false);
+    // };
+
+    const handleSave = async () => {
+        // try {
+        //     if (!automationName) return;
+        //     await addAutomation(selectedTrigger.service_id, selectedTrigger.id, JSON.stringify(selectedTrigger.formValues),
+        //         selectedReaction.service_id, selectedReaction.id, JSON.stringify(selectedReaction.formValues), automationName);
+        //     window.location.href = '/dashboard/services';
+        // } catch (error) {
+        //     const errData = error?.response?.data || null;
+        //     if (!errData) return;
+
+        //     if (error.response && error.response.status === 401) {
+        //         serviceOauth(error.response.data.service_id);
+        //     } else {
+        //         console.error("Error during addAutomation:", error);
+        //     }
+        // }
+        // setIsDialogOpen(false);
+    }
 
     return (
         <Grid container>
@@ -58,6 +117,13 @@ export default function AddService() {
                         </>
                     )}
                 </Box>
+                <ModalSettingsService isOpen={isModalOpen} closeModal={closeModal} data={modalData} onSubmit={submitSettings} />
+                {/* <Dialog open={isDialogOpen} onClose={handleClose}>
+                    <DialogActions>
+                        <Button onClick={handleClose}>Cancel</Button>
+                        <Button onClick={handleSave}>Save</Button>
+                    </DialogActions>
+                </Dialog> */}
             </Grid>
         </Grid>
     );
