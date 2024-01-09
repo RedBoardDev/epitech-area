@@ -13,43 +13,46 @@ import { SettingsProvider } from './SettingsContext';
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { useTheme } from './themeContext';
-import { MyThemeProvider, ThemeContext } from './themeContext';
+import { MyThemeProvider } from './themeContext';
 import ServicesGithub from './components/service/ServiceInfo';
+import Layout from './dashboard/Layout';
 
 const AppBody = () => {
-  const { mainTheme } = useTheme();
-  return (
-    <SettingsProvider>
-      <ThemeProvider theme={mainTheme}>
-        <CssBaseline />
-        <AuthProvider>
-          <Router>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/register/github/callback" element={<RegisterGithubCallback />} />
-              <Route path="/login/github/callback" element={<LoginGithubCallback />} />
-              <Route path="/services" element={<Services />} />
-              <Route path="/service/:serviceName" element={<ServicesGithub />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/dashboard/services" element={<ServicesDash />} />
-              <Route path="/dashboard/addservice" element={<AddService />} />
-              <Route path="*" element={<Lost />} />
-            </Routes>
-          </Router>
-        </AuthProvider>
-      </ThemeProvider>
-    </SettingsProvider>
-  );
-}
+    const { mainTheme } = useTheme();
+    return (
+      <SettingsProvider>
+        <ThemeProvider theme={mainTheme}>
+          <CssBaseline />
+          <AuthProvider>
+            <Router>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/register/github/callback" element={<RegisterGithubCallback />} />
+                <Route path="/login/github/callback" element={<LoginGithubCallback />} />
+                <Route path="/services" element={<Services />} />
+
+                <Route path="/service/:serviceName" element={<ServicesGithub />} />
+                <Route path="/dashboard" element={<Layout><Dashboard /></Layout>} />
+                <Route path="/dashboard/services" element={<Layout><ServicesDash /></Layout>} />
+                <Route path="/dashboard/addservice" element={<Layout><AddService /></Layout>} />
+                <Route path="*" element={<Lost />} />
+              </Routes>
+            </Router>
+          </AuthProvider>
+        </ThemeProvider>
+      </SettingsProvider>
+    );
+  };
+
 
 function App() {
-  return (
-    <MyThemeProvider>
-      <AppBody />
-    </MyThemeProvider>
-  );
+    return (
+        <MyThemeProvider>
+            <AppBody />
+        </MyThemeProvider>
+    );
 }
 
 export default App;

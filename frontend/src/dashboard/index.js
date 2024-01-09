@@ -48,12 +48,12 @@ export default function Dashboard() {
 
     return (
         <Grid container style={{overflow: 'hidden'}}>
-            <Grid item xs={1.8}>
+            {/* <Grid item xs={1.8}>
                 {isSidebarOpen ? <SideBar /> : null}
             </Grid>
             <Grid item xs={9}>
                 {isSidebarOpen ? <TopBar /> : null}
-            </Grid>
+            </Grid> */}
             <div style={{paddingLeft: '2%', width: '80%', height: '100%', zIndex: '5', position: 'absolute', top: '6%', left: '15%'}}>
                 <Grid container spacing={2}>
                     <h1>Welcome, {user && user.firstname}
