@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../AuthContext';
 import { Grid, Box } from '@mui/material';
-import ServiceBox from './components/ServiceBox';
-import SearchIcon from '@mui/icons-material/Search';
-import PageTitle from './components/PageTitle';
+import ChooseService from './components/ChooseService';
+import ChooseArea from './components/ChooseArea';
 
 export default function AddService() {
     const [services, setServices] = useState([]);
-    const [searchTerm, setSearchTerm] = useState('');
+    const [serviceChoose, setServiceChoose] = useState(null); // true for active / false for inactive
+    const [selectionState, setSelectionState] = useState('triggers'); // triggers or reactions
+
     const { getAllServices, addAutomation, serviceOauth } = useAuth();
 
     useEffect(() => {
@@ -15,6 +16,20 @@ export default function AddService() {
             .then((data) => setServices(data))
             .catch((error) => console.error('Error:', error));
     }, [getAllServices]);
+
+    const handleServiceSelect = (selectedService) => {
+        setServiceChoose(selectedService);
+    };
+
+    const handleTriggerSelect = (selectedTrigger) => {
+        console.log("oui", selectedTrigger);
+        setSelectionState('reactions');
+        setServiceChoose(null);
+    };
+
+    const handleReactionSelect = (selectedReaction) => {
+        console.log("non", selectedReaction);
+    };
 
     return (
         <Grid container>
@@ -29,55 +44,19 @@ export default function AddService() {
                         justifyContent: 'center',
                     }}
                 >
-                    <PageTitle title="Explore Services" />
-                    <div style={{
-                        marginBottom: '30px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        position: 'relative',
-                        width: '26%'
-                    }}>
-                        <SearchIcon style={{ position: 'absolute', marginLeft: '10px', fontSize: '2rem', color: 'black' }} />
-                        <input
-                            type="text"
-                            placeholder="Search services..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            style={{
-                                padding: '12px',
-                                width: '100%',
-                                borderRadius: '8px',
-                                border: '3px solid #f5f5f5',
-                                backgroundColor: '#f5f5f5',
-                                color: 'black',
-                                fontSize: '1rem',
-                                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                                outline: 'none',
-                                paddingLeft: '40px',
-                            }}
-                            onFocus={() => {
-                                document.getElementById('searchInput').style.border = '3px solid black';
-                            }}
-                            onBlur={() => {
-                                document.getElementById('searchInput').style.border = '3px solid transparent';
-                            }}
-                            id="searchInput"
-                        />
-
-                    </div>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '20px', maxWidth: '700px' }}>
-                        {services
-                            .filter((service) => service.name.toLowerCase().includes(searchTerm.toLowerCase()))
-                            .map((service) => (
-                                <ServiceBox
-                                    key={service.id}
-                                    id={service.id}
-                                    name={service.name}
-                                    color={service.color}
-                                    icon={service.icon}
-                                />
-                            ))}
-                    </div>
+                    {serviceChoose === null && (
+                        <ChooseService services={services} type={selectionState} onServiceSelected={handleServiceSelect} />
+                    )}
+                    {serviceChoose !== null && (
+                        <>
+                            {selectionState === 'triggers' && (
+                                <ChooseArea data={serviceChoose.triggers} type={selectionState} serviceName={serviceChoose.name} onSelected={handleTriggerSelect} />
+                            )}
+                            {selectionState === 'reactions' && (
+                                <ChooseArea data={serviceChoose.reactions} type={selectionState} serviceName={serviceChoose.name} onSelected={handleReactionSelect} />
+                            )}
+                        </>
+                    )}
                 </Box>
             </Grid>
         </Grid>
