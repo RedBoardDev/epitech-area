@@ -148,6 +148,38 @@ router.post("/login/github/:code", async (req, res) => {
     }
 });
 
+router.post("/login/githubmobile/:token", async (req, res) => {
+    if (!req.params.token) {
+        res.status(400).json({ msg: "Bad parameter" });
+        return;
+    }
+    const token = req.params.token;
+
+    try {
+        const email = await getGithubEmail(token);
+
+        db.getUserByEmail(email, true).then((rows) => {
+            if (rows[0] === undefined) {
+                res.status(400).json({ msg: "Invalid Credentials" });
+                return;
+            }
+            if (rows[0].auth_type !== 'github') {
+                res.status(400).json({ msg: "Invalid Credentials" });
+                return;
+            }
+
+            const token = jwt.sign({ id: `${rows[0].id}` }, process.env.API_SECRET, { expiresIn: '40w' });
+            res.status(201).json({ token: token, id: rows[0].id });
+        }).catch((err) => {
+            res.status(500).json({ msg: "Internal server error", error: err });
+            console.error(err);
+        });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ msg: "Internal server error", error: error });
+    }
+});
+
 /**
  * @swagger
  * /auth/register:
@@ -262,6 +294,40 @@ router.post("/register/github/:code", async (req, res) => {
 
     try {
         const token = await getGithubToken(code);
+        const email = await getGithubEmail(token);
+        const infos = await getGithubInfos(token);
+
+        db.getUserByEmail(email).then((rows) => {
+            if (rows[0] !== undefined) {
+                res.status(400).json({ msg: "Email already exists" });
+                return;
+            }
+
+            db.insertUser(email, null, infos.username, infos.username, 'github').then((rows) => {
+                const jwtToken = jwt.sign({ id: `${rows.insertId}` }, process.env.API_SECRET, { expiresIn: '40w' });
+                res.status(201).json({ token: jwtToken, id: rows.insertId });
+            }).catch((err) => {
+                res.status(500).json({ msg: "Internal server error", error: err });
+                console.error(err);
+            });
+        }).catch((err) => {
+            res.status(500).json({ msg: "Internal server error", error: err });
+            console.error(err);
+        });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ msg: "Internal server error", error: error });
+    }
+});
+
+router.post("/register/githubmobile/:token", async (req, res) => {
+    if (!req.params.token) {
+        res.status(400).json({ msg: "Bad parameter" });
+        return;
+    }
+    const token = req.params.token;
+
+    try {
         const email = await getGithubEmail(token);
         const infos = await getGithubInfos(token);
 
