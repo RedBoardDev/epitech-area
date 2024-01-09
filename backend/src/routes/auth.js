@@ -150,6 +150,79 @@ router.post("/login/github/:code", async (req, res) => {
 
 /**
  * @swagger
+ * /auth/login/githubmobile/{token}:
+ *   post:
+ *     tags:
+ *       - auth
+ *     summary: "Login with GitHub"
+ *     description: "Login to your Area account using GitHub authentication"
+ *     operationId: "loginWithGithubMobile"
+ *     security: []
+ *     parameters:
+ *       - in: path
+ *         name: token
+ *         required: true
+ *         description: "GitHub token"
+ *         schema:
+ *           type: string
+ *     consumes:
+ *       - "application/json"
+ *     produces:
+ *       - "application/json"
+ *     responses:
+ *       '201':
+ *         description: "Successful github login"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/loginResponse"
+ *       '400':
+ *         description: "Bad request - Invalid or missing GitHub authorization code"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/unauthorized"
+ *       '500':
+ *         description: "Internal server error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/internalServerError"
+ */
+router.post("/login/githubmobile/:token", async (req, res) => {
+    if (!req.params.token) {
+        res.status(400).json({ msg: "Bad parameter" });
+        return;
+    }
+    const token = req.params.token;
+
+    try {
+        const email = await getGithubEmail(token);
+
+        db.getUserByEmail(email, true).then((rows) => {
+            if (rows[0] === undefined) {
+                res.status(400).json({ msg: "Invalid Credentials" });
+                return;
+            }
+            if (rows[0].auth_type !== 'github') {
+                res.status(400).json({ msg: "Invalid Credentials" });
+                return;
+            }
+
+            const token = jwt.sign({ id: `${rows[0].id}` }, process.env.API_SECRET, { expiresIn: '40w' });
+            res.status(201).json({ token: token, id: rows[0].id });
+        }).catch((err) => {
+            res.status(500).json({ msg: "Internal server error", error: err });
+            console.error(err);
+        });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ msg: "Internal server error", error: error });
+    }
+});
+
+/**
+ * @swagger
  * /auth/register:
  *   post:
  *     tags:
@@ -262,6 +335,77 @@ router.post("/register/github/:code", async (req, res) => {
 
     try {
         const token = await getGithubToken(code);
+        const email = await getGithubEmail(token);
+        const infos = await getGithubInfos(token);
+
+        db.getUserByEmail(email).then((rows) => {
+            if (rows[0] !== undefined) {
+                res.status(400).json({ msg: "Email already exists" });
+                return;
+            }
+
+            db.insertUser(email, null, infos.username, infos.username, 'github').then((rows) => {
+                const jwtToken = jwt.sign({ id: `${rows.insertId}` }, process.env.API_SECRET, { expiresIn: '40w' });
+                res.status(201).json({ token: jwtToken, id: rows.insertId });
+            }).catch((err) => {
+                res.status(500).json({ msg: "Internal server error", error: err });
+                console.error(err);
+            });
+        }).catch((err) => {
+            res.status(500).json({ msg: "Internal server error", error: err });
+            console.error(err);
+        });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ msg: "Internal server error", error: error });
+    }
+});
+
+/**
+ * @swagger
+ * /auth/register/githubmobile/{token}:
+ *   post:
+ *     tags:
+ *       - auth
+ *     summary: "Register with GitHub"
+ *     description: "Register to an Area account using GitHub authentication"
+ *     operationId: "githubRegisterMobile"
+ *     security: []
+ *     parameters:
+ *       - in: path
+ *         name: token
+ *         required: true
+ *         description: "GitHub token"
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '201':
+ *         description: "Successful GitHub registration"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/loginResponse"
+ *       '400':
+ *         description: "Bad request - Invalid or missing GitHub authorization code"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/unauthorized"
+ *       '500':
+ *         description: "Internal server error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/internalServerError"
+ */
+router.post("/register/githubmobile/:token", async (req, res) => {
+    if (!req.params.token) {
+        res.status(400).json({ msg: "Bad parameter" });
+        return;
+    }
+    const token = req.params.token;
+
+    try {
         const email = await getGithubEmail(token);
         const infos = await getGithubInfos(token);
 
