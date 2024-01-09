@@ -12,12 +12,17 @@ import {
   Image,
   Alert,
   SafeAreaView,
-  Modal
+  Modal,
+  Linking
 } from 'react-native';
 
 import {
   useNavigation, useTheme
 } from '@react-navigation/native';
+
+import { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from '@env';
+
+import { authorize } from 'react-native-app-auth';
 
 import { theme } from '../Components/Theme'
 import Background from '../Components/Background'
@@ -27,7 +32,7 @@ import Button from '../Components/Button'
 
 import { validateEmail, validatePassword } from '../Tests/Validators'
 
-import { LoginEmailPass, GetUser } from '../Core/ServerCalls'
+import { LoginEmailPass, GetUser, loginGithub } from '../Core/ServerCalls'
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from '../Components/Icon';
@@ -39,8 +44,8 @@ function LoginScreen() {
   const { colors } = useTheme();
   const [modalVisible, setModalVisible] = useState(false);
 
-  const [email, setEmail] = useState({ value: 'test@gmail.com', error: '' })
-  const [password, setPassword] = useState({ value: '12345678', error: '' })
+  const [email, setEmail] = useState({ value: 'test@thomasott.com', error: '' })
+  const [password, setPassword] = useState({ value: 'test123/', error: '' })
   const [error, setError] = useState("")
 
   useEffect(() => {
@@ -71,6 +76,39 @@ function LoginScreen() {
       setEmail({ ...email, error: true })
     }
   }
+
+  const handleLoginGithub = async () => {
+    try {
+      const config = {
+        redirectUrl: 'com.area://oauthredirect',
+        clientId: GITHUB_CLIENT_ID,
+        clientSecret: GITHUB_CLIENT_SECRET,
+        scopes: ['user', 'repo'],
+        additionalHeaders: { 'Accept': 'application/json' },
+        serviceConfiguration: {
+          authorizationEndpoint: 'https://github.com/login/oauth/authorize',
+          tokenEndpoint: 'https://github.com/login/oauth/access_token',
+          revocationEndpoint: 'https://github.com/settings/connections/applications/' + GITHUB_CLIENT_ID
+        }
+      };
+      const authState = await authorize(config);
+
+      const token = await loginGithub(settings.apiBaseUrl, authState.accessToken);
+      if (token.length > 10) {
+        await AsyncStorage.setItem('jwtToken', token);
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'NavBar' }],
+        });
+      } else {
+        setError("Unknown error, please try again. ")
+      }
+    } catch (err) {
+      setError(err.message)
+      setEmail({ ...email, error: true })
+    }
+  }
+
   return (
     <Background>
       <Modal
@@ -134,7 +172,7 @@ function LoginScreen() {
           <Text style={styles.link}>{t("Sign up")}</Text>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.button_log_with} onPress={() => console.log("github login")}>
+      <TouchableOpacity style={styles.button_log_with} onPress={handleLoginGithub}>
         <Image source={require("../../assets/github_logo.png")} style={styles.logo} />
         <Text style={styles.text}>{t("Login with GitHub")}</Text>
       </TouchableOpacity>

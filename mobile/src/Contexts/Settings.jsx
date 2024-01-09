@@ -7,9 +7,9 @@ const SettingsContext = createContext();
 
 export const SettingsProvider = ({ children }) => {
     const [settings, setSettings] = useState({
-        apiLocation: `http://localhost:3000`,
-        apiBaseUrl: `http://localhost:3000/en`,
-        language: "en",
+        apiLocation: `https://area.mazettt.fr/api`,
+        apiBaseUrl: `https://area.mazettt.fr/api/fr`,
+        language: "fr",
     });
     const languages = { fr };
 
