@@ -148,6 +148,47 @@ router.post("/login/github/:code", async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /auth/login/githubmobile/{token}:
+ *   post:
+ *     tags:
+ *       - auth
+ *     summary: "Login with GitHub"
+ *     description: "Login to your Area account using GitHub authentication"
+ *     operationId: "loginWithGithubMobile"
+ *     security: []
+ *     parameters:
+ *       - in: path
+ *         name: token
+ *         required: true
+ *         description: "GitHub token"
+ *         schema:
+ *           type: string
+ *     consumes:
+ *       - "application/json"
+ *     produces:
+ *       - "application/json"
+ *     responses:
+ *       '201':
+ *         description: "Successful github login"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/loginResponse"
+ *       '400':
+ *         description: "Bad request - Invalid or missing GitHub authorization code"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/unauthorized"
+ *       '500':
+ *         description: "Internal server error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/internalServerError"
+ */
 router.post("/login/githubmobile/:token", async (req, res) => {
     if (!req.params.token) {
         res.status(400).json({ msg: "Bad parameter" });
@@ -320,6 +361,43 @@ router.post("/register/github/:code", async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /auth/register/githubmobile/{token}:
+ *   post:
+ *     tags:
+ *       - auth
+ *     summary: "Register with GitHub"
+ *     description: "Register to an Area account using GitHub authentication"
+ *     operationId: "githubRegisterMobile"
+ *     security: []
+ *     parameters:
+ *       - in: path
+ *         name: token
+ *         required: true
+ *         description: "GitHub token"
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '201':
+ *         description: "Successful GitHub registration"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/loginResponse"
+ *       '400':
+ *         description: "Bad request - Invalid or missing GitHub authorization code"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/unauthorized"
+ *       '500':
+ *         description: "Internal server error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/internalServerError"
+ */
 router.post("/register/githubmobile/:token", async (req, res) => {
     if (!req.params.token) {
         res.status(400).json({ msg: "Bad parameter" });
