@@ -5,7 +5,7 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "test": "jest --watchAll --verbose",
+    "test": "jest --verbose",
     "start": "node src/index.js"
   },
   "author": "",
