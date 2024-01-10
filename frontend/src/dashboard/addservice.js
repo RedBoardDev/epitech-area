@@ -11,11 +11,12 @@ import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import ModalSettingsService from './components/ModalSettingsService';
+import ReviewChooseArea from './components/ReviewChooseArea';
 
 export default function AddService() {
     const [services, setServices] = useState([]);
     const [serviceChoose, setServiceChoose] = useState(null); // null for active / not null for inactive
-    const [selectionState, setSelectionState] = useState('triggers'); // triggers or reactions
+    const [selectionState, setSelectionState] = useState('triggers'); // triggers or reactions or review
     const [selectedTriggerData, setSelectedTriggerData] = useState(null);
     const [selectedReactionData, setSelectedReactionData] = useState(null);
 
@@ -47,15 +48,18 @@ export default function AddService() {
 
 
     const submitSettings = (data) => {
-        setSelectionState('reactions');
-        setServiceChoose(null);
         if (selectionState === 'triggers') {
+            data['service_id'] = serviceChoose.id;
             setSelectedTriggerData(data);
+            setSelectionState('reactions');
+            setServiceChoose(null);
         }
         if (selectionState === 'reactions') {
+            data['service_id'] = serviceChoose.id;
             setSelectedReactionData(data);
+            setServiceChoose('');
+            setSelectionState('review');
         }
-        console.log("submit data modal", data);
     }
 
     const openModal = (selected) => {
@@ -113,6 +117,11 @@ export default function AddService() {
                             )}
                             {selectionState === 'reactions' && (
                                 <ChooseArea data={serviceChoose.reactions} type={selectionState} serviceName={serviceChoose.name} onSelected={handleReactionSelect} />
+                            )}
+                            {selectionState === 'review' && (
+                                <>
+                                    <ReviewChooseArea triggerData={selectedTriggerData} reactionData={selectedReactionData} />
+                                </>
                             )}
                         </>
                     )}

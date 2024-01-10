@@ -20,7 +20,7 @@ export default function ServicesDash() {
     }, [verifyToken, navigate]);
 
     return (
-        <div style={{ backgroundColor: mainTheme.palette.mode, height: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <div style={{ backgroundColor: mainTheme.palette.mode, height: '100%', width:'100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <PageTitle title="Services Dashboard" />
             <div style={{ width: '85%', overflow: 'auto', paddingTop: '10px' }}>
                 <ServicesList />
