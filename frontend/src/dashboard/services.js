@@ -21,7 +21,7 @@ export default function ServicesDash() {
 
     return (
         <div style={{ backgroundColor: mainTheme.palette.mode, height: '100%', width:'100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <PageTitle title="Services Dashboard" />
+            <PageTitle title="Automations Dashboard" />
             <div style={{ width: '85%', overflow: 'auto', paddingTop: '10px' }}>
                 <ServicesList />
             </div>

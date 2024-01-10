@@ -63,7 +63,7 @@ export default function Dashboard() {
                 </Grid>
 
                 <Grid item xs={12}>
-                    <h1 style={{ fontWeight: '100' }}>Your favorite services</h1>
+                    <h1 style={{ fontWeight: '100' }}>Your favorite automations</h1>
                 </Grid>
 
                 <Grid item xs={12} style={{ overflow: 'auto' }}>

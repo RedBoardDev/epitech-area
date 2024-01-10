@@ -5,7 +5,7 @@ import { useSettings } from './SettingsContext';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const { settings, setSettings } = useSettings();
+    const { settings } = useSettings();
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     useEffect(() => {
@@ -172,7 +172,7 @@ export const AuthProvider = ({ children }) => {
             setIsAuthenticated(false);
             throw error;
         }
-    };    
+    };
 
     const getAllServices = async () => {
         try {
@@ -320,6 +320,19 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const serviceOauthVerify = async (service_id) => {
+        try {
+            const response = await callApiWithToken('GET', `/service/oauth/${service_id}/connected`);
+            setIsAuthenticated(true);
+            if (response === null || response.connected === null) return false;
+            return response.connected;
+        } catch (error) {
+            console.error('Service error:', error);
+            setIsAuthenticated(false);
+            return false;
+        }
+    };
+
     return (
         <AuthContext.Provider value={{
             isAuthenticated,
@@ -334,6 +347,7 @@ export const AuthProvider = ({ children }) => {
             updateUserById,
             addAutomation,
             serviceOauth,
+            serviceOauthVerify,
             loginGithub,
             registerGithub,
             getAutomationsById,
@@ -343,7 +357,7 @@ export const AuthProvider = ({ children }) => {
             getAutomationsByFav,
             updateActiveById,
             getActiveAutomations,
-            getActiveServices
+            getActiveServices,
         }}>
             {children}
         </AuthContext.Provider>

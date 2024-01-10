@@ -3,13 +3,6 @@ import { useAuth } from '../AuthContext';
 import { Grid, Box } from '@mui/material';
 import ChooseService from './components/ChooseService';
 import ChooseArea from './components/ChooseArea';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
 import ModalSettingsService from './components/ModalSettingsService';
 import ReviewChooseArea from './components/ReviewChooseArea';
 
@@ -20,11 +13,10 @@ export default function AddService() {
     const [selectedTriggerData, setSelectedTriggerData] = useState(null);
     const [selectedReactionData, setSelectedReactionData] = useState(null);
 
-    const { getAllServices, addAutomation, serviceOauth } = useAuth();
+    const { getAllServices } = useAuth();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalData, setModalData] = useState(null);
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     useEffect(() => {
         getAllServices()
@@ -71,27 +63,12 @@ export default function AddService() {
     const closeModal = () => {
         setIsModalOpen(false);
     };
-    // const handleClose = () => {
-    //     setIsDialogOpen(false);
-    // };
 
-    const handleSave = async () => {
-        // try {
-        //     if (!automationName) return;
-        //     await addAutomation(selectedTrigger.service_id, selectedTrigger.id, JSON.stringify(selectedTrigger.formValues),
-        //         selectedReaction.service_id, selectedReaction.id, JSON.stringify(selectedReaction.formValues), automationName);
-        //     window.location.href = '/dashboard/services';
-        // } catch (error) {
-        //     const errData = error?.response?.data || null;
-        //     if (!errData) return;
-
-        //     if (error.response && error.response.status === 401) {
-        //         serviceOauth(error.response.data.service_id);
-        //     } else {
-        //         console.error("Error during addAutomation:", error);
-        //     }
-        // }
-        // setIsDialogOpen(false);
+    const reset = () => {
+        setServiceChoose(null);
+        setSelectionState('triggers');
+        setSelectedTriggerData(null);
+        setSelectedReactionData(null);
     }
 
     return (
@@ -120,19 +97,13 @@ export default function AddService() {
                             )}
                             {selectionState === 'review' && (
                                 <>
-                                    <ReviewChooseArea triggerData={selectedTriggerData} reactionData={selectedReactionData} />
+                                    <ReviewChooseArea triggerData={selectedTriggerData} reactionData={selectedReactionData} reset={reset} />
                                 </>
                             )}
                         </>
                     )}
                 </Box>
                 <ModalSettingsService isOpen={isModalOpen} closeModal={closeModal} data={modalData} onSubmit={submitSettings} />
-                {/* <Dialog open={isDialogOpen} onClose={handleClose}>
-                    <DialogActions>
-                        <Button onClick={handleClose}>Cancel</Button>
-                        <Button onClick={handleSave}>Save</Button>
-                    </DialogActions>
-                </Dialog> */}
             </Grid>
         </Grid>
     );
