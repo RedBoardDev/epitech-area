@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ServiceBox from './ServiceBox';
 import SearchIcon from '@mui/icons-material/Search';
 import PageTitle from './PageTitle';
+import { motion } from "framer-motion";
 
 export default function ChooseService({ services, type, onServiceSelected }) {
     const [searchTerm, setSearchTerm] = useState('');
@@ -61,20 +62,32 @@ export default function ChooseService({ services, type, onServiceSelected }) {
                     id="searchInput"
                 />
             </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '20px', maxWidth: '700px' }}>
-                {filteredServices && filteredServices
-                    .filter((service) => service.name.toLowerCase().includes(searchTerm.toLowerCase()))
-                    .map((service) => (
-                        <ServiceBox
-                            key={service.id}
-                            id={service.id}
-                            name={service.name}
-                            color={service.color}
-                            icon={service.icon}
-                            onClick={handleServiceSelect}
-                        />
-                    ))}
-            </div>
+            <motion.div
+                className="box"
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{
+                  duration: 0.8,
+                  delay: 0.2,
+                  ease: [0, 0.71, 0.2, 1.01]
+                }}
+            >
+                <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '20px', maxWidth: '700px' }}>
+                    {filteredServices && filteredServices
+                        .filter((service) => service.name.toLowerCase().includes(searchTerm.toLowerCase()))
+                        .map((service) => (
+                            <ServiceBox
+                                key={service.id}
+                                id={service.id}
+                                name={service.name}
+                                color={service.color}
+                                icon={service.icon}
+                                onClick={handleServiceSelect}
+                            />
+                        ))}
+
+                </div>
+            </motion.div>
         </>
     );
 }
