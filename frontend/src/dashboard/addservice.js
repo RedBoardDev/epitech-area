@@ -1,42 +1,62 @@
 import React, { useEffect, useState } from 'react';
-import SideBar from './components/SideBar';
-import TopBar from './components/TopBar';
 import { useAuth } from '../AuthContext';
-import Grid from '@mui/material/Grid';
-import AddCategory from './addCategory';
-import PuzzlePiece from './components/PuzzlePiece';
-import Button from '@mui/material/Button';
+import { Grid, Box } from '@mui/material';
+import ChooseService from './components/ChooseService';
+import ChooseArea from './components/ChooseArea';
 import ModalSettingsService from './components/ModalSettingsService';
-import { useSettings } from '../SettingsContext';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import TextField from '@mui/material/TextField';
+import ReviewChooseArea from './components/ReviewChooseArea';
 
-export default function ServicesDash() {
-    const { t } = useSettings();
+export default function AddService() {
     const [services, setServices] = useState([]);
-    const { getAllServices, addAutomation, serviceOauth } = useAuth();
-    const [selectedTrigger, setSelectedTrigger] = useState(null);
-    const [selectedReaction, setSelectedReaction] = useState(null);
+    const [serviceChoose, setServiceChoose] = useState(null); // null for active / not null for inactive
+    const [selectionState, setSelectionState] = useState('triggers'); // triggers or reactions or review
+    const [selectedTriggerData, setSelectedTriggerData] = useState(null);
+    const [selectedReactionData, setSelectedReactionData] = useState(null);
+
+    const { getAllServices } = useAuth();
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalData, setModalData] = useState(null);
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [automationName, setAutomationName] = useState('');
 
     useEffect(() => {
-        getAllServices().then((data) => {
-            setServices(data);
-        }).catch((error) => {
-            console.error('Error:', error);
-        });
+        getAllServices()
+            .then((data) => setServices(data))
+            .catch((error) => console.error('Error:', error));
     }, [getAllServices]);
 
-    const openModal = (choose) => {
-        if (selectedTrigger && selectedReaction) return;
-        setModalData(choose);
+    const handleServiceSelect = (selectedService) => {
+        setServiceChoose(selectedService);
+    };
+
+    const handleTriggerSelect = (selectedTrigger) => {
+        console.log("trigger", selectedTrigger);
+        openModal(selectedTrigger);
+    };
+
+    const handleReactionSelect = (selectedReaction) => {
+        console.log("reaction", selectedReaction);
+        openModal(selectedReaction);
+    };
+
+
+    const submitSettings = (data) => {
+        if (selectionState === 'triggers') {
+            data['service_id'] = serviceChoose.id;
+            setSelectedTriggerData(data);
+            setSelectionState('reactions');
+            setServiceChoose(null);
+        }
+        if (selectionState === 'reactions') {
+            data['service_id'] = serviceChoose.id;
+            setSelectedReactionData(data);
+            setServiceChoose('');
+            setSelectionState('review');
+        }
+    }
+
+    const openModal = (selected) => {
+        if (serviceChoose === null) return;
+        setModalData(selected);
         setIsModalOpen(true);
     };
 
@@ -44,107 +64,46 @@ export default function ServicesDash() {
         setIsModalOpen(false);
     };
 
-    const submitSettings = (data) => {
-        if (!selectedTrigger) {
-            setSelectedTrigger(data);
-        } else {
-            setSelectedReaction(data);
-        }
-    }
-
-    const handleConfirm = () => {
-        setIsDialogOpen(true);
-    };
-
-    const handleClose = () => {
-        setIsDialogOpen(false);
-    };
-
-    const handleSave = async () => {
-        try {
-            if (!automationName) return;
-            await addAutomation(selectedTrigger.service_id, selectedTrigger.id, JSON.stringify(selectedTrigger.formValues),
-                selectedReaction.service_id, selectedReaction.id, JSON.stringify(selectedReaction.formValues), automationName);
-            window.location.href = '/dashboard/services';
-        } catch (error) {
-            const errData = error?.response?.data || null;
-            if (!errData) return;
-
-            if (error.response && error.response.status === 401) {
-                serviceOauth(error.response.data.service_id);
-            } else {
-                console.error("Error during addAutomation:", error);
-            }
-        }
-        setIsDialogOpen(false);
+    const reset = () => {
+        setServiceChoose(null);
+        setSelectionState('triggers');
+        setSelectedTriggerData(null);
+        setSelectedReactionData(null);
     }
 
     return (
-        <Grid container style={{ overflow: 'hidden' }}>
-            <Grid item xs={2}>
-                <SideBar />
-            </Grid>
-            <Grid item xs={10} style={{ overflow: 'hidden' }}>
-                <Grid container direction="column" style={{ overflow: 'hidden' }}>
-                    <Grid item>
-                        <TopBar />
-                    </Grid>
-                    <Grid item xs={12} style={{ overflow: 'hidden' }}>
-                        <div style={{ height: '93.6%', top: '6.4%', left: '15%', position: 'absolute', width: '85%', overflow: 'auto', display: 'flex' }}>
-                            <div style={{ width: '20rem', height: '100%', background: '#333448' }} className="no-overflow">
-                                {!selectedTrigger ?
-                                    services.map((service) => (<AddCategory key={service.id} id={service.id} name={service.name} color={service.color} triggers={service.triggers} icon={service.icon} handleClick={openModal} />))
-                                    : services.map((service) => (<AddCategory key={service.id} id={service.id} name={service.name} color={service.color} triggers={service.reactions} icon={service.icon} handleClick={openModal} />))
-                                }
-                            </div>
-                            {selectedTrigger && (
-                                <PuzzlePiece name={selectedTrigger.name} description={selectedTrigger.description} />
+        <Grid container>
+            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Box
+                    sx={{
+                        width: '85%',
+                        overflowY: 'auto',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                >
+                    {serviceChoose === null && (
+                        <ChooseService services={services} type={selectionState} onServiceSelected={handleServiceSelect} />
+                    )}
+                    {serviceChoose !== null && (
+                        <>
+                            {selectionState === 'triggers' && (
+                                <ChooseArea data={serviceChoose.triggers} type={selectionState} serviceName={serviceChoose.name} onSelected={handleTriggerSelect} />
                             )}
-                            {selectedReaction && (
-                                <PuzzlePiece name={selectedReaction.name} description={selectedReaction.description} />
+                            {selectionState === 'reactions' && (
+                                <ChooseArea data={serviceChoose.reactions} type={selectionState} serviceName={serviceChoose.name} onSelected={handleReactionSelect} />
                             )}
-                            {selectedTrigger && selectedReaction && (
-                                <Button 
-                                    onClick={handleConfirm} 
-                                    style={{
-                                        backgroundColor: '#2a9d8f', 
-                                        color: 'white', 
-                                        height: '50px', 
-                                        width: '100px', 
-                                        alignSelf: 'center',
-                                        '&:hover': {
-                                            backgroundColor: '#9d4edd',
-                                        },
-                                    }}
-                                >
-                                    Confirm
-                                </Button>
+                            {selectionState === 'review' && (
+                                <>
+                                    <ReviewChooseArea triggerData={selectedTriggerData} reactionData={selectedReactionData} reset={reset} />
+                                </>
                             )}
-                        </div>
-                        <ModalSettingsService isOpen={isModalOpen} closeModal={closeModal} data={modalData} onSubmit={submitSettings} />
-                        <Dialog open={isDialogOpen} onClose={handleClose}>
-                            <DialogTitle>Enter Automation Name</DialogTitle>
-                            <DialogContent>
-                                <DialogContentText>
-                                    Please enter a name for your automation.
-                                </DialogContentText>
-                                <TextField
-                                    autoFocus
-                                    margin="dense"
-                                    label="Automation Name"
-                                    type="text"
-                                    fullWidth
-                                    value={automationName}
-                                    onChange={(e) => setAutomationName(e.target.value)}
-                                />
-                            </DialogContent>
-                            <DialogActions>
-                                <Button onClick={handleClose}>Cancel</Button>
-                                <Button onClick={handleSave}>Save</Button>
-                            </DialogActions>
-                        </Dialog>
-                    </Grid>
-                </Grid>
+                        </>
+                    )}
+                </Box>
+                <ModalSettingsService isOpen={isModalOpen} closeModal={closeModal} data={modalData} onSubmit={submitSettings} />
             </Grid>
         </Grid>
     );

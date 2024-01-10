@@ -10,6 +10,7 @@ import { useSettings } from '../../SettingsContext';
 const ModalSettingsService = ({ isOpen, closeModal, data, onSubmit }) => {
     const { t } = useSettings();
     const [formValues, setFormValues] = useState({});
+    const [isFormInvalid, setIsFormInvalid] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -17,10 +18,19 @@ const ModalSettingsService = ({ isOpen, closeModal, data, onSubmit }) => {
             ...prevValues,
             [name]: value,
         }));
+        setIsFormInvalid(false);
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        const formValuesSize = Object.keys(formValues).length;
+        const expectedFieldsLength = (data?.fields).length;
+        console.log("formValuesSize", formValuesSize, "expectedFieldsLength", expectedFieldsLength);
+        if (formValuesSize !== expectedFieldsLength) {
+            setIsFormInvalid(true);
+            return;
+        }
+        setIsFormInvalid(false);
         data['formValues'] = formValues;
         onSubmit(data);
         closeModal();
@@ -29,12 +39,13 @@ const ModalSettingsService = ({ isOpen, closeModal, data, onSubmit }) => {
     useEffect(() => {
         if (isOpen) {
             setFormValues({});
+            setIsFormInvalid(false);
         }
     }, [isOpen]);
 
     return (
         <Dialog open={isOpen} onClose={closeModal}>
-            <DialogTitle>{t("Parameters")}</DialogTitle>
+            <DialogTitle sx={{ textAlign: 'center' }}>{t("Parameters")}</DialogTitle>
             <DialogContent>
                 <form onSubmit={handleSubmit}>
                     {data?.fields && data.fields.map((field) => (
@@ -49,14 +60,21 @@ const ModalSettingsService = ({ isOpen, closeModal, data, onSubmit }) => {
                             />
                         </div>
                     ))}
-                    <DialogActions>
-                        <Button onClick={closeModal}>{t("Cancel")}</Button>
-                        <Button type="submit" variant="contained" color="primary">
-                            {t("Submit")}
-                        </Button>
-                    </DialogActions>
+                    {isFormInvalid && (
+                        <div style={{ color: 'red', marginTop: '10px' }}>
+                            Please fill in all the fields.
+                        </div>
+                    )}
                 </form>
             </DialogContent>
+            <DialogActions style={{ justifyContent: 'space-between', marginLeft: '20px', marginRight: '20px', marginTop: '-1.5rem' }}>
+                <Button onClick={closeModal} color="primary">
+                    {t("Cancel")}
+                </Button>
+                <Button type="submit" variant="contained" color="primary" onClick={handleSubmit}>
+                    {t("Submit")}
+                </Button>
+            </DialogActions>
         </Dialog>
     );
 };

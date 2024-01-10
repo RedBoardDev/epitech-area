@@ -9,7 +9,7 @@ import { useAuth } from '../../AuthContext';
 import { useSettings } from '../../SettingsContext';
 import { useTheme } from '../../themeContext';
 import { Switch } from '@mui/material';
-import { ToggleButton, ToggleButtonGroup, Grid } from '@mui/material';
+import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 import Alert from '@mui/material/Alert';
 
 export default function SettingsUserModal({ isOpen, closeModal, onUpdateUser, user }) {
