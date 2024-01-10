@@ -275,7 +275,7 @@ router.get('/oauth/:id/callback', async (req, res) => {
         return res.status(400).json({ msg: 'Bad parameter1' });
 
     const ret = await service.callback(code);
-    if (ret === "error")
+    if (ret.status === "error")
         return res.status(400).json(ret.msg);
     console.log(ret.token);
     console.log(ret.action);

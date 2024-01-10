@@ -35,6 +35,7 @@ export default function Services() {
   const { settings, t } = useSettings();
 
   const fetchServices = async () => {
+    console.log("Fetching services.")
     const data = await getServices(settings.apiBaseUrl);
     setServices(data);
   };
@@ -156,9 +157,9 @@ export default function Services() {
         text: 'Cancel',
         style: 'cancel',
       },
-      {text: 'Yes', onPress: () => deleteServiceConnexion(settings.apiBaseUrl, id)},
+      { text: 'Yes', onPress: () => { deleteServiceConnexion(settings.apiBaseUrl, id); fetchServices(); } },
     ]);
-    fetchServices();
+
   };
 
   const addService = async (id) => {
@@ -202,12 +203,12 @@ export default function Services() {
                 </LinearGradient>
               </TouchableOpacity>
               {getSConnected(service.id) ?
-              <TouchableOpacity key={service.id} style={styles.disconnectBtn} onPress={() => removeService(service.id, service.name)}>
-                <Image source={require("../../assets/disconnect.png")} style={{ width: 40, height: 40}} />
-              </TouchableOpacity> :
-              <TouchableOpacity key={service.id} style={styles.connectBtn} onPress={() => addService(service.id)}>
-                <Image source={require("../../assets/login.png")} style={{ width: 40, height: 40 }} />
-              </TouchableOpacity>}
+                <TouchableOpacity key={service.id} style={styles.disconnectBtn} onPress={() => removeService(service.id, service.name)}>
+                  <Image source={require("../../assets/disconnect.png")} style={{ width: 40, height: 40 }} />
+                </TouchableOpacity> :
+                <TouchableOpacity key={service.id} style={styles.connectBtn} onPress={() => addService(service.id)}>
+                  <Image source={require("../../assets/login.png")} style={{ width: 40, height: 40 }} />
+                </TouchableOpacity>}
             </View>
           ))}
         </ScrollView>
