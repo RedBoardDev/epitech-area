@@ -26,6 +26,7 @@ import { NewAutomation_Reactions1, NewAutomation_Reactions2 } from "./NewAutomat
 import Button from "../Components/Button";
 import { useContext } from 'react';
 import { useSettings } from '../Contexts/Settings';
+import { ServiceRecap } from "../Components/ServiceCard";
 
 function NewAutomation_Submit({ route }) {
   const { settings, t } = useSettings();
@@ -71,25 +72,9 @@ function NewAutomation_Submit({ route }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={[styles.card, styles.cardService]}>
-        <Image style={styles.image} source={{ uri: `${settings.apiBaseUrl}/${triggerService?.icon}` }} />
-        <View style={styles.infoContainer}>
-          <View style={styles.header}>
-            <Text style={styles.title}>{triggerService?.name}</Text>
-          </View>
-          <Text style={styles.content}>{trigger?.name}</Text>
-        </View>
-      </View>
+      <ServiceRecap service={triggerService} elem={trigger} />
       <Image style={styles.arrow} source={require('../../assets/down_arrow.png')} tintColor={colors.text} />
-      <View style={[styles.card, styles.cardService]}>
-        <Image style={styles.image} source={{ uri: `${settings.apiBaseUrl}/${reactionService?.icon}` }} />
-        <View style={styles.infoContainer}>
-          <View style={styles.header}>
-            <Text style={styles.title}>{reactionService?.name}</Text>
-          </View>
-          <Text style={styles.content}>{reaction?.name}</Text>
-        </View>
-      </View>
+      <ServiceRecap service={reactionService} elem={reaction} />
       <Button onPress={submit}>{t("Submit")}</Button>
     </SafeAreaView>
   );
@@ -162,7 +147,7 @@ const styles = StyleSheet.create({
   arrow: {
     width: 100,
     height: 100,
-    marginBottom: 20,
+    marginVertical: 20,
   },
 
   infoContainer: {

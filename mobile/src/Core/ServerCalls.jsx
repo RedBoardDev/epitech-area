@@ -244,3 +244,31 @@ export const deleteServiceConnexion = async (apiBaseUrl, service_id) => {
     }
     return data.connected;
 }
+
+export const registerGithub = async (apiBaseUrl, token) => {
+    const response = await fetch(`${apiBaseUrl}/auth/register/githubmobile/${token}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.msg);
+    }
+    return data.token;
+}
+
+export const loginGithub = async (apiBaseUrl, token) => {
+    const response = await fetch(`${apiBaseUrl}/auth/login/githubmobile/${token}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.msg);
+    }
+    return data.token;
+}

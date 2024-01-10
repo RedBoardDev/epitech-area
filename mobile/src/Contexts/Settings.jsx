@@ -7,8 +7,8 @@ const SettingsContext = createContext();
 
 export const SettingsProvider = ({ children }) => {
     const [settings, setSettings] = useState({
-        apiLocation: `http://10.137.158.160:6500`,
-        apiBaseUrl: `http://10.137.158.160:6500/fr`,
+        apiLocation: `https://area.mazettt.fr/api`,
+        apiBaseUrl: `https://area.mazettt.fr/api/fr`,
         language: "fr",
     });
     const languages = { fr };
