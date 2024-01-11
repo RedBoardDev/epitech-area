@@ -1,68 +1,67 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../AuthContext';
+import { useTheme } from '../../themeContext';
+import Logo from '../assets/logo.png';
+import { Typography, AppBar, Toolbar, Button, IconButton } from '@mui/material';
+import { useSettings } from '../../SettingsContext';
+import { useAuth } from '../../AuthContext';
+import Hidden from '@mui/material/Hidden';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import HomeIcon from '@mui/icons-material/Home';
+import LoginIcon from '@mui/icons-material/Person';
 
-import Box from '@mui/material/Box';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import Logo from '../img/logo.png';
-import { useSettings } from '../SettingsContext';
-
-function HeaderComponent({ showButton }) {
+export default function TopBarPublic() {
     const { t } = useSettings();
-    const { isAuthenticated, logout } = useAuth();
+    const { verifyToken, isAuthenticated } = useAuth();
+    const { mainTheme } = useTheme();
     const navigate = useNavigate();
 
+    useEffect(() => {
+        verifyToken();
+    }, []);
     const handleLogin = () => {
         navigate('/login');
     };
 
+    const handleHome = () => {
+        navigate('/');
+    }
+
     return (
-        <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="fixed" style={{ top: 0, backgroundColor: '#000' }}>
-                <Toolbar>
-                    <Link to="/" style={{ textDecoration: 'none' }}>
-                        <img src={Logo} alt="Logo" style={{ marginLeft: '50px', marginRight: '16px', height: 'auto', width: '90px' }} />
+        <AppBar position="fixed" style={{ right: 0, width: '100%', zIndex: 100 }}>
+            <Toolbar style={{ background: mainTheme.palette.ForegroundItems.main }} sx={{ boxShadow: 3 }}>
+                <div style={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
+                    <Link to="/">
+                        <img src={Logo} alt="Logo" style={{ display: 'block', margin: '4px 10px 0 0', maxWidth: '80px', height: 'auto' }} />
                     </Link>
-                    <Typography variant="h4" component="div" sx={{ flexGrow: 1, color: '#fff' }}>
-                        {/* HarmonieWeb */}
-                    </Typography>
-                    <Typography
-                        component={Link}
-                        to="/"
-                        variant="h6"
-                        color="primary"
-                        sx={{
-                            marginRight: '46px',
-                            textDecoration: 'none',
-                            color: '#fff',
-                        }}
-                    >
-                        {t("Home")}
-                    </Typography>
+                </div>
+                <IconButton onClick={handleHome} sx={{ marginRight: '30px' }}>
+                    <HomeIcon style={{ color: 'white' }} fontSize='large' />
+                </IconButton>
+                <div style={{ display: 'flex', alignItems: 'center', marginLeft: 'auto' }}>
                     <Typography
                         component={Link}
                         to="/services"
                         variant="h6"
                         color="primary"
                         sx={{
-                            marginRight: '46px',
+                            marginRight: '30px',
+                            marginTop: '3px',
                             textDecoration: 'none',
                             color: '#fff',
+                            fontSize: '1.4rem',
                         }}
                     >
                         {t("Services")}
                     </Typography>
+
                     {isAuthenticated ? (
                         <Button
                             variant="contained"
                             color="primary"
                             sx={{
-                                marginLeft: '16px',
                                 height: '5vh',
-                                backgroundColor: '#4B4E6D',
+                                background: 'linear-gradient(315deg, #6E0FD4 0%, #B71CFF 74%)',
                                 border: 'none',
                                 paddingX: '15px',
                                 borderRadius: '10px',
@@ -74,13 +73,14 @@ function HeaderComponent({ showButton }) {
                                 textAlign: 'center',
                                 transition: '0.3s',
                                 '&:hover': {
-                                    backgroundImage: 'linear-gradient(315deg, #8130a2 0%, #dd067f 74%)',
+                                    background: 'linear-gradient(315deg, #6E0FD4 0%, #B71CFF 24%)',
                                 },
                             }}
                             component={Link}
                             to="/dashboard"
                         >
-                            {t("Dashboard")}
+                            <Hidden smDown>{`${t("Dashboard")}`}</Hidden>
+                            <Hidden smUp><DashboardIcon fontSize='large' /></Hidden>
                         </Button>
                     ) : (
                         <Button
@@ -88,9 +88,8 @@ function HeaderComponent({ showButton }) {
                             variant="contained"
                             color="primary"
                             sx={{
-                                marginLeft: '16px',
                                 height: '5vh',
-                                backgroundColor: '#4B4E6D',
+                                background: 'linear-gradient(315deg, #6E0FD4 0%, #B71CFF 74%)',
                                 border: 'none',
                                 paddingX: '15px',
                                 borderRadius: '10px',
@@ -102,17 +101,16 @@ function HeaderComponent({ showButton }) {
                                 textAlign: 'center',
                                 transition: '0.3s',
                                 '&:hover': {
-                                    backgroundImage: 'linear-gradient(315deg, #8130a2 0%, #dd067f 74%)',
+                                    background: 'linear-gradient(315deg, #6E0FD4 0%, #B71CFF 24%)',
                                 },
                             }}
                         >
-                            {t("Sign In")}
+                            <Hidden smDown>{t("Sign In")}</Hidden>
+                            <Hidden smUp><LoginIcon fontSize='large' /></Hidden>
                         </Button>
                     )}
-                </Toolbar>
-            </AppBar>
-        </Box>
+                </div>
+            </Toolbar>
+        </AppBar>
     );
 }
-
-export default HeaderComponent;

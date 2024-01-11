@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import HeaderComponent from './Header';
 import backgroundImage from '../img/BgTop.png';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import { useSettings } from '../SettingsContext';
@@ -79,7 +78,6 @@ const Login = () => {
         <div style={{
             backgroundImage: 'linear-gradient(to right, #f3f3f3, #dcdcdc)',
         }}>
-            <HeaderComponent isLoggedIn={false} />
             <div
                 style={{
                     display: 'flex',
@@ -134,7 +132,7 @@ const Login = () => {
                         color="primary"
                         size="large"
                         onClick={handleLogin}
-                        sx={{ width: '200px' }}
+                        sx={{ width: '30%', minHeight: '45px', minWidth: '120px' }}
                     >
                         {t("Login")}
                     </Button>
@@ -144,7 +142,7 @@ const Login = () => {
                         size="large"
                         startIcon={<GitHubIcon />}
                         onClick={handleLoginGithub}
-                        sx={{ width: '200px', marginTop: '1rem' }}
+                        sx={{ width: '30%', minHeight: '45px', minWidth: '120px', marginTop: '1rem' }}
                     >
                         {t("Login with Github")}
                     </Button>

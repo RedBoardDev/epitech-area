@@ -11,6 +11,10 @@ const StyledBox = styled(Box)({
     transition: 'background-color 0.2s',
     overflow: 'hidden',
 
+    '&:hover': {
+        backgroundColor: 'nouvelle couleur ou style ici',
+    },
+
     '::before': {
         content: '""',
         position: 'absolute',
