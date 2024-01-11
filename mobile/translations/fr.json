@@ -41,5 +41,12 @@
     "New password": "Nouveau mot de passe",
     "Confirm password": "Confirmez le mot de passe",
     "Modify account": "Modifier le compte",
-    "Automations": "Automatisations"
+    "Automations": "Automatisations",
+    "Automation name": "Nom de l'automatisation",
+    "Trigger": "Déclencheur",
+    "Reaction": "Réaction",
+    "Status": "Statut",
+    "Active": "Active",
+    "Inactive": "Inactive",
+    "Delete": "Supprimer"
 }

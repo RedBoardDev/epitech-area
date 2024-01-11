@@ -10,6 +10,8 @@ import {
   SafeAreaView,
   ImageBackground,
   RefreshControl,
+  Modal,
+  Button,
 } from "react-native";
 
 import {
@@ -38,6 +40,8 @@ export default function Automations() {
   const [services, setServices] = useState({ k: {} });
   const isFocused = useIsFocused();
   const [refreshing, setRefreshing] = React.useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedAuto, setSelectedAuto] = useState(null);
 
   useEffect(() => {
     const fetchAutos = async () => {
@@ -146,8 +150,52 @@ export default function Automations() {
     setRefreshing(false);
   }, []);
 
+  const openModal = (auto) => {
+    setSelectedAuto(auto);
+    setModalVisible(true);
+  }
+
+  const closeModal = () => {
+    setModalVisible(false);
+    setSelectedAuto(null);
+  }
+
   return (
     <SafeAreaView style={styles.container}>
+      <Modal animationType="slide" transparent={false} visible={modalVisible} style={styles.modal}>
+        {selectedAuto && (
+          <View style={{ flex: 1, padding: 20, justifyContent: 'space-between' }}>
+            <View style={{ flex: 1 }}>
+              <View style={{ marginBottom: 30 }}>
+                <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{t("Automation name")}</Text>
+                <Text style={{ fontSize: 15 }}>{selectedAuto.automation_name}</Text>
+              </View>
+              <View style={{ marginBottom: 10, flexDirection: 'row' }}>
+                <Image source={getImageSource(selectedAuto.trigger_service_id)} style={{ width: 50, height: 50, marginRight: 15 }} />
+                <View>
+                  <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{t("Trigger")}</Text>
+                  <Text style={{ fontSize: 15 }}>{services[selectedAuto.trigger_service_id].triggers.find(trigger => trigger.id === selectedAuto.trigger_id).name}</Text>
+                </View>
+              </View>
+              <Image source={require("../../assets/down_arrow.png")} style={{ width: 50, height: 50, marginBottom: 10 }} />
+              <View style={{ marginBottom: 30, flexDirection: 'row' }}>
+                <Image source={getImageSource(selectedAuto.reaction_service_id)} style={{ width: 50, height: 50, marginRight: 15 }} />
+                <View>
+                  <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{t("Reaction")}</Text>
+                  <Text style={{ fontSize: 15 }}>{services[selectedAuto.reaction_service_id].reactions.find(reaction => reaction.id === selectedAuto.reaction_id).name}</Text>
+                </View>
+              </View>
+              <View style={{ marginBottom: 30 }}>
+                <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{t("Status")}</Text>
+                <Text style={{ fontSize: 15 }}>{selectedAuto.active ? t("Active") : t("Inactive")}</Text>
+              </View>
+            </View>
+            <View>
+              <Button title="OK" onPress={closeModal} />
+            </View>
+          </View>
+        )}
+      </Modal>
       <View style={{ alignItems: "center", marginTop: 20 }}>
         <Text style={{ color: colors.text, textAlign: "center", fontSize: 32, fontWeight: "bold" }}>{t("Automations")}</Text>
       </View>
@@ -156,7 +204,7 @@ export default function Automations() {
       }>
         <View style={{ margin: 10 }}>
           {autos && autos.map(auto => (
-            <TouchableOpacity key={auto.id} style={[styles.card, { backgroundColor: colors.card }]} onPress={() => { }}>
+            <TouchableOpacity key={auto.id} style={[styles.card, { backgroundColor: colors.card }]} onPress={() => { openModal(auto) }}>
               <Text style={styles.title}>{auto.automation_name}</Text>
               <View style={{ flexDirection: 'row' }}>
                 <Image source={getImageSource(auto.trigger_service_id)} style={{ width: 25, height: 25, marginVertical: 1, marginLeft: 8 }} />
@@ -244,5 +292,8 @@ const styles = StyleSheet.create({
     padding: 5,
     margin: 3,
     marginLeft: 0,
+  },
+  modal: {
+    flex: 1,
   },
 });
