@@ -40,5 +40,6 @@
     "Lastname": "Nom",
     "New password": "Nouveau mot de passe",
     "Confirm password": "Confirmez le mot de passe",
-    "Modify account": "Modifier le compte"
+    "Modify account": "Modifier le compte",
+    "Automations": "Automatisations"
 }

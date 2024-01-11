@@ -5,7 +5,7 @@ import { db } from "../global.js";
 export const id = 'twitch';
 export const name = 'Twitch';
 export const description = 'Twitch service';
-export const color = '#432b70';
+export const color = '#623fa1';
 export const icon = '/twitch.png';
 
 async function refreshToken(userId, refreshToken) {

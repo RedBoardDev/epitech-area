@@ -30,7 +30,7 @@ import Background from '../Components/Background'
 const defaultImage = require("../../assets/logo.png");
 
 export default function Automations() {
-  const { settings } = useSettings();
+  const { settings, t } = useSettings();
   const { colors } = useTheme();
   const navigation = useNavigation();
   const [autos, setAutos] = useState([]);
@@ -127,7 +127,7 @@ export default function Automations() {
 
   const getImageSource = (imageId) => {
     if (imageUrls && imageUrls[imageId]) {
-      return { uri: imageUrls[imageId] };
+      return { uri: imageUrls[imageId] + '?' + (new Date()).toISOString() };
     } else {
       return defaultImage;
     }
@@ -148,39 +148,24 @@ export default function Automations() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <View style={{ alignItems: "center", marginTop: 20 }}>
+        <Text style={{ color: colors.text, textAlign: "center", fontSize: 32, fontWeight: "bold" }}>{t("Automations")}</Text>
+      </View>
       <ScrollView style={{ flexDirection: "columns" }} refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }>
-        {autos && autos.map(auto => (
-          <View key={auto.id} style={{ flexDirection: "row" }}>
-            <TouchableOpacity style={[styles.card, { backgroundColor: colors.card }]}>
-              <View style={[styles.header]}>
-                <Text style={styles.title}>{auto.automation_name}</Text>
-              </View>
-              <View style={{ width: "100%", flexDirection: 'row', alignItems: 'center' }}>
-                <View style={styles.minServiceImgView}><Image
-                  source={getImageSource(auto.trigger_service_id)}
-                  style={styles.minServiceImg}
-                />
-                </View>
-                <View style={{ flex: 1 }} />
-                <View style={styles.minServiceImgView}><Image
-                  source={getImageSource(auto.reaction_service_id)}
-                  style={styles.minServiceImg}
-                />
-                </View>
+        <View style={{ margin: 10 }}>
+          {autos && autos.map(auto => (
+            <TouchableOpacity key={auto.id} style={[styles.card, { backgroundColor: colors.card }]} onPress={() => { }}>
+              <Text style={styles.title}>{auto.automation_name}</Text>
+              <View style={{ flexDirection: 'row' }}>
+                <Image source={getImageSource(auto.trigger_service_id)} style={{ width: 25, height: 25, marginVertical: 1, marginLeft: 8 }} />
+                <Image source={require("../../assets/right_arrow.png")} style={{ width: 25, height: 25, marginVertical: 1, marginLeft: 8 }} />
+                <Image source={getImageSource(auto.reaction_service_id)} style={{ width: 25, height: 25, marginVertical: 1, marginLeft: 8 }} />
               </View>
             </TouchableOpacity>
-            <View style={{ flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
-              <TouchableOpacity style={[styles.sideButton, {backgroundColor: "#e01f40"}]} onPress={() => removeAutomation(auto.id)}>
-                <Image source={require("../../assets/trash.png")} style={{ width: 30, height: 40, tintColor: "white" }} />
-              </TouchableOpacity>
-              <TouchableOpacity style={[styles.sideButton, {backgroundColor: "#f5c518"}]} onPress={() => 0}>
-                <Image source={require("../../assets/star.png")} style={{ width: 40, height: 40, tintColor: "white" }} />
-              </TouchableOpacity>
-            </View>
-          </View>
-        ))}
+          ))}
+        </View>
       </ScrollView>
       <TouchableOpacity style={styles.addButton} onPress={navigateToAddAutomation}>
         <Text style={styles.addButtonLabel}>+</Text>
@@ -197,14 +182,11 @@ const styles = StyleSheet.create({
   },
   card: {
     flex: 1,
-    borderRadius: 10,
-    padding: 15,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-    margin: 10,
+    flexDirection: 'row',
+    padding: 8,
+    borderBottomWidth: 1,
+    borderColor: '#ddd',
+    justifyContent: 'space-between',
   },
   header: {
     flexDirection: 'row',
@@ -217,7 +199,8 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
-    fontWeight: 'bold',
+    color: '#333',
+    width: '50%',
   },
   content: {
     fontSize: 16

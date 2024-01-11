@@ -67,12 +67,12 @@ export default function Home() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <View style={{ alignItems: "center", marginTop: 20 }}>
+        <Logo />
+      </View>
+      <Text style={{ color: colors.text, textAlign: "center", fontSize: 32, fontWeight: "bold" }}>Dashboard</Text>
+      <Text style={{ color: colors.text, fontSize: 22, marginHorizontal: 20, marginTop: 10, fontWeight: "bold" }}>{t("Welcome, ") + userName}</Text>
       <ScrollView>
-        <View style={{ alignItems: "center", marginTop: 20 }}>
-          <Logo/>
-        </View>
-        <Text style={{ color: colors.text, textAlign: "center", fontSize: 32, fontWeight: "bold" }}>Dashboard</Text>
-        <Text style={{ color: colors.text, fontSize: 22, marginHorizontal: 20, marginTop: 10, fontWeight: "bold" }}>{t("Welcome, ") + userName}</Text>
         <Card title={t("Total active automations")} value={nbAutos} color={"#cdb4db"} />
         <Card title={t("Total connected services")} value={0} color={"#ffc8dd"} />
         <Card title={t("Total comments")} value={0} color={"#bde0fe"} />
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-  cardLeft : {
+  cardLeft: {
     backgroundColor: 'rgba(55, 155, 255, 0.3)',
     borderRadius: 15,
     marginTop: 50,
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     ],
   },
 
-  cardRight : {
+  cardRight: {
     backgroundColor: 'rgba(0, 255, 55, 0.3)',
     borderRadius: 15,
     marginTop: 20,
