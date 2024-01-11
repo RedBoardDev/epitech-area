@@ -168,52 +168,43 @@ export default function Services() {
   };
 
   return (
-    <ImageBackground
-      source={require('../../assets/background_dot.png')}
-      resizeMode="repeat"
-      style={styles.background}
-      imageStyle={{ opacity: 0.3 }}
-    >
-      <SafeAreaView style={styles.container}>
-        <ScrollView style={{ flexDirection: "columns" }}>
-          {Array.isArray(services) && services.map(service => (
-            <View key={service.id} style={{ flexDirection: "row" }}>
-              <TouchableOpacity style={{ flex: 1 }}>
-                <LinearGradient useAngle={true} angle={170} colors={getBackgroundGradient(service.color)} style={styles.card}>
-                  <Text style={styles.title}>{service.name}</Text>
-                  <View style={{ width: "100%", flexDirection: 'row', alignItems: 'center' }}>
-                    <View style={{ flex: 1, marginTop: 15 }}>
-                      <View style={styles.header}>
-                        <Text style={styles.content}>{service.description}</Text>
-                      </View>
-                      {getSConnected(service.id) ?
-                        <LinearGradient key={service.id} useAngle={true} angle={170} colors={["#fff", "#76EC8B"]} style={styles.header}>
-                          <Text style={{}}>{t("Connected")}</Text>
-                        </LinearGradient> :
-                        <LinearGradient key={service.id} useAngle={true} angle={170} colors={["#fff", "#F16A37"]} style={styles.header}>
-                          <Text style={{}}>{t("Not connected")}</Text>
-                        </LinearGradient>}
-                    </View>
-                    <View style={styles.minServiceImgView}><Image
-                      source={getImageSource(service.id)}
-                      style={styles.minServiceImg}
-                    />
-                    </View>
+    <SafeAreaView style={styles.container}>
+      <ScrollView style={{ flexDirection: "columns" }}>
+        {Array.isArray(services) && services.map(service => (
+          <View key={service.id} style={{ flexDirection: "row" }}>
+            <TouchableOpacity style={[styles.card, { backgroundColor: colors.card }]}>
+              <Text style={styles.title}>{service.name}</Text>
+              <View style={{ width: "100%", flexDirection: 'row', alignItems: 'center' }}>
+                <View style={{ flex: 1, marginTop: 7 }}>
+                  <View style={styles.header}>
+                    <Text style={styles.content}>{service.description}</Text>
                   </View>
-                </LinearGradient>
-              </TouchableOpacity>
-              {getSConnected(service.id) ?
-                <TouchableOpacity key={service.id} style={styles.disconnectBtn} onPress={() => removeService(service.id, service.name)}>
-                  <Image source={require("../../assets/disconnect.png")} style={{ width: 40, height: 40 }} />
-                </TouchableOpacity> :
-                <TouchableOpacity key={service.id} style={styles.connectBtn} onPress={() => addService(service.id)}>
-                  <Image source={require("../../assets/login.png")} style={{ width: 40, height: 40 }} />
-                </TouchableOpacity>}
-            </View>
-          ))}
-        </ScrollView>
-      </SafeAreaView>
-    </ImageBackground>
+                  {getSConnected(service.id) ?
+                    <View key={service.id} style={[styles.header, { backgroundColor: "#76EC8B" }]}>
+                      <Text style={{}}>{t("Connected")}</Text>
+                    </View> :
+                    <View key={service.id} style={[styles.header, { backgroundColor: "#F16A37" }]}>
+                      <Text style={{}}>{t("Not connected")}</Text>
+                    </View>}
+                </View>
+                <View style={styles.minServiceImgView}><Image
+                  source={getImageSource(service.id)}
+                  style={styles.minServiceImg}
+                />
+                </View>
+              </View>
+            </TouchableOpacity>
+            {getSConnected(service.id) ?
+              <TouchableOpacity key={service.id} style={styles.disconnectBtn} onPress={() => removeService(service.id, service.name)}>
+                <Image source={require("../../assets/disconnect.png")} style={{ width: 40, height: 40 }} />
+              </TouchableOpacity> :
+              <TouchableOpacity key={service.id} style={styles.connectBtn} onPress={() => addService(service.id)}>
+                <Image source={require("../../assets/login.png")} style={{ width: 40, height: 40 }} />
+              </TouchableOpacity>}
+          </View>
+        ))}
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
@@ -222,6 +213,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   card: {
+    flex: 1,
     borderRadius: 10,
     padding: 15,
     shadowColor: '#000',
@@ -230,9 +222,6 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
     margin: 10,
-    borderColor: '#fff',
-    borderWidth: 1,
-    backgroundColor: '#fff',
   },
   header: {
     flexDirection: 'row',

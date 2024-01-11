@@ -61,9 +61,10 @@ function LoginScreen() {
       return
     }
     try {
-      const token = await LoginEmailPass(settings.apiBaseUrl, email.value, password.value);
+      const { token, id } = await LoginEmailPass(settings.apiBaseUrl, email.value, password.value);
       if (token.length > 10) {
         await AsyncStorage.setItem('jwtToken', token);
+        await AsyncStorage.setItem('id', id.toString());
         navigation.reset({
           index: 0,
           routes: [{ name: 'NavBar' }],
@@ -93,9 +94,10 @@ function LoginScreen() {
       };
       const authState = await authorize(config);
 
-      const token = await loginGithub(settings.apiBaseUrl, authState.accessToken);
+      const { token, id } = await loginGithub(settings.apiBaseUrl, authState.accessToken);
       if (token.length > 10) {
         await AsyncStorage.setItem('jwtToken', token);
+        await AsyncStorage.setItem('id', id.toString());
         navigation.reset({
           index: 0,
           routes: [{ name: 'NavBar' }],
