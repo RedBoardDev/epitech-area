@@ -6,8 +6,10 @@ import ServiceBox from '../dashboard/components/ServiceBox';
 import SearchIcon from '@mui/icons-material/Search';
 import PageTitle from '../dashboard/components/PageTitle';
 import { motion } from "framer-motion";
+import { useSettings } from '../SettingsContext';
 
 const Services = () => {
+    const { t } = useSettings();
     const navigate = useNavigate();
     const [allServices, setAllServices] = useState(null);
     const { getAllServices } = useAuth();
@@ -42,7 +44,7 @@ const Services = () => {
                     justifyContent: 'center',
                 }}
             >
-                <PageTitle title={`Explore available services`} />
+                <PageTitle title={t("Explore available services")} />
                 <div style={{
                     marginBottom: '30px',
                     display: 'flex',
@@ -53,7 +55,7 @@ const Services = () => {
                     <SearchIcon style={{ position: 'absolute', marginLeft: '10px', fontSize: '2rem', color: 'black' }} />
                     <input
                         type="text"
-                        placeholder="Search services..."
+                        placeholder={t("Search services...")}
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         style={{

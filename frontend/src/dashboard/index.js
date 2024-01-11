@@ -6,9 +6,11 @@ import FavAutomations from "./components/FavAutomationList";
 import Grid from '@mui/material/Grid';
 import PageTitle from './components/PageTitle';
 import { motion } from "framer-motion";
+import { useSettings } from '../SettingsContext';
 
 export default function Dashboard() {
     const navigate = useNavigate();
+    const { t } = useSettings();
     const { verifyToken, getUserById, getActiveAutomations, getActiveServices } = useAuth();
     const [user, setUser] = useState();
     const [activeAutomation, setActiveAutomation] = useState([]);
@@ -44,9 +46,9 @@ export default function Dashboard() {
 
     return (
         <div style={{ width: '100%', height: '100%' }}>
-            <PageTitle title="Dashboard" />
+            <PageTitle title={t("Dashboard")} />
             <div>
-                <h1 style={{ color: 'black' }}>Welcome, {user && user.firstname}</h1>
+                <h1 style={{ color: 'black' }}>{t("Welcome")}, {user && user.firstname}</h1>
             </div>
 
             <Grid container spacing={3}>
@@ -61,7 +63,7 @@ export default function Dashboard() {
                           ease: [0, 0.71, 0.2, 1.01]
                         }}
                     >
-                        <Card title="Total active automations" description={activeAutomation.length} color="#cdb4db" icon="person" />
+                        <Card title={t("Total active automations")} description={activeAutomation.length} color="#cdb4db" icon="person" />
                     </motion.div>
                 </Grid>
                 <Grid item xs={12} sm={6} md={3}>
@@ -75,7 +77,7 @@ export default function Dashboard() {
                           ease: [0, 0.71, 0.2, 1.01]
                         }}
                     >
-                        <Card title="Total connected services" description={activeService.length} color="#ffc8dd" />
+                        <Card title={t("Total connected services")} description={activeService.length} color="#ffc8dd" />
                     </motion.div>
 
                 </Grid>
@@ -111,7 +113,7 @@ export default function Dashboard() {
                 </Grid>
 
                 <Grid item xs={12}>
-                    <h1 style={{ fontWeight: '100' }}>Your favorite automations</h1>
+                    <h1 style={{ fontWeight: '100' }}>{t("Your favorite automations")}</h1>
                 </Grid>
 
                 <Grid item xs={12} style={{ overflow: 'auto' }}>

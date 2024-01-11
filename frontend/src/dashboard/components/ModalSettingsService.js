@@ -62,7 +62,7 @@ const ModalSettingsService = ({ isOpen, closeModal, data, onSubmit }) => {
                     ))}
                     {isFormInvalid && (
                         <div style={{ color: 'red', marginTop: '10px' }}>
-                            Please fill in all the fields.
+                            {t("Please fill in all the fields")}
                         </div>
                     )}
                 </form>

@@ -94,7 +94,7 @@ export default function FavAutomations() {
             <Table>
                 <TableHead>
                     <TableRow>
-                        <TableCell>Automations name</TableCell>
+                        <TableCell>{t("Automations name")}</TableCell>
                         <TableCell>{t("Trigger")}</TableCell>
                         <TableCell>{t("Reaction")}</TableCell>
                         <TableCell>{t("Status")}</TableCell>
