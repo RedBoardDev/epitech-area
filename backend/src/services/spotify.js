@@ -6,7 +6,7 @@ import { db } from "../global.js";
 export const id = 'spotify';
 export const name = 'Spotify';
 export const description = 'Spotify Music service';
-export const color = '#1ED760';
+export const color = '#18d860';
 export const icon = '/spotify.png';
 
 export const connect = async (userId) => {
