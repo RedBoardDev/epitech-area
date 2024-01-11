@@ -20,4 +20,4 @@ WORKDIR /app
 
 COPY --from=build /app/android/app/build/outputs/apk/release/app-release.apk /tmp/client.apk
 
-CMD cp /tmp/app-release.apk /output
+CMD cp /tmp/client.apk /output
