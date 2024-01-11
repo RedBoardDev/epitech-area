@@ -34,5 +34,11 @@
     "Total active automations": "Total des automatisations actives",
     "Total connected services": "Total des services connectés",
     "Total comments": "Total des commentaires",
-    "Total likes": "Total des likes"
+    "Total likes": "Total des likes",
+    "Account": "Compte",
+    "Firstname": "Prénom",
+    "Lastname": "Nom",
+    "New password": "Nouveau mot de passe",
+    "Confirm password": "Confirmez le mot de passe",
+    "Modify account": "Modifier le compte"
 }

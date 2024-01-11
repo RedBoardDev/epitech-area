@@ -26,6 +26,7 @@ import Help from './src/Help';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { WorkingToken } from './src/Core/ServerCalls';
+import ModifyAccount from './src/Screens/ModifyAccount';
 
 function Main() {
   const { settings, setSettings, t } = useSettings();
@@ -70,6 +71,7 @@ function Main() {
         <Stack.Screen name="LoginScreen" component={LoginScreen} options={{ headerShown: false }} />
         <Stack.Screen name="RegisterScreen" component={RegisterScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Help" component={Help} options={{ headerShown: false }} />
+        <Stack.Screen name="ModifyAccount" component={ModifyAccount} options={{ title: t("Modify account"), headerShown: true }} />
         <Stack.Screen name="NavBar" component={NavBar} options={{ headerShown: false }} />
         <Stack.Screen name="NewAutomation" component={NewAutomation} options={{ title: t("New automation"), headerShown: true }} />
       </Stack.Navigator>

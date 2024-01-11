@@ -58,7 +58,7 @@ export default function Home() {
 
     const fetchUserName = async () => {
       const user = await getUserInfos(settings.apiBaseUrl);
-      setUserName(user[0].firstname);
+      setUserName(user.firstname);
     };
 
     fetchUserName();
@@ -71,8 +71,8 @@ export default function Home() {
         <View style={{ alignItems: "center", marginTop: 20 }}>
           <Logo/>
         </View>
-        <Text style={{ color: "#000", textAlign: "center", fontSize: 32, fontWeight: "bold" }}>Dashboard</Text>
-        <Text style={{ color: "#000", fontSize: 22, marginHorizontal: 20, marginTop: 10, fontWeight: "bold" }}>{t("Welcome, ") + userName}</Text>
+        <Text style={{ color: colors.text, textAlign: "center", fontSize: 32, fontWeight: "bold" }}>Dashboard</Text>
+        <Text style={{ color: colors.text, fontSize: 22, marginHorizontal: 20, marginTop: 10, fontWeight: "bold" }}>{t("Welcome, ") + userName}</Text>
         <Card title={t("Total active automations")} value={nbAutos} color={"#cdb4db"} />
         <Card title={t("Total connected services")} value={0} color={"#ffc8dd"} />
         <Card title={t("Total comments")} value={0} color={"#bde0fe"} />

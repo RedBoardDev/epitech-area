@@ -14,7 +14,7 @@ export const LoginEmailPass = async (apiBaseUrl, email, password) => {
     if (!response.ok) {
         throw new Error(data.msg);
     }
-    return data.token;
+    return data;
 };
 
 export const RegisterEmailPass = async (apiBaseUrl, email, password, firstname, lastname) => {
@@ -31,7 +31,7 @@ export const RegisterEmailPass = async (apiBaseUrl, email, password, firstname, 
     if (!response.ok) {
         throw new Error(data.msg);
     }
-    return data.token;
+    return data;
 };
 
 export const WorkingToken = async (apiBaseUrl) => {
@@ -256,7 +256,7 @@ export const registerGithub = async (apiBaseUrl, token) => {
     if (!response.ok) {
         throw new Error(data.msg);
     }
-    return data.token;
+    return data;
 }
 
 export const loginGithub = async (apiBaseUrl, token) => {
@@ -270,15 +270,16 @@ export const loginGithub = async (apiBaseUrl, token) => {
     if (!response.ok) {
         throw new Error(data.msg);
     }
-    return data.token;
+    return data;
 }
 
 export const getUserInfos = async (apiBaseUrl) => {
     const token = await AsyncStorage.getItem('jwtToken');
+    const id = await AsyncStorage.getItem('id');
     if (!token) {
         return false;
     }
-    const response = await fetch(`${apiBaseUrl}/user/`, {
+    const response = await fetch(`${apiBaseUrl}/user/${id}`, {
         method: "GET",
         headers: {
             "Authorization": `Bearer ${token}`,
@@ -291,3 +292,22 @@ export const getUserInfos = async (apiBaseUrl) => {
     }
     return data;
 };
+
+export const updateUser = async (apiBaseUrl, firstname, lastname, email, password) => {
+    const token = await AsyncStorage.getItem('jwtToken');
+    const id = await AsyncStorage.getItem('id');
+    const response = await fetch(`${apiBaseUrl}/user/${id}`, {
+        method: "PUT",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ firstname, lastname, email, password }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+        console.error(data);
+        throw new Error(data.msg);
+    }
+    return data;
+}
