@@ -60,9 +60,10 @@ function RegisterScreen() {
       return
     }
     try {
-      const token = await RegisterEmailPass(settings.apiBaseUrl, email.value, password.value, firstname.value, lastname.value);
+      const { token, id } = await RegisterEmailPass(settings.apiBaseUrl, email.value, password.value, firstname.value, lastname.value);
       if (token.length > 10) {
         await AsyncStorage.setItem('jwtToken', token);
+        await AsyncStorage.setItem('id', id.toString());
         navigation.reset({
           index: 0,
           routes: [{ name: 'NavBar' }],
@@ -92,9 +93,10 @@ function RegisterScreen() {
       };
       const authState = await authorize(config);
 
-      const token = await registerGithub(settings.apiBaseUrl, authState.accessToken);
+      const { token, id } = await registerGithub(settings.apiBaseUrl, authState.accessToken);
       if (token.length > 10) {
         await AsyncStorage.setItem('jwtToken', token);
+        await AsyncStorage.setItem('id', id.toString());
         navigation.reset({
           index: 0,
           routes: [{ name: 'NavBar' }],

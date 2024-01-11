@@ -26,6 +26,7 @@ import Help from './src/Help';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { WorkingToken } from './src/Core/ServerCalls';
+import ModifyAccount from './src/Screens/ModifyAccount';
 
 function Main() {
   const { settings, setSettings, t } = useSettings();
@@ -36,7 +37,7 @@ function Main() {
   const Dark = { "colors": { "background": "rgb(1, 1, 1)", "border": "rgb(39, 39, 41)", "card": "rgb(22, 22, 22)", "notification": "rgb(255, 69, 58)", "primary": "rgb(10, 132, 255)", "text": "rgb(229, 229, 231)" }, "dark": true }
 
   const getColorTheme = () => {
-    const theme = settings.colorTheme || "dark";
+    const theme = settings.colorTheme || "light";
     if (theme === 'adaptive')
       return Appearance.getColorScheme();
     else
@@ -70,6 +71,7 @@ function Main() {
         <Stack.Screen name="LoginScreen" component={LoginScreen} options={{ headerShown: false }} />
         <Stack.Screen name="RegisterScreen" component={RegisterScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Help" component={Help} options={{ headerShown: false }} />
+        <Stack.Screen name="ModifyAccount" component={ModifyAccount} options={{ title: t("Modify account"), headerShown: true }} />
         <Stack.Screen name="NavBar" component={NavBar} options={{ headerShown: false }} />
         <Stack.Screen name="NewAutomation" component={NewAutomation} options={{ title: t("New automation"), headerShown: true }} />
       </Stack.Navigator>

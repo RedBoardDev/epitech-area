@@ -122,6 +122,7 @@ const styles = StyleSheet.create({
   },
 
   cardContainer: {
+    paddingHorizontal: 10,
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
