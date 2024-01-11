@@ -1,5 +1,4 @@
 import React from 'react';
-import HeaderComponent from './Header';
 import backgroundImage from '../img/BgTop.png';
 import Button from '@mui/material/Button';
 import { useSettings } from '../SettingsContext';
@@ -9,7 +8,6 @@ const Lost = () => {
 
     return (
         <div>
-            <HeaderComponent isLoggedIn={false} />
             <div style={{ marginTop: '0px', background: 'linear-gradient(to right, #000000, #4b4b4b)' }}>
                 <div
                     style={{

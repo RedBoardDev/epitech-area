@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Card, CardContent, Typography } from '@mui/material';
-import HeaderComponent from '../Header';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../AuthContext';
 import { useSettings } from '../../SettingsContext';
@@ -23,42 +22,37 @@ const ServicesGithub = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                if (!(await verifyToken())) {
-                    navigate('/login');
-                } else {
-                    const formattedServiceId = formatServiceId(serviceName);
-                    const result = await getServiceById(formattedServiceId);
-                    const allTriggers = result.triggers || [];
-                    const allReactions = result.reactions || [];
-                    const icon = result.icon || "";
-                    const color = result.color || "";
-                    const description = result.description || "";
-                    const title = result.name || "";
+                const formattedServiceId = formatServiceId(serviceName);
+                const result = await getServiceById(formattedServiceId);
+                const allTriggers = result.triggers || [];
+                const allReactions = result.reactions || [];
+                const icon = result.icon || "";
+                const color = result.color || "";
+                const description = result.description || "";
+                const title = result.name || "";
 
-                    setAllServices({
-                        title,
-                        icon,
-                        color,
-                        description,
-                        triggers: allTriggers,
-                        reactions: allReactions,
-                    });
-                }
+                setAllServices({
+                    title,
+                    icon,
+                    color,
+                    description,
+                    triggers: allTriggers,
+                    reactions: allReactions,
+                });
             } catch (error) {
                 console.error('Error fetching service by id:', error);
             }
         };
-    
+
         if (!validServiceNames.includes(serviceName)) {
             navigate('/lost');
         } else {
             fetchData();
         }
     }, [verifyToken, getServiceById, navigate, serviceName]);
-    
+
     return (
-        <Box style={{ backgroundColor: allServices.color, minHeight: '100vh', textAlign: 'center'}}>
-        <HeaderComponent isLoggedIn={false} />
+        <Box style={{ backgroundColor: allServices.color, minHeight: '100vh', textAlign: 'center' }}>
             <Box
                 style={{
                     position: 'absolute',
@@ -74,29 +68,29 @@ const ServicesGithub = () => {
                     height: '80%',
                 }}
             >
-                <IconButton 
-                    onClick={() => {navigate('/services')}} 
-                    style={{ 
-                        position: 'absolute', 
-                        top: '10px', 
-                        left: '10px', 
-                        borderRadius: '10px', 
-                        border: '4px solid white', 
+                <IconButton
+                    onClick={() => { navigate('/services') }}
+                    style={{
+                        position: 'absolute',
+                        top: '10px',
+                        left: '10px',
+                        borderRadius: '10px',
+                        border: '4px solid white',
                     }}
                 >
-                    <ArrowBackIosIcon/> 
+                    <ArrowBackIosIcon />
                     {`${t("Go back services")}`}
                 </IconButton>
-                <IconButton 
+                <IconButton
                     onClick={() => {
-                         window.open(`http://www.${allServices.title.split(' ')[0]}.com`, '_blank') 
-                        }} 
-                    style={{ 
-                        position: 'absolute', 
-                        top: '10px', 
-                        right: '10px', 
-                        borderRadius: '10px', 
-                        border: '4px solid white', 
+                        window.open(`http://www.${allServices.title.split(' ')[0]}.com`, '_blank')
+                    }}
+                    style={{
+                        position: 'absolute',
+                        top: '10px',
+                        right: '10px',
+                        borderRadius: '10px',
+                        border: '4px solid white',
                     }}
                 >
                     {`${t("Visit")} ${allServices.title}`}
@@ -120,7 +114,7 @@ const ServicesGithub = () => {
                         </Card>
                     )) : ""}
                 </Box>
-                <Box>                 
+                <Box>
                     <h4>{t("Reactions")}:</h4>
                     {allServices ? allServices.reactions.map(reaction => (
                         <Card key={reaction.id} style={{ marginBottom: '10px', borderRadius: '10px' }}>

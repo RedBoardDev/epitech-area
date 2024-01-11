@@ -4,7 +4,7 @@ import axios from 'axios';
 export const id = 'notion';
 export const name = 'Notion';
 export const description = 'Notion service';
-export const color = '#000000';
+export const color = '#999999';
 export const icon = '/NotionLogo.png';
 
 export const connect = async (userId) => {

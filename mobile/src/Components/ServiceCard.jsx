@@ -17,9 +17,11 @@ export function ServiceCard({ service, onPress }) {
     const { settings, t } = useSettings();
 
     return (
-        <TouchableOpacity style={[styles1.card, { backgroundColor: service.color }]} onPress={onPress}>
-            <Image style={styles1.image} source={{ uri: `${settings.apiBaseUrl}/${service.icon}` }} />
-            <Text style={[styles1.title, { color: 'black' }]}>{service.name}</Text>
+        <TouchableOpacity style={[styles1.card, { backgroundColor: '#000000' }]} onPress={onPress}>
+            <View style={[styles1.cardColor, { backgroundColor: `${service.color}aa` }]}>
+                <Image style={styles1.image} source={{ uri: `${settings.apiBaseUrl}/${service.icon}` }} />
+                <Text style={[styles1.title, { color: 'black' }]}>{service.name}</Text>
+            </View>
         </TouchableOpacity>
     );
 }
@@ -44,11 +46,13 @@ export function ServiceRecap({ service, elem }) {
     }
 
     return (
-        <View style={[styles3.card, { backgroundColor: service.color }]}>
-            <Image style={styles3.image} source={{ uri: `${settings.apiBaseUrl}/${service.icon}` }} />
-            <View style={styles3.infoContainer}>
-                <Text style={styles3.title}>{service.name}</Text>
-                <Text style={styles3.content}>{elem.name}</Text>
+        <View style={[styles3.card, { backgroundColor: '#000000' }]}>
+            <View style={[styles3.cardColor, { backgroundColor: `${service.color}aa` }]}>
+                <Image style={styles3.image} source={{ uri: `${settings.apiBaseUrl}/${service.icon}` }} />
+                <View style={styles3.infoContainer}>
+                    <Text style={styles3.title}>{service.name}</Text>
+                    <Text style={styles3.content}>{elem.name}</Text>
+                </View>
             </View>
         </View>
     );
@@ -59,19 +63,26 @@ const styles1 = StyleSheet.create({
         borderRadius: 10,
         marginBottom: 10,
         width: "48%",
+    },
+
+    cardColor: {
+        borderRadius: 10,
         padding: 10,
         alignContent: "center",
         alignItems: "center",
         justifyContent: "center",
+        height: 'auto',
+        width: 'auto',
     },
 
     image: {
-        width: 100,
-        height: 100,
+        marginTop: 10,
+        width: 90,
+        height: 90,
     },
 
     title: {
-        marginTop: 20,
+        marginVertical: 10,
         fontSize: 18,
         fontWeight: "bold",
     },
@@ -102,8 +113,18 @@ const styles2 = StyleSheet.create({
 const styles3 = StyleSheet.create({
     card: {
         borderRadius: 17,
-        padding: 10,
+        marginHorizontal: 10,
+        width: "95%",
+    },
+    cardColor: {
         flexDirection: "row",
+        borderRadius: 17,
+        padding: 10,
+        alignContent: "center",
+        alignItems: "center",
+        justifyContent: "center",
+        height: 'auto',
+        width: 'auto',
     },
     image: {
         margin: 10,
@@ -125,8 +146,10 @@ const styles3 = StyleSheet.create({
     title: {
         fontSize: 20,
         fontWeight: "bold",
+        color: "#000",
     },
     content: {
         fontSize: 17,
+        color: "#000",
     },
 });
