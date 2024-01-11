@@ -90,7 +90,6 @@ export function NewAutomation_Reactions2({ route }) {
     <View style={styles.container}>
       <Modal animationType="slide" transparent={false} visible={modalVisible} style={styles.modal}>
         <SafeAreaView style={styles.container}>
-
           <KeyboardAwareScrollView style={{ padding: 20 }}>
             <Text style={{ fontSize: 30, marginBottom: 30 }}>{t("Parameters")}</Text>
             {selectedReaction && selectedReaction.fields.map(field => {

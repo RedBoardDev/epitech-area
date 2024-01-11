@@ -5,7 +5,7 @@ import { db } from "../global.js";
 export const id = 'youtube';
 export const name = 'Youtube';
 export const description = 'Youtube service';
-export const color = '#ff0000';
+export const color = '#ed1f24';
 export const icon = '/youtube.png';
 
 async function refreshToken(userId, refreshToken) {
