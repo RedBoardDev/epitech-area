@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import ServiceBox from '../dashboard/components/ServiceBox';
 import SearchIcon from '@mui/icons-material/Search';
 import PageTitle from '../dashboard/components/PageTitle';
+import { motion } from "framer-motion";
 
 const Services = () => {
     const navigate = useNavigate();
@@ -80,15 +81,26 @@ const Services = () => {
                     {allServices && allServices
                         .filter((service) => service.name.toLowerCase().includes(searchTerm.toLowerCase()))
                         .map((service) => (
-                            <Grid key={service.name} item>
-                                <ServiceBox
-                                    id={service.name}
-                                    name={service.name}
-                                    color={service.color}
-                                    icon={service.icon}
-                                    onClick={onClickBox}
-                                />
-                            </Grid>
+                            <motion.div
+                                className="box"
+                                initial={{ opacity: 0, scale: 0.5 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{
+                                  duration: 0.8,
+                                  delay: 0.2,
+                                  ease: [0, 0.71, 0.2, 1.01]
+                                }}
+                            >
+                                <Grid key={service.name} item>
+                                    <ServiceBox
+                                        id={service.name}
+                                        name={service.name}
+                                        color={service.color}
+                                      g  icon={service.icon}
+                                        onClick={onClickBox}
+                                    />
+                                </Grid>
+                            </motion.div>
                         ))}
                 </div>
             </Box>
