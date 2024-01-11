@@ -137,7 +137,7 @@ export default function ServicesDash() {
     };
 
     const handleRenderStatus = (status) => {
-        if (status == 1)
+        if (status === 1)
             return t("Active");
         else
             return t("Inactive");

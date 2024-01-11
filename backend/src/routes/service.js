@@ -22,6 +22,7 @@ router.get('/active', verifyToken, async (req, res) => {
  *     summary: "Get all services"
  *     description: "Get all services"
  *     operationId: "getAllServices"
+ *     security: []
  *     produces:
  *       - application/json
  *     responses:
@@ -45,10 +46,8 @@ router.get('/active', verifyToken, async (req, res) => {
  *           application/json:
  *             schema:
  *               $ref: "#/components/schemas/internalServerError"
- *     security:
- *       - bearerAuth: []
  */
-router.get('/', verifyToken, async (req, res) => {
+router.get('/', async (req, res) => {
     try {
         const services = serviceManager.getServicesTranslated(t.getUrlLang(req));
         res.status(200).json(services);
@@ -66,6 +65,7 @@ router.get('/', verifyToken, async (req, res) => {
  *     summary: "Get service by id"
  *     description: "Get service by id"
  *     operationId: "getServiceById"
+ *     security: []
  *     produces:
  *       - application/json
  *     parameters:
@@ -100,10 +100,8 @@ router.get('/', verifyToken, async (req, res) => {
  *           application/json:
  *             schema:
  *               $ref: "#/components/schemas/internalServerError"
- *     security:
- *       - bearerAuth: []
  */
-router.get('/:id', verifyToken, async (req, res) => {
+router.get('/:id', async (req, res) => {
     try {
         const service = serviceManager.getServiceTranslated(t.getUrlLang(req), req.params.id);
         if (!service) {

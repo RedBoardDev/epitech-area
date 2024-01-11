@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Grid, Box } from '@mui/material';
-import HeaderComponent from './Header';
-import Logo from '../img/logo.png';
 import { useAuth } from '../AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { useTheme } from '../themeContext';
 import ServiceBox from '../dashboard/components/ServiceBox';
 import SearchIcon from '@mui/icons-material/Search';
 import PageTitle from '../dashboard/components/PageTitle';
@@ -12,25 +9,21 @@ import PageTitle from '../dashboard/components/PageTitle';
 const Services = () => {
     const navigate = useNavigate();
     const [allServices, setAllServices] = useState(null);
-    const { verifyToken, getAllServices } = useAuth();
-    const { mainTheme } = useTheme();
+    const { getAllServices } = useAuth();
     const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
+
         const getServices = async () => {
-            if (!(await verifyToken())) {
-                navigate('/login');
-            } else {
-                try {
-                    const result = await getAllServices();
-                    setAllServices(result);
-                } catch (error) {
-                    console.error('Error fetching automations:', error);
-                }
+            try {
+                const result = await getAllServices();
+                setAllServices(result);
+            } catch (error) {
+                console.error('Error fetching automations:', error);
             }
         };
         getServices();
-    }, [verifyToken, navigate, getAllServices]);
+    }, [navigate, getAllServices]);
 
     const onClickBox = (id) => {
         navigate(`/service/${id}`);

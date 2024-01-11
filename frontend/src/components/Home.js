@@ -1,15 +1,14 @@
 import React from 'react';
-import HeaderComponent from './Header';
 import backgroundImage from '../img/BgTop.png';
-import Button from '@mui/material/Button';
+import { Button, Typography } from '@mui/material';
 import { useSettings } from '../SettingsContext';
+import Hidden from '@mui/material/Hidden';
 
 const Home = () => {
     const { t } = useSettings();
 
     return (
         <div>
-            <HeaderComponent isLoggedIn={false} />
             <div style={{ marginTop: '0px', background: 'linear-gradient(to right, #000000, #4b4b4b)' }}>
                 <div
                     style={{
@@ -36,38 +35,27 @@ const Home = () => {
                             padding: '0 5%',
                         }}
                     >
-                        <h1 style={{ fontSize: '5.5rem', fontWeight: 700, marginBottom: '2rem', fontFamily: 'Roboto, sans-serif', background: 'linear-gradient(#ca6387, #c50854)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', textShadow: '0px 4px 4px rgba(255, 255, 255, 0.1)' }}>
-                            HarmonieWeb
-                        </h1>
+                        <Hidden smDown>
+                            <Typography
+                                variant="h2"
+                                component="h1"
+                                sx={{
+                                    fontSize: '5.5rem',
+                                    fontWeight: 700,
+                                    marginBottom: '2rem',
+                                    fontFamily: 'Roboto, sans-serif',
+                                    background: 'linear-gradient(#ca6387, #c50854)',
+                                    WebkitBackgroundClip: 'text',
+                                    WebkitTextFillColor: 'transparent',
+                                    textShadow: '0px 4px 4px rgba(255, 255, 255, 0.1)',
+                                }}
+                            >
+                                HarmonieWeb
+                            </Typography>
+                        </Hidden>
                         <p style={{ fontSize: '1.6rem', fontWeight: 400, marginBottom: '2rem', textShadow: '0px 4px 4px rgba(0, 0, 0, 0.85)', color: '#fff' }}>
                             {t("HarmonieWeb is an online and mobile platform.")}<br />{t("It allows you to connect and harmonize your online actions in a simple and secure way!")}
                         </p>
-
-                        <Button
-                            size="large"
-                            variant="outlined"
-                            color="primary"
-                            sx={{
-                                marginLeft: '64px',
-                                width: '220px',
-                                height: '6.5vh',
-                                backgroundColor: '#6b73ce',
-                                border: 'none',
-                                borderRadius: '10px',
-                                cursor: 'pointer',
-                                fontSize: '1.2rem',
-                                fontWeight: '600',
-                                color: '#ffffff',
-                                textDecoration: 'none',
-                                textAlign: 'center',
-                                transition: '0.3s',
-                                '&:hover': {
-                                    backgroundColor: '#5a62bf',
-                                },
-                            }}
-                        >
-                            {t("Learn More")}
-                        </Button>
                     </div>
                     <div
                         style={{

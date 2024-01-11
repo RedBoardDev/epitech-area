@@ -1,8 +1,4 @@
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
-import Icon from '@mui/material/Icon'; // Ajout d'une icône
-
+import { Card, CardContent, Typography } from '@mui/material';
 export default function ModalCard({ title, description, color }) {
     return (
         <Card style={{ backgroundColor: color }}>
