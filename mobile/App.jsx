@@ -36,7 +36,7 @@ function Main() {
   const Dark = { "colors": { "background": "rgb(1, 1, 1)", "border": "rgb(39, 39, 41)", "card": "rgb(22, 22, 22)", "notification": "rgb(255, 69, 58)", "primary": "rgb(10, 132, 255)", "text": "rgb(229, 229, 231)" }, "dark": true }
 
   const getColorTheme = () => {
-    const theme = settings.colorTheme || "dark";
+    const theme = settings.colorTheme || "light";
     if (theme === 'adaptive')
       return Appearance.getColorScheme();
     else

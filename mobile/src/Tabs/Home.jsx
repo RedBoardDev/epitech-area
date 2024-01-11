@@ -10,6 +10,7 @@ import {
   SafeAreaView,
   Dimensions,
   ImageBackground,
+  ScrollView,
 } from "react-native";
 
 import {
@@ -24,6 +25,15 @@ import { getNbAutos, getNbServices } from "../Core/ServerCalls";
 import { useSettings } from "../Contexts/Settings";
 
 const screenWidth = Dimensions.get('window').width;
+
+function Card({ title, value, color }) {
+  return (
+    <View style={{ backgroundColor: color, borderRadius: 10, marginTop: 20, padding: 20, width: '100%', }}>
+      <Text style={{ color: "#000", fontSize: 20, fontWeight: "bold" }}>{title}</Text>
+      <Text style={{ color: "#000", fontSize: 15 }}>{value}</Text>
+    </View>
+  )
+}
 
 export default function Home() {
   const { colors } = useTheme();
@@ -48,20 +58,19 @@ export default function Home() {
   }, []);
 
   return (
-    <ImageBackground blurRadius={15} source={require("../../assets/back.png")} resizeMode="cover" style={{ flex: 1 }}>
     <SafeAreaView style={styles.container}>
-      <Logo/>
-      <Text style={{ color: "#fff", textAlign: "center", fontSize: 32, fontWeight: "bold" }}>HarmonieWeb</Text>
-      <View style={ styles.cardLeft}>
-      <Text style={{ color: "#fff", textAlign: "right", fontSize: 90 }}>{nbAutos}</Text>
-      <Text style={{ color: "#fff", textAlign: "right", fontSize: 22, marginTop: 5 }}>{t("🤖 Automations")}</Text>
-      </View>
-      <View style={ styles.cardRight}>
-      <Text style={{ color: "#fff", textAlign: "left", fontSize: 90 }}>{nbServices}</Text>
-      <Text style={{ color: "#fff", textAlign: "left", fontSize: 22, marginTop: 5 }}>{t("Services ⚙️")}</Text>
-      </View>
+      <ScrollView>
+        <View style={{ alignItems: "center", marginTop: 20 }}>
+          <Logo/>
+        </View>
+        <Text style={{ color: "#000", textAlign: "center", fontSize: 32, fontWeight: "bold" }}>Dashboard</Text>
+        <Text style={{ color: "#000", fontSize: 22, marginHorizontal: 20, marginTop: 10, fontWeight: "bold" }}>{t("Welcome, ") + "NAME"}</Text>
+        <Card title={t("Total active automations")} value={nbAutos} color={"#cdb4db"} />
+        <Card title={t("Total connected services")} value={0} color={"#ffc8dd"} />
+        <Card title={t("Total comments")} value={0} color={"#bde0fe"} />
+        <Card title={t("Total likes")} value={0} color={"#a2d2ff"} />
+      </ScrollView>
     </SafeAreaView>
-    </ImageBackground>
   );
 }
 

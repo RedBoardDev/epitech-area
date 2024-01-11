@@ -29,5 +29,10 @@
     "Parameters": "Paramètres",
     "Submit": "Ajouter",
     "New automation": "Nouvelle automatisation",
-    "Language": "Langue"
+    "Language": "Langue",
+    "Welcome, ": "Bienvenue, ",
+    "Total active automations": "Total des automatisations actives",
+    "Total connected services": "Total des services connectés",
+    "Total comments": "Total des commentaires",
+    "Total likes": "Total des likes"
 }
