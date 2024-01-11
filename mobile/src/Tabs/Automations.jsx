@@ -116,7 +116,7 @@ export default function Automations() {
         text: 'Cancel',
         style: 'cancel',
       },
-      {text: 'Yes', onPress: () => rmOne(id)},
+      { text: 'Yes', onPress: () => rmOne(id) },
     ]);
 
   };
@@ -147,22 +147,16 @@ export default function Automations() {
   }, []);
 
   return (
-    <ImageBackground
-      source={require('../../assets/background_dot.png')}
-      resizeMode="repeat"
-      style={styles.background}
-      imageStyle={{ opacity: 0.3 }}
-    >
     <SafeAreaView style={styles.container}>
       <ScrollView style={{ flexDirection: "columns" }} refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }>
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }>
         {autos && autos.map(auto => (
           <View key={auto.id} style={{ flexDirection: "row" }}>
-          <TouchableOpacity style={{ flex: 1 }}>
-            <LinearGradient useAngle={true} angle={90} colors={getBackgroundGradient(auto.trigger_service_id, auto.reaction_service_id)} style={styles.card}>
+            <TouchableOpacity style={[styles.card, { backgroundColor: colors.card }]}>
+              {/* <LinearGradient useAngle={true} angle={90} colors={getBackgroundGradient(auto.trigger_service_id, auto.reaction_service_id)} style={styles.card}> */}
               <View style={[styles.header]}>
-                <Text style={styles.title}>Automation {auto.id}</Text>
+                <Text style={styles.title}>{auto.automation_name}</Text>
               </View>
               <View style={{ width: "100%", flexDirection: 'row', alignItems: 'center' }}>
                 <View style={styles.minServiceImgView}><Image
@@ -177,11 +171,16 @@ export default function Automations() {
                 />
                 </View>
               </View>
-            </LinearGradient>
-          </TouchableOpacity>
-          <TouchableOpacity style={ styles.removeButton } onPress={ () => removeAutomation(auto.id) }>
-            <Image source={require("../../assets/trash.png")} style={{ width: 30, height: 40 }} />
-          </TouchableOpacity>
+              {/* </LinearGradient> */}
+            </TouchableOpacity>
+            <View style={{ flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
+              <TouchableOpacity style={[styles.sideButton, {backgroundColor: "#e01f40"}]} onPress={() => removeAutomation(auto.id)}>
+                <Image source={require("../../assets/trash.png")} style={{ width: 30, height: 40, tintColor: "white" }} />
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.sideButton, {backgroundColor: "#f5c518"}]} onPress={() => 0}>
+                <Image source={require("../../assets/star.png")} style={{ width: 40, height: 40, tintColor: "white" }} />
+              </TouchableOpacity>
+            </View>
           </View>
         ))}
       </ScrollView>
@@ -189,7 +188,6 @@ export default function Automations() {
         <Text style={styles.addButtonLabel}>+</Text>
       </TouchableOpacity>
     </SafeAreaView>
-    </ImageBackground>
   );
 }
 
@@ -203,15 +201,14 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 10,
     padding: 15,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    // shadowColor: '#000',
+    // shadowOffset: { width: 0, height: 2 },
+    // shadowOpacity: 0.25,
+    // shadowRadius: 3.84,
     elevation: 5,
     margin: 10,
-    borderColor: '#fff',
-    borderWidth: 1,
-    backgroundColor: '#fff',
+    // borderColor: '#fff',
+    // borderWidth: 1,
   },
   header: {
     flexDirection: 'row',
@@ -260,13 +257,13 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: "#000",
   },
-  removeButton: {
+  sideButton: {
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#e01f40',
     width: 50,
     borderRadius: 10,
-    margin: 10,
+    padding: 5,
+    margin: 3,
     marginLeft: 0,
   },
 });
