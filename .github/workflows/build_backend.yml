@@ -7,6 +7,7 @@ on:
   push:
     branches:
       - CI/CD
+      - Tests
 jobs:
   build:
     env:
@@ -22,7 +23,7 @@ jobs:
       run: npm ci
       continue-on-error: false
       working-directory: backend
-    # - name: Testing backend
-    #   run: npm test
-    #   continue-on-error: false
-    #   working-directory: backend
+    - name: Testing backend
+      run: npm run test
+      continue-on-error: false
+      working-directory: backend

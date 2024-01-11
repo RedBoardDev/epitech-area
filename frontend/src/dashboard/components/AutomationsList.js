@@ -13,9 +13,13 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useAuth } from '../../AuthContext';
 import { useSettings } from '../../SettingsContext';
 import EditModalAutomations from './EditModalAutomations';
+import { useTheme } from '../../themeContext';
+import GradeIcon from '@mui/icons-material/Grade';
+import GradeOutlinedIcon from '@mui/icons-material/GradeOutlined';
+import StopCircleOutlinedIcon from '@mui/icons-material/StopCircleOutlined';
 
-function createData(id, serviceName, trigger, reaction, type, status, imageSrc, name) {
-    return { id, serviceName, trigger, reaction, type, status, imageSrc, name };
+function createData(id, trigger, reaction, type, status, imageSrcTrigger, imageSrcReaction, name, favorite) {
+    return { id, trigger, reaction, type, status, imageSrcTrigger, imageSrcReaction, name, favorite };
 }
 
 const rows = [
@@ -27,7 +31,8 @@ export default function ServicesDash() {
     const [tableData, setTableData] = useState(rows);
     const [automation, setAutomation] = useState();
     const [openEditModal, setOpenEditModal] = useState(false);
-    const { getAllServices, getAutomations, deleteAutomation, getAutomationsById } = useAuth();
+    const { mainTheme } = useTheme();
+    const { getAllServices, getAutomations, deleteAutomation, getAutomationsById, updateFavById, updateActiveById } = useAuth();
 
     useEffect(() => {
         const getAllAutomations = async () => {
@@ -46,13 +51,14 @@ export default function ServicesDash() {
 
                     const automationData = createData(
                         automation.id,
-                        triggerService.name,
                         trigger,
                         reaction,
                         'Automation',
-                        'Status',
+                        automation.active,
                         triggerService.icon,
-                        automation.automation_name
+                        reactionService.icon,
+                        automation.automation_name,
+                        automation.favorite,
                         );
                     automationsMap[automation.id] = automationData;
                 });
@@ -92,6 +98,30 @@ export default function ServicesDash() {
         }
     };
 
+    const handleFavAutomation = async (id, fav) => {
+        try {
+            await updateFavById(id, fav);
+            const updateFav = ((prevTableData) => prevTableData.map((row) =>
+                row.id === id ? { ...row, favorite: fav, } : row
+            ));
+            setTableData(updateFav);
+        } catch (error) {
+            console.error('fav automation failed:', error);
+        }
+    };
+
+    const handleStartAutomation = async (id, status) => {
+        try {
+            await updateActiveById(id, status);
+            const updateActive = ((prevTableData) => prevTableData.map((row) =>
+                row.id === id ? { ...row, active: status, status: status } : row
+            ));
+            setTableData(updateActive);
+        } catch (error) {
+            console.error('active automation failed:', error);
+        }
+    };
+
     const updateAutomation = (updatedAutomationData) => {
         if (updatedAutomationData && updatedAutomationData.id) {
             setTableData((prevTableData) =>
@@ -106,12 +136,19 @@ export default function ServicesDash() {
         }
     };
 
+    const handleRenderStatus = (status) => {
+        if (status == 1)
+            return t("Active");
+        else
+            return t("Inactive");
+    }
+
     TableCell.defaultProps = {
         style: { fontSize: '1.2rem', color: '#4B4E6D' }
     };
 
     let TableCellChildrends = {
-        style: { fontSize: '1rem', color: 'black' }
+        style: { color: mainTheme.palette.TextField1.main, fontSize: '1rem'}
     }
 
     return (
@@ -119,41 +156,65 @@ export default function ServicesDash() {
             <Table>
                 <TableHead>
                     <TableRow>
-                        <TableCell>{t("ID")}</TableCell>
-                        <TableCell>{t("Services name")}</TableCell>
-                        <TableCell>Automations name</TableCell>
-                        <TableCell>{t("Trigger")}</TableCell>
-                        <TableCell>{t("Reaction")}</TableCell>
-                        <TableCell>{t("Status")}</TableCell>
-                        <TableCell>{t("Actions")}</TableCell>
+                        <TableCell style={{color: mainTheme.palette.TextField1.main}}>{t("ID")}</TableCell>
+                        <TableCell style={{color: mainTheme.palette.TextField1.main}}>{t("Automations name")}</TableCell>
+                        <TableCell style={{color: mainTheme.palette.TextField1.main}}>{t("Trigger")}</TableCell>
+                        <TableCell style={{color: mainTheme.palette.TextField1.main}}>{t("Reaction")}</TableCell>
+                        <TableCell style={{color: mainTheme.palette.TextField1.main}}>{t("Status")}</TableCell>
+                        <TableCell style={{color: mainTheme.palette.TextField1.main}}>{t("Actions")}</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {tableData.map((row) => (
                         <TableRow key={row.id}>
                             <TableCell {...TableCellChildrends}>{row.id}</TableCell>
+                            <TableCell {...TableCellChildrends}>{row.name}</TableCell>
                             <TableCell {...TableCellChildrends}>
-                                <img
-                                  src={process.env.REACT_APP_API_URL + row.imageSrc}
-                                  alt="GitHub Logo"
+                                {<img
+                                  src={process.env.REACT_APP_API_URL + row.imageSrcTrigger}
+                                  alt="Logo"
+                                  height="32"
+                                  width="32"
+                                  style={{color: mainTheme.palette.TextField1.main, verticalAlign: 'middle', marginRight: '8px' }}
+                                />
+                                }
+                                {row.trigger}
+                            </TableCell>
+                            <TableCell {...TableCellChildrends}>
+                                {<img
+                                  src={process.env.REACT_APP_API_URL + row.imageSrcReaction}
+                                  alt="Logo"
                                   height="32"
                                   width="32"
                                   style={{ verticalAlign: 'middle', marginRight: '8px' }}
                                 />
-                                {row.serviceName}
+                                }
+                                {row.reaction}
                             </TableCell>
-                            <TableCell {...TableCellChildrends}>{row.name}</TableCell>
-                            <TableCell {...TableCellChildrends}>{row.trigger}</TableCell>
-                            <TableCell {...TableCellChildrends}>{row.reaction}</TableCell>
-                            <TableCell {...TableCellChildrends}>{row.status}</TableCell>
+                            <TableCell {...TableCellChildrends}>{handleRenderStatus(row.status)}</TableCell>
                             <TableCell {...TableCellChildrends}>
-                                <IconButton style={{ color: TableCell.defaultProps.style.color }} aria-label="play">
-                                    <PlayCircleOutlineIcon />
+                                <IconButton onClick={() => handleStartAutomation(row.id, !row.status)} style={{ color: mainTheme.palette.TextField1.main }} aria-label="play">
+                                    {row.status ? (
+                                        <StopCircleOutlinedIcon />
+                                    ) : (
+                                        <PlayCircleOutlineIcon />
+                                    )}
                                 </IconButton>
-                                <IconButton onClick={() => handleOpenEditModal(row.id)} style={{ color: TableCell.defaultProps.style.color }} aria-label="edit">
+                                <IconButton
+                                    onClick={() => handleFavAutomation(row.id, !row.favorite)}
+                                    style={{ color: mainTheme.palette.TextField1.main }}
+                                    aria-label="favorite"
+                                >
+                                    {row.favorite ? (
+                                        <GradeIcon />
+                                    ) : (
+                                        <GradeOutlinedIcon />
+                                    )}
+                                </IconButton>
+                                <IconButton onClick={() => handleOpenEditModal(row.id)} style={{ color: mainTheme.palette.TextField1.main }} aria-label="edit">
                                     <EditIcon />
                                 </IconButton>
-                                <IconButton onClick={() => handleDeleteAutomation(row.id)} style={{ color: TableCell.defaultProps.style.color }} aria-label="delete">
+                                <IconButton onClick={() => handleDeleteAutomation(row.id)} style={{ color: mainTheme.palette.TextField1.main }} aria-label="delete">
                                     <DeleteIcon />
                                 </IconButton>
                             </TableCell>

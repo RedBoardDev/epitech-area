@@ -1,16 +1,17 @@
-import React, { useEffect } from 'react';
-import SideBar from './components/SideBar';
-import TopBar from './components/TopBar';
-import Grid from '@mui/material/Grid';
-
+import React, { useEffect, useState } from 'react';
+import Card from "./components/Card";
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
-
+import FavAutomations from "./components/FavAutomationList";
+import Grid from '@mui/material/Grid';
+import PageTitle from './components/PageTitle';
 
 export default function Dashboard() {
-    const [isSidebarOpen] = React.useState(true);
     const navigate = useNavigate();
-    const { verifyToken } = useAuth();
+    const { verifyToken, getUserById, getActiveAutomations, getActiveServices } = useAuth();
+    const [user, setUser] = useState();
+    const [activeAutomation, setActiveAutomation] = useState([]);
+    const [activeService, setActiveService] = useState([]);
 
     useEffect(() => {
         const checkToken = async () => {
@@ -21,14 +22,54 @@ export default function Dashboard() {
         checkToken();
     }, [verifyToken, navigate]);
 
+    useEffect(() => {
+        const getInfo = async () => {
+            try {
+                const user = await getUserById();
+                const activeAutomations = await getActiveAutomations();
+                const activeServices = await getActiveServices();
+                setActiveService(activeServices);
+                setActiveAutomation(activeAutomations);
+                setUser(user);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        if (!user) {
+            getInfo();
+        }
+    }, [user, getUserById, getActiveAutomations, getActiveServices]);
+
     return (
-        <Grid container style={{overflow: 'hidden'}}>
-            <Grid item xs={1.8}>
-                {isSidebarOpen ? <SideBar /> : null}
+        <div style={{ width: '100%', height: '100%' }}>
+            <PageTitle title="Dashboard" />
+            <div>
+                <h1 style={{ color: 'black' }}>Welcome, {user && user.firstname}</h1>
+            </div>
+
+            <Grid container spacing={3}>
+                <Grid item xs={12} sm={6} md={3}>
+                    <Card title="Total active automations" description={activeAutomation.length} color="#cdb4db" icon="person" />
+                </Grid>
+                <Grid item xs={12} sm={6} md={3}>
+                    <Card title="Total connected services" description={activeService.length} color="#ffc8dd" />
+                </Grid>
+                <Grid item xs={12} sm={6} md={3}>
+                    <Card title="Total Comments" description="100" color="#bde0fe" />
+                </Grid>
+                <Grid item xs={12} sm={6} md={3}>
+                    <Card title="Total Likes" description="100" color="#a2d2ff" />
+                </Grid>
+
+                <Grid item xs={12}>
+                    <h1 style={{ fontWeight: '100' }}>Your favorite automations</h1>
+                </Grid>
+
+                <Grid item xs={12} style={{ overflow: 'auto' }}>
+                    <FavAutomations />
+                </Grid>
             </Grid>
-            <Grid item xs={9}>
-                {isSidebarOpen ? <TopBar /> : null}
-            </Grid>
-        </Grid>
+        </div>
     );
 }

@@ -3,6 +3,16 @@ import { db, serviceManager, verifyToken, getIdFromToken, t } from "../global.js
 
 const router = express.Router();
 
+router.get('/active', verifyToken, async (req, res) => {
+    try {
+        const userId = getIdFromToken(req, res); if (userId === -1) return;
+        const result = await db.getServiceByActive(userId);
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(500).json({ msg: "Internal server error", error: error });
+    }
+});
+
 /**
  * @swagger
  * /service:
@@ -263,7 +273,7 @@ router.get('/oauth/:id/callback', async (req, res) => {
         return res.status(400).json({ msg: 'Bad parameter1' });
 
     const ret = await service.callback(code);
-    if (ret === "error")
+    if (ret.status === "error")
         return res.status(400).json(ret.msg);
     if (!ret.token || !ret.action)
         return res.status(400).json({ msg: 'Bad parameter2' });

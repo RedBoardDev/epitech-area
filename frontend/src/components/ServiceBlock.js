@@ -16,7 +16,7 @@ const ServiceBlock = ({ imageSrc, title, backgroundColor }) => {
             onClick={handleClick}
             sx={{
                 position: 'relative',
-                overflow: 'hidden',
+                cursor: 'pointer',
                 width: '200px',
                 height: '200px',
                 borderRadius: '8%',

@@ -156,15 +156,39 @@ export const AuthProvider = ({ children }) => {
             setIsAuthenticated(true);
             return response;
         } catch (error) {
+            console.error('Automations error:', error);
+            setIsAuthenticated(false);
+            throw error;
+        }
+    }
+
+    const getAutomationsByFav = async () => {
+        try {
+            const response = await callApiWithToken('GET', `/automations/favorite`);
+            setIsAuthenticated(true);
+            return response;
+        } catch (error) {
+            console.error('Automations error:', error);
+            setIsAuthenticated(false);
+            throw error;
+        }
+    };
+
+    const getAllServices = async () => {
+        try {
+            const response = await callApiWithToken('GET', `/service`);
+            setIsAuthenticated(true);
+            return response;
+        } catch (error) {
             console.error('Service error:', error);
             setIsAuthenticated(false);
             throw error;
         }
     }
 
-    const getAllServices = async () => {
+    const getServiceById = async (serviceId) => {
         try {
-            const response = await callApiWithToken('GET', `/service`);
+            const response = await callApiWithToken('GET', `/service/${serviceId}`);
             setIsAuthenticated(true);
             return response;
         } catch (error) {
@@ -199,10 +223,10 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
-    const updateUserById = async (lastname, firstname, email) => {
+    const updateUserById = async (lastname, firstname, email, password) => {
         const userID = localStorage.getItem('userID');
         try {
-            const response = await callApiWithToken('PUT', `/user/${userID}`, { lastname, firstname, email });
+            const response = await callApiWithToken('PUT', `/user/${userID}`, { lastname, firstname, email, password });
             setIsAuthenticated(true);
             return response;
         } catch (error) {
@@ -235,6 +259,54 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
+    const updateFavById = async (id, fav) => {
+        try {
+            const response = await callApiWithToken('PUT', `/automations/favorite/${id}`, { fav });
+            setIsAuthenticated(true);
+            return response;
+        } catch (error) {
+            console.error('Service error:', error);
+            setIsAuthenticated(false);
+            throw error;
+        }
+    }
+
+    const updateActiveById = async (id, active) => {
+        try {
+            const response = await callApiWithToken('PUT', `/automations/active/${id}`, { active });
+            setIsAuthenticated(true);
+            return response;
+        } catch (error) {
+            console.error('Service error:', error);
+            setIsAuthenticated(false);
+            throw error;
+        }
+    }
+
+    const getActiveAutomations = async () => {
+        try {
+            const response = await callApiWithToken('GET', `/automations/active`);
+            setIsAuthenticated(true);
+            return response;
+        } catch (error) {
+            console.error('Automations error:', error);
+            setIsAuthenticated(false);
+            throw error;
+        }
+    }
+
+    const getActiveServices = async () => {
+        try {
+            const response = await callApiWithToken('GET', `/service/active`);
+            setIsAuthenticated(true);
+            return response;
+        } catch (error) {
+            console.error('Automations error:', error);
+            setIsAuthenticated(false);
+            throw error;
+        }
+    }
+
     const serviceOauth = async (service_id) => {
         try {
             const response = await callApiWithToken('GET', `/service/oauth/${service_id}/connect`);
@@ -245,6 +317,19 @@ export const AuthProvider = ({ children }) => {
             console.error('Service error:', error);
             setIsAuthenticated(false);
             throw error;
+        }
+    };
+
+    const serviceOauthVerify = async (service_id) => {
+        try {
+            const response = await callApiWithToken('GET', `/service/oauth/${service_id}/connected`);
+            setIsAuthenticated(true);
+            if (response === null || response.connected === null) return false;
+            return response.connected;
+        } catch (error) {
+            console.error('Service error:', error);
+            setIsAuthenticated(false);
+            return false;
         }
     };
 
@@ -262,10 +347,17 @@ export const AuthProvider = ({ children }) => {
             updateUserById,
             addAutomation,
             serviceOauth,
+            serviceOauthVerify,
             loginGithub,
             registerGithub,
             getAutomationsById,
-            updateAutomationById
+            updateAutomationById,
+            getServiceById,
+            updateFavById,
+            getAutomationsByFav,
+            updateActiveById,
+            getActiveAutomations,
+            getActiveServices,
         }}>
             {children}
         </AuthContext.Provider>
