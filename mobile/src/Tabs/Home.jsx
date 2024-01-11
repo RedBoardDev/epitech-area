@@ -20,7 +20,7 @@ import {
 
 import Logo from '../Components/Logo'
 
-import { getNbAutos, getNbServices } from "../Core/ServerCalls";
+import { getNbAutos, getNbServices, getUserInfos } from "../Core/ServerCalls";
 
 import { useSettings } from "../Contexts/Settings";
 
@@ -40,6 +40,7 @@ export default function Home() {
   const { settings, t } = useSettings();
   const [nbServices, setNbServices] = useState(0);
   const [nbAutos, setNbAutos] = useState(0);
+  const [userName, setUserName] = useState("");
 
   const handleLogoutPress = () => {
     navigateToLogin();
@@ -55,6 +56,13 @@ export default function Home() {
 
     fetchNbServicesAutos();
 
+    const fetchUserName = async () => {
+      const user = await getUserInfos(settings.apiBaseUrl);
+      setUserName(user[0].firstname);
+    };
+
+    fetchUserName();
+
   }, []);
 
   return (
@@ -64,7 +72,7 @@ export default function Home() {
           <Logo/>
         </View>
         <Text style={{ color: "#000", textAlign: "center", fontSize: 32, fontWeight: "bold" }}>Dashboard</Text>
-        <Text style={{ color: "#000", fontSize: 22, marginHorizontal: 20, marginTop: 10, fontWeight: "bold" }}>{t("Welcome, ") + "NAME"}</Text>
+        <Text style={{ color: "#000", fontSize: 22, marginHorizontal: 20, marginTop: 10, fontWeight: "bold" }}>{t("Welcome, ") + userName}</Text>
         <Card title={t("Total active automations")} value={nbAutos} color={"#cdb4db"} />
         <Card title={t("Total connected services")} value={0} color={"#ffc8dd"} />
         <Card title={t("Total comments")} value={0} color={"#bde0fe"} />

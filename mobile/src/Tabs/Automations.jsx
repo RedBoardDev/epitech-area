@@ -105,7 +105,7 @@ export default function Automations() {
   };
 
   const rmOne = async (id) => {
-    removeAuto(settings.apiBaseUrl, id);
+    await removeAuto(settings.apiBaseUrl, id);
     const data = await getAutos(settings.apiBaseUrl);
     setAutos(data);
   }
@@ -154,7 +154,6 @@ export default function Automations() {
         {autos && autos.map(auto => (
           <View key={auto.id} style={{ flexDirection: "row" }}>
             <TouchableOpacity style={[styles.card, { backgroundColor: colors.card }]}>
-              {/* <LinearGradient useAngle={true} angle={90} colors={getBackgroundGradient(auto.trigger_service_id, auto.reaction_service_id)} style={styles.card}> */}
               <View style={[styles.header]}>
                 <Text style={styles.title}>{auto.automation_name}</Text>
               </View>
@@ -171,7 +170,6 @@ export default function Automations() {
                 />
                 </View>
               </View>
-              {/* </LinearGradient> */}
             </TouchableOpacity>
             <View style={{ flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
               <TouchableOpacity style={[styles.sideButton, {backgroundColor: "#e01f40"}]} onPress={() => removeAutomation(auto.id)}>
@@ -201,14 +199,12 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 10,
     padding: 15,
-    // shadowColor: '#000',
-    // shadowOffset: { width: 0, height: 2 },
-    // shadowOpacity: 0.25,
-    // shadowRadius: 3.84,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
     elevation: 5,
     margin: 10,
-    // borderColor: '#fff',
-    // borderWidth: 1,
   },
   header: {
     flexDirection: 'row',

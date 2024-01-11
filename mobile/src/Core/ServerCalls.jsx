@@ -272,3 +272,22 @@ export const loginGithub = async (apiBaseUrl, token) => {
     }
     return data.token;
 }
+
+export const getUserInfos = async (apiBaseUrl) => {
+    const token = await AsyncStorage.getItem('jwtToken');
+    if (!token) {
+        return false;
+    }
+    const response = await fetch(`${apiBaseUrl}/user/`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+        },
+    });
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.msg);
+    }
+    return data;
+};
