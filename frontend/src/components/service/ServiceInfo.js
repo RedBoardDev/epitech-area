@@ -7,7 +7,7 @@ import { useSettings } from '../../SettingsContext';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import IconButton from '@mui/material/IconButton';
 
-const validServiceNames = ['Github', 'Twitch', 'Youtube', 'Trello', 'Microsoft Calendar', 'Spotify', 'Discord'];
+const validServiceNames = ['Github', 'Twitch', 'Youtube', 'Trello', 'Microsoft Calendar', 'Spotify', 'Discord', 'Notion'];
 
 const ServicesGithub = () => {
     const navigate = useNavigate();
