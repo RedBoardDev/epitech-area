@@ -12,7 +12,6 @@ export const connect = async (userId) => {
     const clientId = process.env.NOTION_API_CLIENT_ID;
 
     try {
-
         const url = 'https://api.notion.com/v1/oauth/authorize'
         const params={
             client_id: clientId,
@@ -21,7 +20,7 @@ export const connect = async (userId) => {
             owner: 'user',
             state: JSON.stringify(`${userId}`),
         }
-        
+
         const query = Object.keys(params).map((key) => `${key}=${encodeURIComponent(params[key])}`).join('&');
         return { status: "success", url: `${url}?${query}`, auth: true };
     } catch (error) {
@@ -30,7 +29,6 @@ export const connect = async (userId) => {
 };
 
 export const callback = async (code) => {
-    // const redirectUri = `${process.env.API_PUBLIC_URL}/en/service/oauth/${id}/callback`;
     const clientId = process.env.NOTION_API_CLIENT_ID;
     const secret = process.env.NOTION_API_SECRET;
     const auth = Buffer.from(`${clientId}:${secret}`).toString("base64");
@@ -40,7 +38,7 @@ export const callback = async (code) => {
         const response = await axios.post(accessTokenUrl, {
             code: code,
             grant_type: 'authorization_code',
-            redirect_uri: 'http://localhost:6500/en/service/oauth/notion/callback',
+            redirect_uri: `${process.env.API_PUBLIC_URL}/en/service/oauth/${id}/callback`,
         }, {
             headers: {
                 Accept: 'application/json',
@@ -60,7 +58,6 @@ export const callback = async (code) => {
         `;
         console.log(response)
         return { status: "success", action: htmlResponse, token: response?.data?.access_token};
-        // return { status: "success", action: htmlResponse, token: JSON.stringify({ access_token: response?.data?.access_token || undefined, refresh_token: response?.data?.refresh_token || undefined, }) };
     } catch (error) {
         console.log(error);
         return { status: "error", msg: error };
@@ -68,22 +65,22 @@ export const callback = async (code) => {
 };
 
 export const triggers = [
-    {
-        id: 1,
-        name: '',
-        description: '',
-        fields: [
-            {
-                id: '',
-                name: '',
-                description: '',
-                type: 'text'
-            }
-        ],
-        check: async (autoId, userData, params, checkData, token) => {
-            return null;
-        }
-    }
+    // {
+    //     id: 1,
+    //     name: '',
+    //     description: '',
+    //     fields: [
+    //         {
+    //             id: '',
+    //             name: '',
+    //             description: '',
+    //             type: 'text'
+    //         }
+    //     ],
+    //     check: async (autoId, userData, params, checkData, token) => {
+    //         return null;
+    //     }
+    // }
 ];
 
 export const reactions = [
@@ -128,7 +125,7 @@ export const reactions = [
                       rich_text: {},
                     },
                 }
-                }, {    
+                }, {
                 headers: {
                         'Content-Type': 'application/json',
                         'Notion-Version': '2021-08-16',
@@ -175,7 +172,7 @@ export const reactions = [
                         }
                     ]
                 }
-                }, {    
+                }, {
                 headers: {
                         'Content-Type': 'application/json',
                         'Notion-Version': '2021-08-16',
