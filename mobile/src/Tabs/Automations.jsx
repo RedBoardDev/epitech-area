@@ -226,7 +226,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: '100%',
-
   },
   card: {
     flex: 1,
@@ -235,6 +234,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: '#ddd',
     justifyContent: 'space-between',
+    borderRadius: 10,
+    margin: 2,
   },
   header: {
     flexDirection: 'row',
