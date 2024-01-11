@@ -94,7 +94,6 @@ export default function FavAutomations() {
             <Table>
                 <TableHead>
                     <TableRow>
-                        <TableCell>{t("ID")}</TableCell>
                         <TableCell>Automations name</TableCell>
                         <TableCell>{t("Trigger")}</TableCell>
                         <TableCell>{t("Reaction")}</TableCell>
@@ -104,7 +103,6 @@ export default function FavAutomations() {
                 <TableBody>
                     {tableData.map((row) => (
                         <TableRow key={row.id}>
-                            <TableCell {...TableCellChildrends}>{row.id}</TableCell>
                             <TableCell {...TableCellChildrends}>{row.name}</TableCell>
                             <TableCell {...TableCellChildrends}>
                                 {<img

@@ -5,7 +5,7 @@ import { db } from "../global.js";
 export const id = 'youtube';
 export const name = 'Youtube';
 export const description = 'Youtube service';
-export const color = '#ff0000';
+export const color = '#ed1f24';
 export const icon = '/youtube.png';
 
 async function refreshToken(userId, refreshToken) {
@@ -40,10 +40,10 @@ export const connect = async (userId) => {
         const scopes = [
             'https://www.googleapis.com/auth/youtube.readonly',
             'https://www.googleapis.com/auth/youtube.force-ssl',
-        ];        
+        ];
         const params = {
             client_id: youtubeClientId,
-            redirect_uri: `http://localhost:6500/fr/service/oauth/${id}/callback`,
+            redirect_uri: `${process.env.API_PUBLIC_URL}/fr/service/oauth/${id}/callback`,
             response_type: 'code',
             scope: scopes.join(' '),
             state: userId,
@@ -66,7 +66,7 @@ export const callback = async (code) => {
                 code: code,
                 client_id: youtubeClientId,
                 client_secret: youtubeClientSecret,
-                redirect_uri: `http://localhost:6500/fr/service/oauth/${id}/callback`,
+                redirect_uri: `${process.env.API_PUBLIC_URL}/fr/service/oauth/${id}/callback`,
                 grant_type: 'authorization_code',
             },
             headers: {
@@ -101,7 +101,7 @@ export const triggers = [
         ],
         check: async (autoId, userData, params, checkData, token) => {
             const { access_token, refresh_token } = JSON.parse(token);
-            try {   
+            try {
                 console.log(`${name} trigger 1 checking...`);
                 const resp = await axios.get(`https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&myRating=like&maxResults=1`, {
                     headers: {

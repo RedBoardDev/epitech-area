@@ -41,12 +41,13 @@ export default function Settings() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={{ color: "#fff", textAlign: "center", fontSize: 32, fontWeight: "bold" }}>{t("Settings")}</Text>
-      <View style={{ flex: 1 }}/>
+      <Text style={{ color: colors.text, textAlign: "center", fontSize: 32, fontWeight: "bold" }}>{t("Settings")}</Text>
       <OptionSelect title={t("Language")} list={["English", "Français"]} selected={settings.language === 'en' ? 0 : 1} setSelected={setSelectedLanguage} />
-      <Button title={t("Help")} onPress={() => navigation.navigate("Help")} />
-      <TouchableOpacity onPress={() => handleLogoutPress()} style={styles.logoutButton}>
-        <Text style={ styles.textBtn }>{t("Logout")}</Text>
+      <TouchableOpacity onPress={() => navigation.navigate("ModifyAccount")} style={[styles.button, { backgroundColor: colors.primary }]}>
+        <Text style={styles.textBtn}>{t("Account")}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => handleLogoutPress()} style={[styles.button, { backgroundColor: colors.notification }]}>
+        <Text style={styles.textBtn}>{t("Logout")}</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -56,9 +57,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "column",
+    padding: 10,
   },
-  logoutButton: {
-    backgroundColor: "#EC6041",
+  button: {
     borderRadius: 10,
     padding: 10,
     margin: 20,

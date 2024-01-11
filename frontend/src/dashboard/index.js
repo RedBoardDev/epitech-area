@@ -5,6 +5,7 @@ import { useAuth } from '../AuthContext';
 import FavAutomations from "./components/FavAutomationList";
 import Grid from '@mui/material/Grid';
 import PageTitle from './components/PageTitle';
+import { motion } from "framer-motion";
 
 export default function Dashboard() {
     const navigate = useNavigate();
@@ -50,16 +51,63 @@ export default function Dashboard() {
 
             <Grid container spacing={3}>
                 <Grid item xs={12} sm={6} md={3}>
-                    <Card title="Total active automations" description={activeAutomation.length} color="#cdb4db" icon="person" />
+                    <motion.div
+                        className="box"
+                        initial={{ opacity: 0, scale: 0.5 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{
+                          duration: 0.8,
+                          delay: 0.2,
+                          ease: [0, 0.71, 0.2, 1.01]
+                        }}
+                    >
+                        <Card title="Total active automations" description={activeAutomation.length} color="#cdb4db" icon="person" />
+                    </motion.div>
                 </Grid>
                 <Grid item xs={12} sm={6} md={3}>
-                    <Card title="Total connected services" description={activeService.length} color="#ffc8dd" />
+                    <motion.div
+                        className="box"
+                        initial={{ opacity: 0, scale: 0.5 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{
+                          duration: 0.8,
+                          delay: 0.2,
+                          ease: [0, 0.71, 0.2, 1.01]
+                        }}
+                    >
+                        <Card title="Total connected services" description={activeService.length} color="#ffc8dd" />
+                    </motion.div>
+
                 </Grid>
                 <Grid item xs={12} sm={6} md={3}>
-                    <Card title="Total Comments" description="100" color="#bde0fe" />
+                    <motion.div
+                        className="box"
+                        initial={{ opacity: 0, scale: 0.5 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{
+                          duration: 0.8,
+                          delay: 0.2,
+                          ease: [0, 0.71, 0.2, 1.01]
+                        }}
+                    >
+                        <Card title="Total Comments" description="100" color="#bde0fe" />
+                    </motion.div>
+
                 </Grid>
                 <Grid item xs={12} sm={6} md={3}>
-                    <Card title="Total Likes" description="100" color="#a2d2ff" />
+                    <motion.div
+                        className="box"
+                        initial={{ opacity: 0, scale: 0.5 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{
+                          duration: 0.8,
+                          delay: 0.2,
+                          ease: [0, 0.71, 0.2, 1.01]
+                        }}
+                    >
+                        <Card title="Total Likes" description="100" color="#a2d2ff" />
+                    </motion.div>
+
                 </Grid>
 
                 <Grid item xs={12}>

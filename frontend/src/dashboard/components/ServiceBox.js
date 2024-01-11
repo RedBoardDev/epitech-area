@@ -1,5 +1,6 @@
 import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/system';
+import { useEffect } from 'react';
 
 const StyledBox = styled(Box)({
     position: 'relative',
@@ -27,6 +28,19 @@ const StyledBox = styled(Box)({
     },
 });
 
+
+const StatusButton = styled('button')({
+    position: 'absolute',
+    top: '10px',
+    right: '10px',
+    width: '15px',
+    height: '15px',
+    borderRadius: '50%',
+    border: 'none',
+    cursor: 'pointer',
+    zIndex: 2,
+});
+
 const Logo = styled('img')({
     width: '40%',
     height: '40%',
@@ -35,7 +49,7 @@ const Logo = styled('img')({
     position: 'relative',
     zIndex: 1,
 });
-function ServiceBox({ id, name, color, icon, description, onClick }) {
+function ServiceBox({ id, name, color, icon, description, onClick, active }) {
     return (
         <StyledBox
             key={id}
@@ -51,6 +65,7 @@ function ServiceBox({ id, name, color, icon, description, onClick }) {
             }}
             onClick={() => onClick(id)}
         >
+            {icon && <StatusButton style={{ backgroundColor: active ? 'green' : 'red' }} />}
             {icon && icon && <Logo src={process.env.REACT_APP_API_URL + icon} alt={`${name} Icon`} />}
 
             <div style={{ marginTop: '20px', zIndex: 1 }}>

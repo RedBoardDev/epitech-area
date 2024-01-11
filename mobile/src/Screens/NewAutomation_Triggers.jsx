@@ -87,7 +87,7 @@ export function NewAutomation_Triggers2({ route }) {
   }
 
   return (
-    <View>
+    <View style={styles.container}>
       <Modal animationType="slide" transparent={false} visible={modalVisible} style={styles.modal}>
         <SafeAreaView style={styles.container}>
           <KeyboardAwareScrollView style={{ padding: 20 }}>
@@ -122,6 +122,7 @@ const styles = StyleSheet.create({
   },
 
   cardContainer: {
+    paddingHorizontal: 10,
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',

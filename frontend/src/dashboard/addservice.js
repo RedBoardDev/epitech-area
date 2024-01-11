@@ -12,8 +12,9 @@ export default function AddService() {
     const [selectionState, setSelectionState] = useState('triggers'); // triggers or reactions or review
     const [selectedTriggerData, setSelectedTriggerData] = useState(null);
     const [selectedReactionData, setSelectedReactionData] = useState(null);
+    const [activeService, setActiveService] = useState([]);
 
-    const { getAllServices } = useAuth();
+    const { getAllServices, getActiveServices } = useAuth();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalData, setModalData] = useState(null);
@@ -22,7 +23,10 @@ export default function AddService() {
         getAllServices()
             .then((data) => setServices(data))
             .catch((error) => console.error('Error:', error));
-    }, [getAllServices]);
+        getActiveServices()
+            .then((data) => setActiveService(data))
+            .catch((error) => console.error('Error:', error));
+    }, [getAllServices, getActiveServices]);
 
     const handleServiceSelect = (selectedService) => {
         setServiceChoose(selectedService);
@@ -85,7 +89,7 @@ export default function AddService() {
                     }}
                 >
                     {serviceChoose === null && (
-                        <ChooseService services={services} type={selectionState} onServiceSelected={handleServiceSelect} />
+                        <ChooseService services={services} type={selectionState} activeServices={activeService} onServiceSelected={handleServiceSelect} />
                     )}
                     {serviceChoose !== null && (
                         <>

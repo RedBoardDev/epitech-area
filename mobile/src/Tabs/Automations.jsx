@@ -10,6 +10,8 @@ import {
   SafeAreaView,
   ImageBackground,
   RefreshControl,
+  Modal,
+  Button,
 } from "react-native";
 
 import {
@@ -30,7 +32,7 @@ import Background from '../Components/Background'
 const defaultImage = require("../../assets/logo.png");
 
 export default function Automations() {
-  const { settings } = useSettings();
+  const { settings, t } = useSettings();
   const { colors } = useTheme();
   const navigation = useNavigation();
   const [autos, setAutos] = useState([]);
@@ -38,6 +40,8 @@ export default function Automations() {
   const [services, setServices] = useState({ k: {} });
   const isFocused = useIsFocused();
   const [refreshing, setRefreshing] = React.useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedAuto, setSelectedAuto] = useState(null);
 
   useEffect(() => {
     const fetchAutos = async () => {
@@ -105,7 +109,7 @@ export default function Automations() {
   };
 
   const rmOne = async (id) => {
-    removeAuto(settings.apiBaseUrl, id);
+    await removeAuto(settings.apiBaseUrl, id);
     const data = await getAutos(settings.apiBaseUrl);
     setAutos(data);
   }
@@ -116,7 +120,7 @@ export default function Automations() {
         text: 'Cancel',
         style: 'cancel',
       },
-      {text: 'Yes', onPress: () => rmOne(id)},
+      { text: 'Yes', onPress: () => rmOne(id) },
     ]);
 
   };
@@ -127,7 +131,7 @@ export default function Automations() {
 
   const getImageSource = (imageId) => {
     if (imageUrls && imageUrls[imageId]) {
-      return { uri: imageUrls[imageId] };
+      return { uri: imageUrls[imageId] + '?' + (new Date()).toISOString() };
     } else {
       return defaultImage;
     }
@@ -146,50 +150,75 @@ export default function Automations() {
     setRefreshing(false);
   }, []);
 
+  const openModal = (auto) => {
+    setSelectedAuto(auto);
+    setModalVisible(true);
+  }
+
+  const closeModal = () => {
+    setModalVisible(false);
+    setSelectedAuto(null);
+  }
+
   return (
-    <ImageBackground
-      source={require('../../assets/background_dot.png')}
-      resizeMode="repeat"
-      style={styles.background}
-      imageStyle={{ opacity: 0.3 }}
-    >
     <SafeAreaView style={styles.container}>
-      <ScrollView style={{ flexDirection: "columns" }} refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }>
-        {autos && autos.map(auto => (
-          <View key={auto.id} style={{ flexDirection: "row" }}>
-          <TouchableOpacity style={{ flex: 1 }}>
-            <LinearGradient useAngle={true} angle={90} colors={getBackgroundGradient(auto.trigger_service_id, auto.reaction_service_id)} style={styles.card}>
-              <View style={[styles.header]}>
-                <Text style={styles.title}>Automation {auto.id}</Text>
+      <Modal animationType="slide" transparent={false} visible={modalVisible} style={styles.modal}>
+        {selectedAuto && (
+          <View style={{ flex: 1, padding: 20, justifyContent: 'space-between' }}>
+            <View style={{ flex: 1 }}>
+              <View style={{ marginBottom: 30 }}>
+                <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{t("Automation name")}</Text>
+                <Text style={{ fontSize: 15 }}>{selectedAuto.automation_name}</Text>
               </View>
-              <View style={{ width: "100%", flexDirection: 'row', alignItems: 'center' }}>
-                <View style={styles.minServiceImgView}><Image
-                  source={getImageSource(auto.trigger_service_id)}
-                  style={styles.minServiceImg}
-                />
-                </View>
-                <View style={{ flex: 1 }} />
-                <View style={styles.minServiceImgView}><Image
-                  source={getImageSource(auto.reaction_service_id)}
-                  style={styles.minServiceImg}
-                />
+              <View style={{ marginBottom: 10, flexDirection: 'row' }}>
+                <Image source={getImageSource(selectedAuto.trigger_service_id)} style={{ width: 50, height: 50, marginRight: 15 }} />
+                <View>
+                  <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{t("Trigger")}</Text>
+                  <Text style={{ fontSize: 15 }}>{services[selectedAuto.trigger_service_id].triggers.find(trigger => trigger.id === selectedAuto.trigger_id).name}</Text>
                 </View>
               </View>
-            </LinearGradient>
-          </TouchableOpacity>
-          <TouchableOpacity style={ styles.removeButton } onPress={ () => removeAutomation(auto.id) }>
-            <Image source={require("../../assets/trash.png")} style={{ width: 30, height: 40 }} />
-          </TouchableOpacity>
+              <Image source={require("../../assets/down_arrow.png")} style={{ width: 50, height: 50, marginBottom: 10 }} />
+              <View style={{ marginBottom: 30, flexDirection: 'row' }}>
+                <Image source={getImageSource(selectedAuto.reaction_service_id)} style={{ width: 50, height: 50, marginRight: 15 }} />
+                <View>
+                  <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{t("Reaction")}</Text>
+                  <Text style={{ fontSize: 15 }}>{services[selectedAuto.reaction_service_id].reactions.find(reaction => reaction.id === selectedAuto.reaction_id).name}</Text>
+                </View>
+              </View>
+              <View style={{ marginBottom: 30 }}>
+                <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{t("Status")}</Text>
+                <Text style={{ fontSize: 15 }}>{selectedAuto.active ? t("Active") : t("Inactive")}</Text>
+              </View>
+            </View>
+            <View>
+              <Button title="OK" onPress={closeModal} />
+            </View>
           </View>
-        ))}
+        )}
+      </Modal>
+      <View style={{ alignItems: "center", marginTop: 20 }}>
+        <Text style={{ color: colors.text, textAlign: "center", fontSize: 32, fontWeight: "bold" }}>{t("Automations")}</Text>
+      </View>
+      <ScrollView style={{ flexDirection: "columns" }} refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }>
+        <View style={{ margin: 10 }}>
+          {autos && autos.map(auto => (
+            <TouchableOpacity key={auto.id} style={[styles.card, { backgroundColor: colors.card }]} onPress={() => { openModal(auto) }}>
+              <Text style={styles.title}>{auto.automation_name}</Text>
+              <View style={{ flexDirection: 'row' }}>
+                <Image source={getImageSource(auto.trigger_service_id)} style={{ width: 25, height: 25, marginVertical: 1, marginLeft: 8 }} />
+                <Image source={require("../../assets/right_arrow.png")} style={{ width: 25, height: 25, marginVertical: 1, marginLeft: 8 }} />
+                <Image source={getImageSource(auto.reaction_service_id)} style={{ width: 25, height: 25, marginVertical: 1, marginLeft: 8 }} />
+              </View>
+            </TouchableOpacity>
+          ))}
+        </View>
       </ScrollView>
       <TouchableOpacity style={styles.addButton} onPress={navigateToAddAutomation}>
         <Text style={styles.addButtonLabel}>+</Text>
       </TouchableOpacity>
     </SafeAreaView>
-    </ImageBackground>
   );
 }
 
@@ -197,21 +226,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: '100%',
-
   },
   card: {
     flex: 1,
+    flexDirection: 'row',
+    padding: 8,
+    borderBottomWidth: 1,
+    borderColor: '#ddd',
+    justifyContent: 'space-between',
     borderRadius: 10,
-    padding: 15,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-    margin: 10,
-    borderColor: '#fff',
-    borderWidth: 1,
-    backgroundColor: '#fff',
+    margin: 2,
   },
   header: {
     flexDirection: 'row',
@@ -224,7 +248,8 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
-    fontWeight: 'bold',
+    color: '#333',
+    width: '50%',
   },
   content: {
     fontSize: 16
@@ -260,13 +285,16 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: "#000",
   },
-  removeButton: {
+  sideButton: {
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#e01f40',
     width: 50,
     borderRadius: 10,
-    margin: 10,
+    padding: 5,
+    margin: 3,
     marginLeft: 0,
+  },
+  modal: {
+    flex: 1,
   },
 });

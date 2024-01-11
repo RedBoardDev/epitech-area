@@ -183,10 +183,10 @@ router.put("/:id", verifyToken, (req, res) => {
 
         db.updateUser(req.params.id, req.body.lastname, req.body.firstname, req.body.email, passwordHash)
             .then((rows) => {
-                if (rows[0])
-                    res.json(rows[0]);
-                else
+                if (rows.affectedRows == 0)
                     res.status(404).json({ msg: "User not found" });
+                else
+                    res.json({ msg: "User updated successfully", res: rows });
             })
             .catch((err) => {
                 res.status(500).json({ msg: "Internal server error", error: err });
@@ -195,10 +195,10 @@ router.put("/:id", verifyToken, (req, res) => {
     } else {
         db.partialUpdateUser(req.params.id, req.body.lastname, req.body.firstname, req.body.email)
             .then((rows) => {
-                if (rows[0])
-                    res.json(rows[0]);
-                else
+                if (rows.affectedRows == 0)
                     res.status(404).json({ msg: "User not found" });
+                else
+                    res.json({ msg: "User updated successfully", res: rows });
             })
             .catch((err) => {
                 res.status(500).json({ msg: "Internal server error", error: err });

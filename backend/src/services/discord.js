@@ -6,7 +6,7 @@ export const router = Router();
 export const id = 'discord';
 export const name = 'Discord';
 export const description = 'Discord service';
-export const color = '#7289da';
+export const color = '#5865f2';
 export const icon = '/discord.png';
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMembers] });
