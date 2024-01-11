@@ -14,7 +14,7 @@ services:
       MYSQL_PASSWORD: $MYSQL_PASSWORD
       MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
     volumes:
-      - $PWD/area-database:/var/lib/mysql
+      - area_database:/var/lib/mysql
     networks:
       areaNetwork:
         ipv4_address: $MYSQL_HOST
@@ -42,7 +42,6 @@ services:
       - "$API_PORT:$API_PORT"
     restart: always
 
-
   client_mobile:
     container_name: "area-client_mobile"
     build:
@@ -51,17 +50,21 @@ services:
     env_file:
       - .env
     volumes:
-      - $PWD/client:/output
+      - area_client:/output
 
   client_web:
     container_name: "area-client_web"
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        - REACT_APP_API_URL=${REACT_APP_API_URL}
+        - REACT_APP_GITHUB_CLIENT_ID=${REACT_APP_GITHUB_CLIENT_ID}
+        - REACT_APP_PUBLIC_URL=${REACT_APP_PUBLIC_URL}
     env_file:
       - .env
     volumes:
-      - $PWD/client/web:/app/build
+      - area_client:/output
     depends_on:
       - server
       - client_mobile
@@ -80,3 +83,6 @@ networks:
         - subnet: "192.168.50.0/24"
           gateway: "192.168.50.1"
 
+volumes:
+  area_client:
+  area_database:

@@ -18,6 +18,6 @@ FROM reactnativecommunity/react-native-android:latest
 
 WORKDIR /app
 
-COPY --from=build /app/android/app/build/outputs/apk/release/app-release.apk /tmp/app-release.apk
+COPY --from=build /app/android/app/build/outputs/apk/release/app-release.apk /tmp/client.apk
 
 CMD cp /tmp/app-release.apk /output
