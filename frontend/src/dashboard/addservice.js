@@ -1,61 +1,62 @@
 import React, { useEffect, useState } from 'react';
-import SideBar from './components/SideBar';
-import TopBar from './components/TopBar';
 import { useAuth } from '../AuthContext';
-import Grid from '@mui/material/Grid';
-import AddCategory from './addCategory';
-import PuzzlePiece from './components/PuzzlePiece';
-import Button from '@mui/material/Button';
+import { Grid, Box } from '@mui/material';
+import ChooseService from './components/ChooseService';
+import ChooseArea from './components/ChooseArea';
 import ModalSettingsService from './components/ModalSettingsService';
-import { useTheme } from '../themeContext';
+import ReviewChooseArea from './components/ReviewChooseArea';
 
-export default function ServicesDash() {
+export default function AddService() {
     const [services, setServices] = useState([]);
-    const { getAllServices, addAutomation, serviceOauth } = useAuth();
-    const { mainTheme } = useTheme();
-    const [selectedTriggers, setSelectedTriggers] = useState([]);
-    const [selectedReaction, setSelectedReaction] = useState(null);
+    const [serviceChoose, setServiceChoose] = useState(null); // null for active / not null for inactive
+    const [selectionState, setSelectionState] = useState('triggers'); // triggers or reactions or review
+    const [selectedTriggerData, setSelectedTriggerData] = useState(null);
+    const [selectedReactionData, setSelectedReactionData] = useState(null);
+
+    const { getAllServices } = useAuth();
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalData, setModalData] = useState(null);
 
-    // Example services for offline testing
-    const exampleServices = [
-        { 
-            id: 1, 
-            name: 'Service 1', 
-            color: '#FF0000', 
-            triggers: [{name: 'Trigger 1', desc: 'Description 1'}, {name: 'Trigger 2', desc: 'Description 2'}], 
-            reactions: [{name: 'Reaction 1', desc: 'Description 1'}, {name: 'Reaction 2', desc: 'Description 2'}] 
-        },
-        { 
-            id: 2, 
-            name: 'Service 2', 
-            color: '#00FF00', 
-            triggers: [{name: 'Trigger 1', desc: 'Description 1'}, {name: 'Trigger 2', desc: 'Description 2'}], 
-            reactions: [{name: 'Reaction 1', desc: 'Description 1'}, {name: 'Reaction 2', desc: 'Description 2'}] 
-        },
-        { 
-            id: 3, 
-            name: 'Service 3', 
-            color: '#0000FF', 
-            triggers: [{name: 'Trigger 1', desc: 'Description 1'}, {name: 'Trigger 2', desc: 'Description 2'}], 
-            reactions: [{name: 'Reaction 1', desc: 'Description 1'}, {name: 'Reaction 2', desc: 'Description 2'}] 
-        },
-    ];  
-
     useEffect(() => {
-        getAllServices().then((data) => {
-            setServices(data);
-        }).catch((error) => {
-            console.error('Error:', error);
-            // Use example services in case of error
-            setServices(exampleServices);
-        });
-    }, []);
+        getAllServices()
+            .then((data) => setServices(data))
+            .catch((error) => console.error('Error:', error));
+    }, [getAllServices]);
 
-    const openModal = (choose) => {
-        if (selectedReaction) return;
-        setModalData(choose);
+    const handleServiceSelect = (selectedService) => {
+        setServiceChoose(selectedService);
+    };
+
+    const handleTriggerSelect = (selectedTrigger) => {
+        console.log("trigger", selectedTrigger);
+        openModal(selectedTrigger);
+    };
+
+    const handleReactionSelect = (selectedReaction) => {
+        console.log("reaction", selectedReaction);
+        openModal(selectedReaction);
+    };
+
+
+    const submitSettings = (data) => {
+        if (selectionState === 'triggers') {
+            data['service_id'] = serviceChoose.id;
+            setSelectedTriggerData(data);
+            setSelectionState('reactions');
+            setServiceChoose(null);
+        }
+        if (selectionState === 'reactions') {
+            data['service_id'] = serviceChoose.id;
+            setSelectedReactionData(data);
+            setServiceChoose('');
+            setSelectionState('review');
+        }
+    }
+
+    const openModal = (selected) => {
+        if (serviceChoose === null) return;
+        setModalData(selected);
         setIsModalOpen(true);
     };
 
@@ -63,64 +64,46 @@ export default function ServicesDash() {
         setIsModalOpen(false);
     };
 
-    const submitSettings = (data) => {
-        setSelectedTriggers(prevTriggers => [...prevTriggers, data]);
-    }
-
-    const handleConfirm = async () => {
-        for (const trigger of selectedTriggers) {
-            try {
-                await addAutomation(trigger.service_id, trigger.id, JSON.stringify(trigger.formValues),
-                    selectedReaction.service_id, selectedReaction.id, JSON.stringify(selectedReaction.formValues));
-            } catch (error) {
-                const errData = error?.response?.data || null;
-                if (!errData) return;
-    
-                if (error.response && error.response.status === 401) {
-                    serviceOauth(error.response.data.service_id);
-                } else {
-                    console.error("Error during addAutomation:", error);
-                }
-            }
-        }
+    const reset = () => {
+        setServiceChoose(null);
+        setSelectionState('triggers');
+        setSelectedTriggerData(null);
+        setSelectedReactionData(null);
     }
 
     return (
-        <Grid container style={{ overflow: 'hidden' }}>
-            <Grid item xs={2}>
-                <SideBar />
-            </Grid>
-            <Grid item xs={10} style={{ overflow: 'hidden' }}>
-                <Grid container direction="column" style={{ overflow: 'hidden' }}>
-                    <Grid item>
-                        <TopBar />
-                    </Grid>
-                    <Grid item xs={12} style={{ overflow: 'hidden' }}>
-                        <Grid container style={{ height: '93.6%', top: '6.4%', left: '15%', position: 'absolute', width: '85%', overflow: 'auto', backgroundColor: mainTheme.mode }}>
-                            <Grid item xs={2} style={{ height: '100%', background: '#333448' }} className="no-overflow">
-                            {!selectedReaction &&
-                                services.map((service) => (<AddCategory key={service.id} id={service.id} name={service.name} color={service.color} triggers={service.triggers} reactions={service.reactions} handleClick={openModal} />))
-                            }
-                            </Grid>
-                            <Grid item xs={10} container>
-                                {selectedTriggers.map((trigger, index) => (
-                                    <Grid item xs={2} key={index}>
-                                        <PuzzlePiece name={trigger.name} description={trigger.description} />
-                                    </Grid>
-                                ))}
-                                {selectedReaction && (
-                                    <Grid item xs={2}>
-                                        <PuzzlePiece name={selectedReaction.name} description={selectedReaction.description} />
-                                    </Grid>
-                                )}
-                                    <Grid item xs={2}>
-                                        <Button onClick={handleConfirm}>Confirm</Button>
-                                    </Grid>
-                            </Grid>
-                        </Grid>
-                        <ModalSettingsService isOpen={isModalOpen} closeModal={closeModal} data={modalData} onSubmit={submitSettings} />
-                    </Grid>
-                </Grid>
+        <Grid container>
+            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Box
+                    sx={{
+                        width: '85%',
+                        overflowY: 'auto',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                >
+                    {serviceChoose === null && (
+                        <ChooseService services={services} type={selectionState} onServiceSelected={handleServiceSelect} />
+                    )}
+                    {serviceChoose !== null && (
+                        <>
+                            {selectionState === 'triggers' && (
+                                <ChooseArea data={serviceChoose.triggers} type={selectionState} serviceName={serviceChoose.name} onSelected={handleTriggerSelect} />
+                            )}
+                            {selectionState === 'reactions' && (
+                                <ChooseArea data={serviceChoose.reactions} type={selectionState} serviceName={serviceChoose.name} onSelected={handleReactionSelect} />
+                            )}
+                            {selectionState === 'review' && (
+                                <>
+                                    <ReviewChooseArea triggerData={selectedTriggerData} reactionData={selectedReactionData} reset={reset} />
+                                </>
+                            )}
+                        </>
+                    )}
+                </Box>
+                <ModalSettingsService isOpen={isModalOpen} closeModal={closeModal} data={modalData} onSubmit={submitSettings} />
             </Grid>
         </Grid>
     );

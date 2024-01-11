@@ -12,12 +12,17 @@ import {
   Image,
   Alert,
   SafeAreaView,
-  Modal
+  Modal,
+  Linking
 } from 'react-native';
 
 import {
   useNavigation, useTheme
 } from '@react-navigation/native';
+
+import { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from '@env';
+
+import { authorize } from 'react-native-app-auth';
 
 import { theme } from '../Components/Theme'
 import Background from '../Components/Background'
@@ -27,20 +32,20 @@ import Button from '../Components/Button'
 
 import { validateEmail, validatePassword } from '../Tests/Validators'
 
-import { LoginEmailPass, GetUser } from '../Core/ServerCalls'
+import { LoginEmailPass, GetUser, loginGithub } from '../Core/ServerCalls'
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from '../Components/Icon';
-import SettingsContext from '../Contexts/Settings';
+import { useSettings } from '../Contexts/Settings';
 
 function LoginScreen() {
-  const { settings, setSettings } = useContext(SettingsContext);
+  const { settings, setSettings, t } = useSettings();
   const navigation = useNavigation();
   const { colors } = useTheme();
   const [modalVisible, setModalVisible] = useState(false);
 
-  const [email, setEmail] = useState({ value: 'test@gmail.com', error: '' })
-  const [password, setPassword] = useState({ value: '12345678', error: '' })
+  const [email, setEmail] = useState({ value: 'test@thomasott.com', error: '' })
+  const [password, setPassword] = useState({ value: 'test123/', error: '' })
   const [error, setError] = useState("")
 
   useEffect(() => {
@@ -56,7 +61,7 @@ function LoginScreen() {
       return
     }
     try {
-      const token = await LoginEmailPass(settings.apiLocation, email.value, password.value);
+      const token = await LoginEmailPass(settings.apiBaseUrl, email.value, password.value);
       if (token.length > 10) {
         await AsyncStorage.setItem('jwtToken', token);
         navigation.reset({
@@ -71,6 +76,39 @@ function LoginScreen() {
       setEmail({ ...email, error: true })
     }
   }
+
+  const handleLoginGithub = async () => {
+    try {
+      const config = {
+        redirectUrl: 'com.area://oauthredirect',
+        clientId: GITHUB_CLIENT_ID,
+        clientSecret: GITHUB_CLIENT_SECRET,
+        scopes: ['user', 'repo'],
+        additionalHeaders: { 'Accept': 'application/json' },
+        serviceConfiguration: {
+          authorizationEndpoint: 'https://github.com/login/oauth/authorize',
+          tokenEndpoint: 'https://github.com/login/oauth/access_token',
+          revocationEndpoint: 'https://github.com/settings/connections/applications/' + GITHUB_CLIENT_ID
+        }
+      };
+      const authState = await authorize(config);
+
+      const token = await loginGithub(settings.apiBaseUrl, authState.accessToken);
+      if (token.length > 10) {
+        await AsyncStorage.setItem('jwtToken', token);
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'NavBar' }],
+        });
+      } else {
+        setError("Unknown error, please try again. ")
+      }
+    } catch (err) {
+      setError(err.message)
+      setEmail({ ...email, error: true })
+    }
+  }
+
   return (
     <Background>
       <Modal
@@ -82,7 +120,7 @@ function LoginScreen() {
       >
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20 }}>
           <TextInput
-            label="API Location"
+            label={t("API Location")}
             returnKeyType="next"
             value={settings.apiLocation}
             onChangeText={(text) => setSettings({ ...settings, apiLocation: text })}
@@ -92,15 +130,15 @@ function LoginScreen() {
             autoCompleteType="name"
             textContentType="name"
           />
-          <Button mode="contained" onPress={() => { setModalVisible(false) }} title="Save">Save</Button>
+          <Button mode="contained" onPress={() => { setModalVisible(false) }}>{t("Save")}</Button>
         </View>
       </Modal>
       {/* <BackButton goBack={navigation.goBack} /> */}
       <Logo />
-      <Text style={styles.header}>Nice to see you again !</Text>
+      <Text style={styles.header}>{t("Nice to see you again!")}</Text>
       {error && <Text style={{ color: 'red' }}>{error}</Text>}
       <TextInput
-        label="Email"
+        label={t("Email")}
         returnKeyType="next"
         value={email.value}
         onChangeText={(text) => setEmail({ value: text, error: '' })}
@@ -112,7 +150,7 @@ function LoginScreen() {
         keyboardType="email-address"
       />
       <TextInput
-        label="Password"
+        label={t("Password")}
         returnKeyType="done"
         value={password.value}
         onChangeText={(text) => setPassword({ value: text, error: '' })}
@@ -127,18 +165,16 @@ function LoginScreen() {
           <Text style={styles.forgot}>Forgot your password ?</Text>
         </TouchableOpacity>
       </View> */}
-      <Button mode="contained" onPress={onLoginPressed} title="Login">
-        Login
-      </Button>
+      <Button mode="contained" onPress={onLoginPressed}>{t("Login")}</Button>
       <View style={styles.row}>
-        <Text>Don't have an account ? </Text>
+        <Text>{t("Don't have an account? ")}</Text>
         <TouchableOpacity onPress={() => navigation.navigate('RegisterScreen')}>
-          <Text style={styles.link}>Sign up</Text>
+          <Text style={styles.link}>{t("Sign up")}</Text>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.button_log_with} onPress={() => console.log("github login")}>
+      <TouchableOpacity style={styles.button_log_with} onPress={handleLoginGithub}>
         <Image source={require("../../assets/github_logo.png")} style={styles.logo} />
-        <Text style={styles.text}>Login with GitHub</Text>
+        <Text style={styles.text}>{t("Login with GitHub")}</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.settings} onPress={() => setModalVisible(true)}>
         <Icon name="settings.png" size={24} color={'black'} />

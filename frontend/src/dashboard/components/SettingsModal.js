@@ -6,47 +6,58 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import { useAuth } from '../../AuthContext';
+import { useSettings } from '../../SettingsContext';
 import { useTheme } from '../../themeContext';
 import { Switch } from '@mui/material';
+import { ToggleButton, ToggleButtonGroup } from '@mui/material';
+import Alert from '@mui/material/Alert';
 
-export default function SettingsUserModal({ user, onUpdateUser }) {
-    const [open, setOpen] = useState(true);
+export default function SettingsUserModal({ isOpen, closeModal, onUpdateUser, user }) {
+    const { t, settings, setSettings } = useSettings();
     const [firstName, setFirstName] = useState(user.firstname);
     const [lastName, setLastName] = useState(user.lastname);
     const [email, setEmail] = useState(user.email);
     const [newPassword, setNewPassword] = useState("");
     const [confirmNewPassword, setConfirmNewPassword] = useState("");
     const { updateUserById } = useAuth();
-    const { toggleThemeMode, toggleSwitchTheme } =useTheme();
+    const { mainTheme, toggleThemeMode, toggleSwitchTheme } = useTheme();
+    const [error, setError] = useState("");
 
-    const handleClickOpen = () => {
-        setOpen(true);
+    useEffect(() => {
+        setFirstName(user.firstname);
+        setLastName(user.lastname);
+        setEmail(user.email);
+    }, [user]);
+
+    const handleLanguageChange = (event, newLanguage) => {
+        setSettings({ ...settings, language: newLanguage });
     };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
-
 
     const handleSave = async () => {
         try {
-                await updateUserById(lastName, firstName);
-                onUpdateUser({ ...user, firstname: firstName, lastname: lastName });
+            if (confirmNewPassword !== newPassword || (confirmNewPassword == "" && newPassword != "") || (confirmNewPassword != "" && newPassword == "")) {
+                setError(t("Please confirm your password"));
+                return;
+            }
+            await updateUserById(lastName, firstName, email, confirmNewPassword);
+            onUpdateUser({ ...user, firstname: firstName, lastname: lastName, email: email });
+
         } catch (error) {
             console.error('Update user failed:', error);
         }
-        setOpen(false);
+        closeModal();
     };
 
     return (
         <div>
-            <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>Modify your informations</DialogTitle>
+            <Dialog open={isOpen} onClose={closeModal}>
+                <DialogTitle>{t("Modify your informations")}</DialogTitle>
                 <DialogContent>
+                    {error ? <Alert severity="warning">{error}</Alert> : ""}
                     <TextField
                         autoFocus
                         margin="dense"
-                        label="First Name"
+                        label={t("First Name")}
                         type="text"
                         fullWidth
                         value={firstName}
@@ -54,7 +65,7 @@ export default function SettingsUserModal({ user, onUpdateUser }) {
                     />
                     <TextField
                         margin="dense"
-                        label="Last Name"
+                        label={t("Last Name")}
                         type="text"
                         fullWidth
                         value={lastName}
@@ -62,7 +73,7 @@ export default function SettingsUserModal({ user, onUpdateUser }) {
                     />
                     <TextField
                         margin="dense"
-                        label="Email"
+                        label={t("Email")}
                         type="email"
                         fullWidth
                         value={email}
@@ -70,7 +81,7 @@ export default function SettingsUserModal({ user, onUpdateUser }) {
                     />
                     <TextField
                         margin="dense"
-                        label="New Password"
+                        label={t("New Password")}
                         type="password"
                         fullWidth
                         value={newPassword}
@@ -78,20 +89,33 @@ export default function SettingsUserModal({ user, onUpdateUser }) {
                     />
                     <TextField
                         margin="dense"
-                        label="Confirm New Password"
+                        label={t("Confirm New Password")}
                         type="password"
                         fullWidth
                         value={confirmNewPassword}
                         onChange={(e) => setConfirmNewPassword(e.target.value)}
                     />
+                    <ToggleButtonGroup
+                        value={settings.language}
+                        exclusive
+                        onChange={handleLanguageChange}
+                        aria-label="select language"
+                    >
+                        <ToggleButton value="fr" aria-label="French">
+                            French
+                        </ToggleButton>
+                        <ToggleButton value="en" aria-label="English">
+                            English
+                        </ToggleButton>
+                    </ToggleButtonGroup>
                 </DialogContent>
                 <DialogActions>
                     <div style={{Display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                        Select Theme
-                        <Switch checked={toggleThemeMode} onChange={toggleSwitchTheme} />
+                        {t("Dark theme")}
+                        <Switch checked={toggleThemeMode} onChange={toggleSwitchTheme} style={{color: mainTheme.palette.SwitchStyle.main}} />
                     </div>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleSave}>Save</Button>
+                    <Button onClick={closeModal} style={{color: mainTheme.palette.TextStyle1.main}}>{t("Cancel")}</Button>
+                    <Button onClick={handleSave} style={{color: mainTheme.palette.TextStyle1.main}}>{t("Save")}</Button>
                 </DialogActions>
             </Dialog>
         </div>

@@ -1,9 +1,11 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { callApi } from './ApiCaller';
+import { useSettings } from './SettingsContext';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+    const { settings } = useSettings();
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     useEffect(() => {
@@ -46,7 +48,7 @@ export const AuthProvider = ({ children }) => {
         try {
             const storedToken = localStorage.getItem('token');
             const authHeaders = { ...headers, Authorization: `Bearer ${storedToken}` };
-            const response = await callApi(method, endpoint, data, authHeaders);
+            const response = await callApi(method, settings.language, endpoint, data, authHeaders);
             return response;
         } catch (error) {
             if (error.response && error.response.status === 403) {
@@ -81,7 +83,7 @@ export const AuthProvider = ({ children }) => {
 
     const register = async (email, password, lastname, firstname) => {
         try {
-            const response = await callApi('POST', '/auth/register', { email, password, lastname, firstname });
+            const response = await callApi('POST', settings.language, '/auth/register', { email, password, lastname, firstname });
             saveData(response.token, response.id);
             setIsAuthenticated(true);
             return response;
@@ -94,7 +96,7 @@ export const AuthProvider = ({ children }) => {
 
     const registerGithub = async (code) => {
         try {
-            const response = await callApi('POST', `/auth/register/github/${code}`);
+            const response = await callApi('POST', settings.language, `/auth/register/github/${code}`);
             saveData(response.token, response.id);
             setIsAuthenticated(true);
             return response;
@@ -107,7 +109,7 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (email, password) => {
         try {
-            const response = await callApi('POST', '/auth/login', { email, password });
+            const response = await callApi('POST', settings.language, '/auth/login', { email, password });
             saveData(response.token, response.id);
             setIsAuthenticated(true);
             return response;
@@ -120,7 +122,7 @@ export const AuthProvider = ({ children }) => {
 
     const loginGithub = async (code) => {
         try {
-            const response = await callApi('POST', `/auth/login/github/${code}`);
+            const response = await callApi('POST', settings.language, `/auth/login/github/${code}`);
             saveData(response.token, response.id);
             setIsAuthenticated(true);
             return response;
@@ -148,9 +150,45 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
+    const getAutomationsById = async (automationId) => {
+        try {
+            const response = await callApiWithToken('GET', `/automations/${automationId}`);
+            setIsAuthenticated(true);
+            return response;
+        } catch (error) {
+            console.error('Automations error:', error);
+            setIsAuthenticated(false);
+            throw error;
+        }
+    }
+
+    const getAutomationsByFav = async () => {
+        try {
+            const response = await callApiWithToken('GET', `/automations/favorite`);
+            setIsAuthenticated(true);
+            return response;
+        } catch (error) {
+            console.error('Automations error:', error);
+            setIsAuthenticated(false);
+            throw error;
+        }
+    };
+
     const getAllServices = async () => {
         try {
             const response = await callApiWithToken('GET', `/service`);
+            setIsAuthenticated(true);
+            return response;
+        } catch (error) {
+            console.error('Service error:', error);
+            setIsAuthenticated(false);
+            throw error;
+        }
+    }
+
+    const getServiceById = async (serviceId) => {
+        try {
+            const response = await callApiWithToken('GET', `/service/${serviceId}`);
             setIsAuthenticated(true);
             return response;
         } catch (error) {
@@ -185,10 +223,10 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
-    const updateUserById = async (lastname, firstname) => {
+    const updateUserById = async (lastname, firstname, email, password) => {
         const userID = localStorage.getItem('userID');
         try {
-            const response = await callApiWithToken('PUT', `/user/${userID}`, { lastname, firstname });
+            const response = await callApiWithToken('PUT', `/user/${userID}`, { lastname, firstname, email, password });
             setIsAuthenticated(true);
             return response;
         } catch (error) {
@@ -198,12 +236,72 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
-    const addAutomation = async (trigger_service_id, trigger_id, trigger_params, reaction_service_id, reaction_id, reaction_params) => {
+    const addAutomation = async (trigger_service_id, trigger_id, trigger_params, reaction_service_id, reaction_id, reaction_params, automation_name) => {
         try {
-            const response = await callApiWithToken('POST', `/automations`, { trigger_service_id, trigger_id, trigger_params, reaction_service_id, reaction_id, reaction_params });
+            const response = await callApiWithToken('POST', `/automations`, { trigger_service_id, trigger_id, trigger_params, reaction_service_id, reaction_id, reaction_params, automation_name });
             setIsAuthenticated(true);
             return response;
         } catch (error) {
+            setIsAuthenticated(false);
+            throw error;
+        }
+    }
+
+    const updateAutomationById = async (id, reaction_params, trigger_params, automation_name) => {
+        try {
+            const response = await callApiWithToken('PUT', `/automations/${id}`, { reaction_params, trigger_params, automation_name });
+            setIsAuthenticated(true);
+            return response;
+        } catch (error) {
+            console.error('Service error:', error);
+            setIsAuthenticated(false);
+            throw error;
+        }
+    }
+
+    const updateFavById = async (id, fav) => {
+        try {
+            const response = await callApiWithToken('PUT', `/automations/favorite/${id}`, { fav });
+            setIsAuthenticated(true);
+            return response;
+        } catch (error) {
+            console.error('Service error:', error);
+            setIsAuthenticated(false);
+            throw error;
+        }
+    }
+
+    const updateActiveById = async (id, active) => {
+        try {
+            const response = await callApiWithToken('PUT', `/automations/active/${id}`, { active });
+            setIsAuthenticated(true);
+            return response;
+        } catch (error) {
+            console.error('Service error:', error);
+            setIsAuthenticated(false);
+            throw error;
+        }
+    }
+
+    const getActiveAutomations = async () => {
+        try {
+            const response = await callApiWithToken('GET', `/automations/active`);
+            setIsAuthenticated(true);
+            return response;
+        } catch (error) {
+            console.error('Automations error:', error);
+            setIsAuthenticated(false);
+            throw error;
+        }
+    }
+
+    const getActiveServices = async () => {
+        try {
+            const response = await callApiWithToken('GET', `/service/active`);
+            setIsAuthenticated(true);
+            return response;
+        } catch (error) {
+            console.error('Automations error:', error);
             setIsAuthenticated(false);
             throw error;
         }
@@ -222,6 +320,19 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const serviceOauthVerify = async (service_id) => {
+        try {
+            const response = await callApiWithToken('GET', `/service/oauth/${service_id}/connected`);
+            setIsAuthenticated(true);
+            if (response === null || response.connected === null) return false;
+            return response.connected;
+        } catch (error) {
+            console.error('Service error:', error);
+            setIsAuthenticated(false);
+            return false;
+        }
+    };
+
     return (
         <AuthContext.Provider value={{
             isAuthenticated,
@@ -236,8 +347,17 @@ export const AuthProvider = ({ children }) => {
             updateUserById,
             addAutomation,
             serviceOauth,
+            serviceOauthVerify,
             loginGithub,
-            registerGithub
+            registerGithub,
+            getAutomationsById,
+            updateAutomationById,
+            getServiceById,
+            updateFavById,
+            getAutomationsByFav,
+            updateActiveById,
+            getActiveAutomations,
+            getActiveServices,
         }}>
             {children}
         </AuthContext.Provider>

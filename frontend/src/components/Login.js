@@ -8,7 +8,9 @@ import Typography from '@mui/material/Typography';
 import HeaderComponent from './Header';
 import backgroundImage from '../img/BgTop.png';
 import GitHubIcon from '@mui/icons-material/GitHub';
-import {useTheme} from '../themeContext';
+import { useSettings } from '../SettingsContext';
+import { useTheme } from '../themeContext';
+import Alert from '@mui/material/Alert';
 
 export const LoginGithubCallback = () => {
     const navigate = useNavigate();
@@ -33,11 +35,13 @@ export const LoginGithubCallback = () => {
 };
 
 const Login = () => {
+    const { t } = useSettings();
     const [username, setUsername] = useState('test@thomasott.com');
     const [password, setPassword] = useState('test123/');
     const { login, logout, verifyToken } = useAuth();
     const { mainTheme } = useTheme();
     const navigate = useNavigate();
+    const [error, setError] = useState("");
 
     useEffect(() => {
         const checkToken = async () => {
@@ -53,6 +57,7 @@ const Login = () => {
             await login(username, password);
             navigate('/');
         } catch (error) {
+            setError(t("Invalid username or password"));
             logout();
             console.error('Login failed:', error);
         }
@@ -102,10 +107,11 @@ const Login = () => {
                     }}
                 >
                     <Typography variant="h4" sx={{ color: '#544d4d', marginBottom: '2rem' }}>
-                        Connexion
+                        {t("Login")}
                     </Typography>
+                    {error ? <Alert severity="warning">{error}</Alert> : ""}
                     <TextField
-                        label="Email"
+                        label={t("Email")}
                         variant="outlined"
                         margin="normal"
                         fullWidth
@@ -114,7 +120,7 @@ const Login = () => {
                         sx={{ marginBottom: '1rem' }}
                     />
                     <TextField
-                        label="Mot de passe"
+                        label={t("Password")}
                         variant="outlined"
                         margin="normal"
                         type="password"
@@ -130,7 +136,7 @@ const Login = () => {
                         onClick={handleLogin}
                         sx={{ width: '200px' }}
                     >
-                        Se Connecter
+                        {t("Login")}
                     </Button>
                     <Button
                         variant="contained"
@@ -140,7 +146,7 @@ const Login = () => {
                         onClick={handleLoginGithub}
                         sx={{ width: '200px', marginTop: '1rem' }}
                     >
-                        Se Connecter avec GitHub
+                        {t("Login with Github")}
                     </Button>
                     <Typography
                         component={Link}
@@ -148,9 +154,9 @@ const Login = () => {
                         color="primary"
                         size="large"
                         align='center'
-                        sx={{ width: '200px', marginTop: '1rem' }}
+                        sx={{ marginTop: '1rem' }}
                     >
-                        Register
+                        {t("Don't have an account?")}
                     </Typography>
                 </div>
                 <div
