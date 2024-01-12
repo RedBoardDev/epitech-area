@@ -59,7 +59,7 @@ export const callback = async (code) => {
         console.log(response)
         return { status: "success", action: htmlResponse, token: response?.data?.access_token};
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return { status: "error", msg: error };
     }
 };
@@ -133,7 +133,7 @@ export const reactions = [
                     },
                 });
             } catch (error) {
-                console.log(error);
+                console.error(error);
                 return null;
             }
         }
@@ -180,7 +180,7 @@ export const reactions = [
                     },
                 });
             } catch (error) {
-                console.log(error);
+                console.error(error);
                 return null;
             }
         }

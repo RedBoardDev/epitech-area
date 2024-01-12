@@ -46,13 +46,6 @@ function NewAutomation_Submit({ route }) {
   }, []);
 
   const submit = async () => {
-    console.log('triggerServiceId', triggerServiceId);
-    console.log('triggerId', triggerId);
-    console.log('triggerParams', triggerParams);
-    console.log('reactionServiceId', reactionServiceId);
-    console.log('reactionId', reactionId);
-    console.log('reactionParams', reactionParams);
-
     const connect = async (service_id) => {
       try {
         const response = await serviceOauth(settings.apiBaseUrl, service_id);

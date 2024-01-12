@@ -28,7 +28,7 @@ async function refreshToken(userId, refreshToken) {
         console.log('Token refreshed, trying next time.');
         return newToken;
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return null;
     }
 }

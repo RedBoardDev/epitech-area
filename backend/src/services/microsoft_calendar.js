@@ -115,13 +115,13 @@ export const reactions = [
                 id: 'date_start',
                 name: 'Start date',
                 description: 'The start date of the event',
-                type: 'text'
+                type: 'date'
             },
             {
                 id: 'date_end',
                 name: 'End date',
                 description: 'The end date of the event',
-                type: 'text'
+                type: 'date'
             }
         ],
         execute: async (userData, params, token, triggerData) => {

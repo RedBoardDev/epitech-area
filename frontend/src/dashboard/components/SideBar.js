@@ -76,7 +76,7 @@ const SideBar = () => {
                 <Drawer anchor="left" open={isDrawerOpen} onClose={handleDrawerClose}>
                     <Box
                         sx={{
-                            width: '80vw',
+                            width: '80vw', // Adjust the width as needed
                             padding: '2rem',
                             background: mainTheme.palette.ForegroundItems.main,
                         }}

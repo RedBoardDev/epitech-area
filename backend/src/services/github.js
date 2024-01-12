@@ -51,7 +51,7 @@ export const callback = async (code) => {
         `;
         return { status: "success", action: htmlResponse, token: response?.data?.access_token || undefined };
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return { status: "error", msg: error };
     }
 };
@@ -199,7 +199,7 @@ export const reactions = [
                 if (error.response.status === 422)
                     console.log("Repository already exists");
                 else
-                    console.log("error:", error);
+                    console.error("error:", error);
             });
         }
     },
@@ -235,7 +235,7 @@ export const reactions = [
             }).then((response) => {
                 console.log("Issue created");
             }).catch((error) => {
-                console.log("error when creating issue:", error);
+                console.error("error when creating issue:", error);
             });
         }
     },
@@ -293,7 +293,7 @@ export const reactions = [
                         else
                             console.log("File created");
                     }).catch((error) => {
-                        console.log("error:", error);
+                        console.error("error:", error);
                     });
             }
 
