@@ -4,6 +4,7 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import PageTitle from "./PageTitle";
 import SummaryCard from "./SummaryCard";
 import { useAuth } from '../../AuthContext';
+import { useTheme } from '../../themeContext';
 import { useNavigate } from "react-router-dom";
 import CachedIcon from '@mui/icons-material/Cached';
 import { useSettings } from '../../SettingsContext';
@@ -16,6 +17,7 @@ const ArrowBox = () => (
 
 const ReviewChooseArea = ({ triggerData, reactionData, reset }) => {
     const { t } = useSettings();
+    const { mainTheme } = useTheme();
     const [validateHover, setValidateHover] = useState(false);
     const [cancelHover, setCancelHover] = useState(false);
     const [OauthService, setOauthService] = useState([false, false]); // [trigger, reaction]
@@ -77,7 +79,8 @@ const ReviewChooseArea = ({ triggerData, reactionData, reset }) => {
                     sx={{
                         marginBottom: '20px',
                         textAlign: 'center',
-                        backgroundColor: '#f0f0f0',
+                        // backgroundColor: '#f0f0f0',
+                        color: '#FDFFF',
                         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
                         border: '2px solid #ddd',
                         borderRadius: '8px',
@@ -95,7 +98,7 @@ const ReviewChooseArea = ({ triggerData, reactionData, reset }) => {
                                 boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
                                 border: '2px solid #ddd',
                                 borderRadius: '8px',
-                                color: '#333333',
+                                color: mainTheme.palette.CardContentTitle.main,
                                 marginRight: '5px',
                             }}
                             onClick={handleValidate}
@@ -112,7 +115,7 @@ const ReviewChooseArea = ({ triggerData, reactionData, reset }) => {
                             boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
                             border: '2px solid #ddd',
                             borderRadius: '8px',
-                            color: '#333333',
+                            color: mainTheme.palette.CardContentTitle.main,
                         }}
                         onClick={handleCancel}
                         onMouseEnter={() => setCancelHover(true)}

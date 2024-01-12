@@ -103,7 +103,7 @@ const Register = () => {
                         padding: '0 5%',
                     }}
                 >
-                    <Typography variant="h4" sx={{ color: '#544d4d', marginBottom: '2rem' }}>
+                    <Typography variant="h4" sx={{ color: mainTheme.palette.SwitchStyle.main, marginBottom: '2rem' }}>
                         {t("Register")}
                     </Typography>
                     <TextField
