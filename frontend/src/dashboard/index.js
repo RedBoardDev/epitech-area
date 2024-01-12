@@ -12,10 +12,12 @@ import { useTheme } from "../themeContext";
 export default function Dashboard() {
     const navigate = useNavigate();
     const { t } = useSettings();
-    const { verifyToken, getUserById, getActiveAutomations, getActiveServices } = useAuth();
+    const { verifyToken, getUserById, getActiveAutomations, getActiveServices, getAutomations, getAutomationsByFav } = useAuth();
     const [user, setUser] = useState();
     const [activeAutomation, setActiveAutomation] = useState([]);
     const [activeService, setActiveService] = useState([]);
+    const [automations, setAutomations] = useState([]);
+    const [favAutomations, setFavAutomations] = useState([]);
     const { mainTheme } = useTheme();
     useEffect(() => {
         const checkToken = async () => {
@@ -32,8 +34,12 @@ export default function Dashboard() {
                 const user = await getUserById();
                 const activeAutomations = await getActiveAutomations();
                 const activeServices = await getActiveServices();
+                const userAutomations = await getAutomations();
+                const userFavAutomations = await getAutomationsByFav()
+                setAutomations(userAutomations);
                 setActiveService(activeServices);
                 setActiveAutomation(activeAutomations);
+                setFavAutomations(userFavAutomations);
                 setUser(user);
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -43,7 +49,7 @@ export default function Dashboard() {
         if (!user) {
             getInfo();
         }
-    }, [user, getUserById, getActiveAutomations, getActiveServices]);
+    }, [user, getUserById, getActiveAutomations, getActiveServices, getAutomations, getAutomationsByFav]);
 
     return (
         <div style={{ width: '100%', height: '100%' }}>
@@ -93,7 +99,7 @@ export default function Dashboard() {
                           ease: [0, 0.71, 0.2, 1.01]
                         }}
                     >
-                        <Card title="Total Comments" description="100" color="#bde0fe" />
+                        <Card title={t("Total automations")} description={automations.length} color="#bde0fe" />
                     </motion.div>
 
                 </Grid>
@@ -108,7 +114,7 @@ export default function Dashboard() {
                           ease: [0, 0.71, 0.2, 1.01]
                         }}
                     >
-                        <Card title="Total Likes" description="100" color="#a2d2ff" />
+                        <Card title={t("Total favorite automations")} description={favAutomations.length} color="#a2d2ff" />
                     </motion.div>
 
                 </Grid>

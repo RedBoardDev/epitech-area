@@ -7,7 +7,6 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import IconButton from '@mui/material/IconButton';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
-import { PauseCircleOutline } from '@mui/icons-material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useAuth } from '../../AuthContext';
@@ -114,7 +113,7 @@ export default function ServicesDash() {
         try {
             await updateActiveById(id, status);
             const updateActive = ((prevTableData) => prevTableData.map((row) =>
-                row.id === id ? { ...row, active: status, status: status } : row
+                row.id === id ? { ...row, status: status } : row
             ));
             setTableData(updateActive);
         } catch (error) {
@@ -137,7 +136,7 @@ export default function ServicesDash() {
     };
 
     const handleRenderStatus = (status) => {
-        if (status === 1)
+        if (status === 1 || status === true)
             return t("Active");
         else
             return t("Inactive");
