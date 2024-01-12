@@ -9,7 +9,7 @@ export const icon = '/NotionLogo.png';
 
 export const connect = async (userId) => {
     const redirectUri = `${process.env.API_PUBLIC_URL}/en/service/oauth/${id}/callback`;
-    const clientId = process.env.NOTION_API_CLIENT_ID;
+    const clientId = process.env.notionClientId;
 
     try {
         const url = 'https://api.notion.com/v1/oauth/authorize'
@@ -29,8 +29,8 @@ export const connect = async (userId) => {
 };
 
 export const callback = async (code) => {
-    const clientId = process.env.NOTION_API_CLIENT_ID;
-    const secret = process.env.NOTION_API_SECRET;
+    const clientId = process.env.notionClientId;
+    const secret = process.env.notionClientSecret;
     const auth = Buffer.from(`${clientId}:${secret}`).toString("base64");
 
     const accessTokenUrl = 'https://api.notion.com/v1/oauth/token';
@@ -103,7 +103,7 @@ export const reactions = [
             },
         ],
         execute: async (userData, params, token, triggerData) => {
-            const apiKey = process.env.NOTION_API_CLIENT_ID;
+            const apiKey = process.env.notionClientId;
             try {
                 const resp = await axios.post('https://api.notion.com/v1/databases', {
                 title: [
