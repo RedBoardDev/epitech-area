@@ -5,11 +5,13 @@ import ChooseService from './components/ChooseService';
 import ChooseArea from './components/ChooseArea';
 import ModalSettingsService from './components/ModalSettingsService';
 import ReviewChooseArea from './components/ReviewChooseArea';
+import { useSettings } from '../SettingsContext';
 
 export default function AddService() {
+    const { t } = useSettings();
     const [services, setServices] = useState([]);
     const [serviceChoose, setServiceChoose] = useState(null); // null for active / not null for inactive
-    const [selectionState, setSelectionState] = useState('triggers'); // triggers or reactions or review
+    const [selectionState, setSelectionState] = useState(t("triggers")); // triggers or reactions or review
     const [selectedTriggerData, setSelectedTriggerData] = useState(null);
     const [selectedReactionData, setSelectedReactionData] = useState(null);
     const [activeService, setActiveService] = useState([]);
@@ -44,17 +46,17 @@ export default function AddService() {
 
 
     const submitSettings = (data) => {
-        if (selectionState === 'triggers') {
+        if (selectionState === t("triggers")) {
             data['service_id'] = serviceChoose.id;
             setSelectedTriggerData(data);
-            setSelectionState('reactions');
+            setSelectionState(t("reactions"));
             setServiceChoose(null);
         }
-        if (selectionState === 'reactions') {
+        if (selectionState === t("reactions")) {
             data['service_id'] = serviceChoose.id;
             setSelectedReactionData(data);
             setServiceChoose('');
-            setSelectionState('review');
+            setSelectionState(t("review"));
         }
     }
 
@@ -70,7 +72,7 @@ export default function AddService() {
 
     const reset = () => {
         setServiceChoose(null);
-        setSelectionState('triggers');
+        setSelectionState(t("triggers"));
         setSelectedTriggerData(null);
         setSelectedReactionData(null);
     }
@@ -93,13 +95,13 @@ export default function AddService() {
                     )}
                     {serviceChoose !== null && (
                         <>
-                            {selectionState === 'triggers' && (
+                            {selectionState === t("triggers") && (
                                 <ChooseArea data={serviceChoose.triggers} type={selectionState} serviceName={serviceChoose.name} onSelected={handleTriggerSelect} />
                             )}
-                            {selectionState === 'reactions' && (
+                            {selectionState === t("reactions") && (
                                 <ChooseArea data={serviceChoose.reactions} type={selectionState} serviceName={serviceChoose.name} onSelected={handleReactionSelect} />
                             )}
-                            {selectionState === 'review' && (
+                            {selectionState === t("review") && (
                                 <>
                                     <ReviewChooseArea triggerData={selectedTriggerData} reactionData={selectedReactionData} reset={reset} />
                                 </>
