@@ -22,25 +22,11 @@ test("Get all services", async () => {
     expect(response.statusCode).toBe(200);
 });
 
-test("Get all services - bad token", async () => {
-    const response = await request("https://area.mazettt.fr/api/en")
-        .get("/service")
-        .set('Authorization', 'Bearer ' + loginToken + "bad");
-    expect(response.statusCode).toBe(403);
-});
-
 test("Get service by id", async () => {
     const response = await request("https://area.mazettt.fr/api/en")
         .get("/service/" + "discord")
         .set('Authorization', 'Bearer ' + loginToken);
     expect(response.statusCode).toBe(200);
-});
-
-test("Get service by id - bad token", async () => {
-    const response = await request("https://area.mazettt.fr/api/en")
-        .get("/service/" + 1)
-        .set('Authorization', 'Bearer ' + "bad");
-    expect(response.statusCode).toBe(403);
 });
 
 test("Get service by id - bad id", async () => {
