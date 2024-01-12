@@ -56,7 +56,6 @@ export const callback = async (code) => {
                 </body>
             </html>
         `;
-        console.log(response)
         return { status: "success", action: htmlResponse, token: response?.data?.access_token};
     } catch (error) {
         console.error(error);

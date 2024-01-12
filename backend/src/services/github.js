@@ -183,8 +183,6 @@ export const reactions = [
             }
         ],
         execute: async (userData, params, token, triggerData) => {
-            console.log(triggerData.text);
-
             axios.post('https://api.github.com/user/repos', {
                 name: params.name,
             }, {
@@ -222,8 +220,6 @@ export const reactions = [
             }
         ],
         execute: async (userData, params, token, triggerData) => {
-            console.log(triggerData.text);
-
             axios.post(`https://api.github.com/repos/${params.repository_name}/issues`, {
                 title: (params.title && params.title.length ? params.title : triggerData.text),
             }, {
@@ -270,8 +266,6 @@ export const reactions = [
             }
         ],
         execute: async (userData, params, token, triggerData) => {
-            console.log(triggerData.text);
-
             const createOrUpdateFile = async (sha = null) => {
                 const options = {
                     message: params.commit_msg,

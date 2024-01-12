@@ -55,7 +55,6 @@ export const callback = async (code) => {
                 </body>
             </html>
         `;
-        console.log("RESPONSE : ", response);
         return { status: "success", action: htmlResponse, token: response?.data?.access_token || undefined };
     } catch (error) {
         return { status: "error", msg: error };
@@ -84,7 +83,6 @@ export const triggers = [
                 if (checkData.lastSongId && curr_id.id === checkData.lastSongId)
                     return null;
 
-                console.log(`${name} : Switch song from ${checkData.lastSongId} to ${curr_id.id} !`);
                 db.updateAutomation(userData.id, autoId, `trigger_check_data = '${JSON.stringify({ lastSongId: curr_id.id })}'`);
                 return {
                     text: `Switch song from ${checkData.lastSongId} to ${curr_id.id}`,
@@ -116,7 +114,6 @@ export const triggers = [
                 if (checkData.currentState === curr_state)
                     return null;
 
-                console.log(`${name} : Song playback state changed !`);
                 db.updateAutomation(userData.id, autoId, `trigger_check_data = '${JSON.stringify({ currentState: curr_state })}'`);
                 return {
                     text: `Song playback state changed from ${checkData.currentState} to ${curr_state}`,
@@ -138,8 +135,6 @@ export const reactions = [
         fields: [
         ],
         execute: async (userData, params, token, triggerData) => {
-            console.log(`${name} action 1 ...`);
-
             const headers = {
                 headers: {
                     "Authorization": `Bearer ${token}`,

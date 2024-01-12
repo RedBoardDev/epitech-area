@@ -125,7 +125,6 @@ export const reactions = [
             }
         ],
         execute: async (userData, params, token, triggerData) => {
-            console.log(triggerData.text);
             const eventParams = {
                 subject: params.name,
                 start: {
