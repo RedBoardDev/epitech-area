@@ -21,7 +21,7 @@ export const connect = async (userId) => {
             response_type: 'code',
             client_id: spotifyClientId,
             scope: scope,
-            redirect_uri: `http://${process.env.API_PUBLIC_URL}/en/service/oauth/${id}/callback`,
+            redirect_uri: `${process.env.API_PUBLIC_URL}/en/service/oauth/${id}/callback`,
             state: state
         };
         const query = url + queryString.stringify(params);
@@ -36,7 +36,7 @@ export const callback = async (code) => {
     try {
         const response = await axios.post('https://accounts.spotify.com/api/token', queryString.stringify({
             grant_type: 'authorization_code',
-            redirect_uri: `http://${process.env.API_PUBLIC_URL}/en/service/oauth/${id}/callback`,
+            redirect_uri: `${process.env.API_PUBLIC_URL}/en/service/oauth/${id}/callback`,
             code: code,
         }), {
             headers: {
