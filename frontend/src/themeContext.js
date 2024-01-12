@@ -45,7 +45,10 @@ export const MyThemeProvider = ({ children }) => {
                 main: toggleThemeMode ? '#FDFFF9' : '#825D97',
             },
             mainBackground: {
-                main: toggleThemeMode ? '#212121' : '#FFF',
+                main: toggleThemeMode ? '#121212' : '#f0f1f5',
+            },
+            CardContentTitle: {
+                main: toggleThemeMode ?  '#FDFFF9' : '#333333',
             },
         },
     });

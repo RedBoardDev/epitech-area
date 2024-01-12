@@ -6,6 +6,7 @@ import FavAutomations from "./components/FavAutomationList";
 import Grid from '@mui/material/Grid';
 import PageTitle from './components/PageTitle';
 import { motion } from "framer-motion";
+import { useTheme } from "../themeContext";
 
 export default function Dashboard() {
     const navigate = useNavigate();
@@ -13,7 +14,7 @@ export default function Dashboard() {
     const [user, setUser] = useState();
     const [activeAutomation, setActiveAutomation] = useState([]);
     const [activeService, setActiveService] = useState([]);
-
+    const { mainTheme } = useTheme();
     useEffect(() => {
         const checkToken = async () => {
             if (!await verifyToken()) {
@@ -46,7 +47,7 @@ export default function Dashboard() {
         <div style={{ width: '100%', height: '100%' }}>
             <PageTitle title="Dashboard" />
             <div>
-                <h1 style={{ color: 'black' }}>Welcome, {user && user.firstname}</h1>
+                <h1 style={{ color: mainTheme.palette.SwitchStyle.main}}>Welcome, {user && user.firstname}</h1>
             </div>
 
             <Grid container spacing={3}>
