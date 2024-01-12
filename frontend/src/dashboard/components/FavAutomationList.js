@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { useAuth } from '../../AuthContext';
 import { useSettings } from '../../SettingsContext';
+import { useTheme } from '../../themeContext';
 import EditModalAutomations from './EditModalAutomations';
 
 function createData(id, trigger, reaction, type, status, imageSrcTrigger, imageSrcReaction, name, favorite) {
@@ -13,6 +14,7 @@ const rows = [
 ];
 
 export default function FavAutomations() {
+    const { mainTheme } = useTheme();
     const { t } = useSettings();
     const [tableData, setTableData] = useState(rows);
     const [automation, setAutomation] = useState();
@@ -82,11 +84,11 @@ export default function FavAutomations() {
     }
 
     TableCell.defaultProps = {
-        style: { fontSize: '1.2rem', color: '#4B4E6D' }
+        style: { fontSize: '1.2rem', color: mainTheme.palette.SwitchStyle.main }
     };
 
     let TableCellChildrends = {
-        style: { fontSize: '1rem', color: 'black' }
+        style: { fontSize: '1rem', color: mainTheme.palette.TextStyle1.main}
     }
 
     return (
