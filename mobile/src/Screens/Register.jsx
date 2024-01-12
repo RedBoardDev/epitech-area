@@ -44,10 +44,10 @@ function RegisterScreen() {
   const { colors } = useTheme();
   const [modalVisible, setModalVisible] = useState(false);
 
-  const [firstname, setFirstname] = useState({ value: 'test', error: '' })
-  const [lastname, setLastname] = useState({ value: 'test', error: '' })
-  const [email, setEmail] = useState({ value: 'test@thomasott.com', error: '' })
-  const [password, setPassword] = useState({ value: 'test123/', error: '' })
+  const [firstname, setFirstname] = useState({ value: '', error: '' })
+  const [lastname, setLastname] = useState({ value: '', error: '' })
+  const [email, setEmail] = useState({ value: '', error: '' })
+  const [password, setPassword] = useState({ value: '', error: '' })
   const [error, setError] = useState("")
 
 
