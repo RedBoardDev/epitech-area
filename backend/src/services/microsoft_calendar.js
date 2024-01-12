@@ -71,14 +71,7 @@ export const triggers = [
         id: 1,
         name: 'New event created',
         description: 'Triggers when a new event is created',
-        fields: [
-            {
-                id: 'calendar_id',
-                name: 'Calendar ID',
-                description: 'The ID of the calendar',
-                type: 'text'
-            }
-        ],
+        fields: [],
         check: async (autoId, userData, params, checkData, token) => {
             try {
                 const apiUrl = 'https://graph.microsoft.com/v1.0/me/events?$top=1&$orderby=createdDateTime desc';
@@ -122,17 +115,16 @@ export const reactions = [
                 id: 'date_start',
                 name: 'Start date',
                 description: 'The start date of the event',
-                type: 'text'
+                type: 'date'
             },
             {
                 id: 'date_end',
                 name: 'End date',
                 description: 'The end date of the event',
-                type: 'text'
+                type: 'date'
             }
         ],
         execute: async (userData, params, token, triggerData) => {
-            console.log(triggerData.text);
             const eventParams = {
                 subject: params.name,
                 start: {

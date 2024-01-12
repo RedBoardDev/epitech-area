@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Card, CardContent, Typography, Button } from '@mui/material';
 import { useAuth } from '../../AuthContext';
 import { useSettings } from '../../SettingsContext';
@@ -8,12 +8,6 @@ const SummaryCard = ({ reloadCheckOauth, serviceId, title, fields, values, conne
     const [hover, setHover] = useState(false);
 
     const { serviceOauth } = useAuth();
-
-    useEffect(() => {
-        console.log("Effect executed");
-        console.log("serviceId", serviceId);
-
-    }, []);
 
     const handleOauthConnect = async () => {
         await serviceOauth(serviceId);

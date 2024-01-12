@@ -34,10 +34,10 @@ export const RegisterGithubCallback = () => {
 
 const Register = () => {
     const { t } = useSettings();
-    const [username, setUsername] = useState('test@thomasott.com');
-    const [password, setPassword] = useState('test123/');
-    const [lastname, setLastname] = useState('Binder');
-    const [firstname, setFirstname] = useState('Lucas');
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [lastname, setLastname] = useState('');
+    const [firstname, setFirstname] = useState('');
     const { register, logout, verifyToken } = useAuth();
     const { mainTheme } = useTheme();
     const navigate = useNavigate();

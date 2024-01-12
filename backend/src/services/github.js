@@ -51,7 +51,7 @@ export const callback = async (code) => {
         `;
         return { status: "success", action: htmlResponse, token: response?.data?.access_token || undefined };
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return { status: "error", msg: error };
     }
 };
@@ -183,8 +183,6 @@ export const reactions = [
             }
         ],
         execute: async (userData, params, token, triggerData) => {
-            console.log(triggerData.text);
-
             axios.post('https://api.github.com/user/repos', {
                 name: params.name,
             }, {
@@ -199,7 +197,7 @@ export const reactions = [
                 if (error.response.status === 422)
                     console.log("Repository already exists");
                 else
-                    console.log("error:", error);
+                    console.error("error:", error);
             });
         }
     },
@@ -222,8 +220,6 @@ export const reactions = [
             }
         ],
         execute: async (userData, params, token, triggerData) => {
-            console.log(triggerData.text);
-
             axios.post(`https://api.github.com/repos/${params.repository_name}/issues`, {
                 title: (params.title && params.title.length ? params.title : triggerData.text),
             }, {
@@ -235,7 +231,7 @@ export const reactions = [
             }).then((response) => {
                 console.log("Issue created");
             }).catch((error) => {
-                console.log("error when creating issue:", error);
+                console.error("error when creating issue:", error);
             });
         }
     },
@@ -270,8 +266,6 @@ export const reactions = [
             }
         ],
         execute: async (userData, params, token, triggerData) => {
-            console.log(triggerData.text);
-
             const createOrUpdateFile = async (sha = null) => {
                 const options = {
                     message: params.commit_msg,
@@ -293,7 +287,7 @@ export const reactions = [
                         else
                             console.log("File created");
                     }).catch((error) => {
-                        console.log("error:", error);
+                        console.error("error:", error);
                     });
             }
 

@@ -35,7 +35,6 @@ export default function Services() {
   const { settings, t } = useSettings();
 
   const fetchServices = async () => {
-    console.log("Fetching services.")
     const data = await getServices(settings.apiBaseUrl);
     setServices(data);
   };
@@ -65,7 +64,6 @@ export default function Services() {
           Alert.alert(JSON.stringify(result))
         })
       } else {
-        console.log("InAppBrowser is not available.")
         Linking.openURL(url)
       }
     } catch (error) {
@@ -90,7 +88,6 @@ export default function Services() {
           const con = await getConnected(settings.apiBaseUrl, service.id);
           newCon[service.id] = con;
         } catch (error) {
-          console.log('Error fetching service:', error);
           newCon[service.id] = false;
         }
       }

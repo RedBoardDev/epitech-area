@@ -28,7 +28,7 @@ async function refreshToken(userId, refreshToken) {
         console.log('Token refreshed, trying next time.');
         return newToken;
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return null;
     }
 }
@@ -102,7 +102,6 @@ export const triggers = [
         check: async (autoId, userData, params, checkData, token) => {
             const { access_token, refresh_token } = JSON.parse(token);
             try {
-                console.log(`${name} trigger 1 checking...`);
                 const resp = await axios.get(`https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&myRating=like&maxResults=1`, {
                     headers: {
                         Authorization: `Bearer ${access_token}`,

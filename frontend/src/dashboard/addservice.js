@@ -35,12 +35,10 @@ export default function AddService() {
     };
 
     const handleTriggerSelect = (selectedTrigger) => {
-        console.log("trigger", selectedTrigger);
         openModal(selectedTrigger);
     };
 
     const handleReactionSelect = (selectedReaction) => {
-        console.log("reaction", selectedReaction);
         openModal(selectedReaction);
     };
 

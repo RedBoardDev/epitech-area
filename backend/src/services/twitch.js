@@ -27,7 +27,7 @@ async function refreshToken(userId, refreshToken) {
         console.log('Token refreshed, trying next time.');
         return newToken;
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return null;
     }
 }
@@ -77,7 +77,7 @@ export const callback = async (code) => {
         `;
         return { status: "success", action: htmlResponse, token: JSON.stringify({ access_token: response?.data?.access_token || undefined, refresh_token: response?.data?.refresh_token || undefined, }) };
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return { status: "error", msg: error };
     }
 };
@@ -123,7 +123,7 @@ export const triggers = [
                 if (error.response.status === 401)
                     await refreshToken(userData.id, refresh_token);
                 else
-                    console.log(error);
+                    console.error(error);
                 return null;
             }
         }
@@ -172,7 +172,7 @@ export const triggers = [
                 if (error.response.status === 401)
                     await refreshToken(userData.id, refresh_token);
                 else
-                    console.log(error);
+                    console.error(error);
                 return null;
             }
         }

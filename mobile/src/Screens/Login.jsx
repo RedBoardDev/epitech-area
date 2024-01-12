@@ -44,8 +44,8 @@ function LoginScreen() {
   const { colors } = useTheme();
   const [modalVisible, setModalVisible] = useState(false);
 
-  const [email, setEmail] = useState({ value: 'test@thomasott.com', error: '' })
-  const [password, setPassword] = useState({ value: 'test123/', error: '' })
+  const [email, setEmail] = useState({ value: '', error: '' })
+  const [password, setPassword] = useState({ value: '', error: '' })
   const [error, setError] = useState("")
 
   useEffect(() => {

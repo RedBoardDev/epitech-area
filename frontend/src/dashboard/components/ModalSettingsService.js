@@ -5,6 +5,10 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs'; // Import dayjs library
+
 import { useSettings } from '../../SettingsContext';
 
 const ModalSettingsService = ({ isOpen, closeModal, data, onSubmit }) => {
@@ -21,15 +25,51 @@ const ModalSettingsService = ({ isOpen, closeModal, data, onSubmit }) => {
         setIsFormInvalid(false);
     };
 
+    const renderFormField = (field) => {
+        if (field.type === 'text') {
+            return (
+                <TextField
+                    fullWidth
+                    label={field.name}
+                    variant="outlined"
+                    name={field.id}
+                    onChange={handleChange}
+                    helperText={field.description}
+                />
+            );
+        } else if (field.type === 'date') {
+            return (
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                        label={field.name}
+                        value={formValues[field.id] || null}
+                        onChange={(newValue) => {
+                            const formattedDate = dayjs(newValue).toISOString();
+                            setFormValues((prevValues) => ({
+                                ...prevValues,
+                                [field.id]: formattedDate,
+                            }));
+                        }}
+                        renderInput={(params) => <TextField {...params} variant="outlined" />}
+                        helperText={field.description}
+                    />
+                </LocalizationProvider>
+            );
+        }
+
+        return null;
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const formValuesSize = Object.keys(formValues).length;
         const expectedFieldsLength = (data?.fields).length;
-        console.log("formValuesSize", formValuesSize, "expectedFieldsLength", expectedFieldsLength);
+
         if (formValuesSize !== expectedFieldsLength) {
             setIsFormInvalid(true);
             return;
         }
+
         setIsFormInvalid(false);
         data['formValues'] = formValues;
         onSubmit(data);
@@ -50,14 +90,7 @@ const ModalSettingsService = ({ isOpen, closeModal, data, onSubmit }) => {
                 <form onSubmit={handleSubmit}>
                     {data?.fields && data.fields.map((field) => (
                         <div key={field.id} style={{ marginBottom: '1.5rem' }}>
-                            <TextField
-                                fullWidth
-                                label={field.name}
-                                variant="outlined"
-                                name={field.id}
-                                onChange={handleChange}
-                                helperText={field.description}
-                            />
+                            {renderFormField(field)}
                         </div>
                     ))}
                     {isFormInvalid && (

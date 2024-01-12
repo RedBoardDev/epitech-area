@@ -109,6 +109,7 @@ class ServiceManager {
                             const triggerServiceCheck = await triggerServiceData.check(automation.id, user, JSON.parse(automation.trigger_params), JSON.parse(automation.trigger_check_data), triggerServiceToken);
 
                             if (triggerServiceCheck) {
+                                console.log(triggerServiceCheck.text);
                                 const reactionServiceToken = (await db.getServiceOauth(user.id, automation.reaction_service_id))[0].token;
                                 await this.getReaction(automation.reaction_service_id, automation.reaction_id).execute(user, JSON.parse(automation.reaction_params), reactionServiceToken, triggerServiceCheck);
                             }

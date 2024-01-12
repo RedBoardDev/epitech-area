@@ -92,7 +92,6 @@ export const triggers = [
         check: async (autoId, userData, params, checkData, token) => {
             if (newMessages[params.channel_id] && newMessages[params.channel_id].length > 0) {
                 const message = newMessages[params.channel_id].shift();
-                console.log(`New message from ${message.author.username}: ${message.content}`);
                 return {
                     text: `New message from ${message.author.username}: ${message.content}`,
                     data: message
@@ -116,7 +115,6 @@ export const triggers = [
         check: async (autoId, userData, params, checkData, token) => {
             if (newMembers[params.guild_id] && newMembers[params.guild_id].length > 0) {
                 const member = newMembers[params.guild_id].shift();
-                console.log(`New member: ${member.user.username}`);
                 return {
                     text: `New member: ${member.user.username}`,
                     data: member
