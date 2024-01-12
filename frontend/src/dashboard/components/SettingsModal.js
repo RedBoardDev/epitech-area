@@ -102,10 +102,10 @@ export default function SettingsUserModal({ isOpen, closeModal, onUpdateUser, us
                         aria-label="select language"
                     >
                         <ToggleButton value="fr" aria-label="French">
-                            French
+                            {t("French")}
                         </ToggleButton>
                         <ToggleButton value="en" aria-label="English">
-                            English
+                            {t("English")}
                         </ToggleButton>
                     </ToggleButtonGroup>
                 </DialogContent>

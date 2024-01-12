@@ -6,8 +6,10 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import { useAuth } from '../../AuthContext';
+import { useSettings } from '../../SettingsContext';
 
 export default function EditModalAutomations({ isOpen, closeModal, selectedAutomation, onUpdateAutomation }) {
+    const { t } = useSettings();
     const [reactionParams, setReactionParams] = useState("");
     const [triggerParams, setTriggerParams] = useState("");
     const [automationName, setAutomationName] = useState("");
@@ -56,7 +58,7 @@ export default function EditModalAutomations({ isOpen, closeModal, selectedAutom
 
     return (
         <Dialog open={isOpen} onClose={closeModal}>
-            <DialogTitle>Modify the automation informations</DialogTitle>
+            <DialogTitle>{t("Modify the automation informations")}</DialogTitle>
             <DialogContent>
                 <TextField
                     margin="dense"
@@ -67,7 +69,7 @@ export default function EditModalAutomations({ isOpen, closeModal, selectedAutom
                     onChange={handleChangeAutomationName}
                 />
             </DialogContent>
-            <DialogTitle fontSize={16}>Trigger settings</DialogTitle>
+            <DialogTitle fontSize={16}>{t("Trigger settings")}</DialogTitle>
             <DialogContent>
                 {Object.keys(triggerParams).map((key) => (
                     <TextField
@@ -81,7 +83,7 @@ export default function EditModalAutomations({ isOpen, closeModal, selectedAutom
                     />
                 ))}
             </DialogContent>
-            <DialogTitle fontSize={16}>Reaction settings</DialogTitle>
+            <DialogTitle fontSize={16}>{t("Reaction settings")}</DialogTitle>
             <DialogContent>
                 {Object.keys(reactionParams).map((key) => (
                     <TextField
@@ -96,8 +98,8 @@ export default function EditModalAutomations({ isOpen, closeModal, selectedAutom
                 ))}
             </DialogContent>
             <DialogActions>
-                <Button onClick={closeModal}>Cancel</Button>
-                <Button onClick={handleSave}>Save</Button>
+                <Button onClick={closeModal}>{t("Cancel")}</Button>
+                <Button onClick={handleSave}>{t("Save")}</Button>
             </DialogActions>
         </Dialog>
     );

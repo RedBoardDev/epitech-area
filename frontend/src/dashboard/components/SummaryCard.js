@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Card, CardContent, Typography, Button } from '@mui/material';
 import { useAuth } from '../../AuthContext';
+import { useSettings } from '../../SettingsContext';
 
 const SummaryCard = ({ reloadCheckOauth, serviceId, title, fields, values, connect }) => {
+    const { t } = useSettings();
     const [hover, setHover] = useState(false);
 
     const { serviceOauth } = useAuth();
@@ -53,7 +55,7 @@ const SummaryCard = ({ reloadCheckOauth, serviceId, title, fields, values, conne
                         onMouseEnter={() => setHover(true)}
                         onMouseLeave={() => setHover(false)}
                     >
-                        Connect to the service
+                        {t("Connect to the service")}
                     </Button>
                 )}
             </CardContent>

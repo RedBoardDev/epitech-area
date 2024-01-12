@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import ServiceBox from './ServiceBox';
 import SearchIcon from '@mui/icons-material/Search';
 import PageTitle from './PageTitle';
+import { useSettings } from '../../SettingsContext';
 
 export default function ChooseArea({ data, type, serviceName, onSelected }) {
     const [searchTerm, setSearchTerm] = useState('');
+    const { t } = useSettings();
 
     const handleSelection = (id) => {
         const selectedData = data.find((trigger) => trigger.id === id);
@@ -13,7 +15,7 @@ export default function ChooseArea({ data, type, serviceName, onSelected }) {
 
     return (
         <>
-            <PageTitle title={`Explore ${type} for ${serviceName}`} />
+            <PageTitle title={`${t("Explore")} ${type} ${t("for")} ${serviceName}`} />
             <div style={{
                 marginBottom: '30px',
                 display: 'flex',
@@ -24,7 +26,7 @@ export default function ChooseArea({ data, type, serviceName, onSelected }) {
                 <SearchIcon style={{ position: 'absolute', marginLeft: '10px', fontSize: '2rem', color: 'black' }} />
                 <input
                     type="text"
-                    placeholder={`Search ${type}...`}
+                    placeholder={`${t("Search")} ${type}...`}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     style={{
