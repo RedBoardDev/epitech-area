@@ -9,6 +9,9 @@ COPY . /app
 
 RUN npm ci
 
+ARG GITHUB_CLIENT_ID
+ARG GITHUB_CLIENT_SECRET
+
 WORKDIR /app/android
 
 RUN ./gradlew clean build
