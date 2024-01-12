@@ -97,7 +97,7 @@ export const reactions = [
             {
                 id: 'title',
                 name: 'Database Title',
-                description: 'the title of your brand new database',
+                description: 'The title of your brand new database',
                 type: 'text'
             },
         ],

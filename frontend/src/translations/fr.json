@@ -69,5 +69,7 @@
     "for": "pour",
     "Search": "Rechercher des",
     "Explore available services": "Explorer les services disponibles",
-    "Review your trigger -> reaction": "Récapitulatif de votre automatisation"
+    "Review your trigger -> reaction": "Récapitulatif de votre automatisation",
+    "Total automations": "Total des automatisations",
+    "Total favorite automations": "Total des automations favorites"
 }

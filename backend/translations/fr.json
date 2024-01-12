@@ -99,5 +99,6 @@
     "Paused/played song": "Chanson pause/jouée",
     "Current song playing paused or played": "Chanson en cours mise en pause ou en cours de lecture",
     "Start/Resume Playback": "Démarrer/Reprendre la lecture",
-    "Resume current playback on current spotify device": "Reprendre la lecture en cours sur l'appareil Spotify actuel"
+    "Resume current playback on current spotify device": "Reprendre la lecture en cours sur l'appareil Spotify actuel",
+    "Page Title": "Titre de la page"
 }
