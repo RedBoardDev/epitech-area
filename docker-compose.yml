@@ -42,18 +42,18 @@ services:
       - "$API_PORT:$API_PORT"
     restart: always
 
-  # client_mobile:
-  #   container_name: "area-client_mobile"
-  #   build:
-  #     context: ./mobile
-  #     dockerfile: Dockerfile
-  #     args:
-  #       - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
-  #       - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
-  #   env_file:
-  #     - .env
-  #   volumes:
-  #     - area_client:/output
+  client_mobile:
+    container_name: "area-client_mobile"
+    build:
+      context: ./mobile
+      dockerfile: Dockerfile
+      args:
+        - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
+        - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
+    env_file:
+      - .env
+    volumes:
+      - area_client:/output
 
   client_web:
     container_name: "area-client_web"
@@ -70,7 +70,7 @@ services:
       - area_client:/output
     depends_on:
       - server
-      # - client_mobile
+      - client_mobile
     networks:
       areaNetwork:
         ipv4_address: $WEBAPP_HOST_NAME
