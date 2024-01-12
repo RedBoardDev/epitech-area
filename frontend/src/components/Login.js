@@ -35,8 +35,8 @@ export const LoginGithubCallback = () => {
 
 const Login = () => {
     const { t } = useSettings();
-    const [username, setUsername] = useState('test@thomasott.com');
-    const [password, setPassword] = useState('test123/');
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
     const { login, logout, verifyToken } = useAuth();
     const { mainTheme } = useTheme();
     const navigate = useNavigate();

@@ -3,8 +3,10 @@ import ServiceBox from './ServiceBox';
 import SearchIcon from '@mui/icons-material/Search';
 import PageTitle from './PageTitle';
 import { motion } from "framer-motion";
+import { useSettings } from '../../SettingsContext';
 
 export default function ChooseService({ services, type, onServiceSelected, activeServices }) {
+    const { t } = useSettings();
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredServices, setFilteredServices] = useState([]);
 
@@ -15,11 +17,11 @@ export default function ChooseService({ services, type, onServiceSelected, activ
 
     useEffect(() => {
         if(!services) return;
-        if (type === 'triggers') {
+        if (type === t("triggers")) {
             const filteredServices = services.filter((service) => service.triggers.length > 0);
             setFilteredServices(filteredServices);
         }
-        if (type === 'reactions') {
+        if (type === t("reactions")) {
             const filteredServices = services.filter((service) => service.reactions.length > 0);
             setFilteredServices(filteredServices);
         }
@@ -27,7 +29,7 @@ export default function ChooseService({ services, type, onServiceSelected, activ
 
     return (
         <>
-            <PageTitle title={`Explore Services for ${type}`} />
+            <PageTitle title={`${t("Explore Services for")} ${type}`} />
             <div style={{
                 marginBottom: '30px',
                 display: 'flex',
@@ -38,7 +40,7 @@ export default function ChooseService({ services, type, onServiceSelected, activ
                 <SearchIcon style={{ position: 'absolute', marginLeft: '10px', fontSize: '2rem', color: 'black' }} />
                 <input
                     type="text"
-                    placeholder="Search services..."
+                    placeholder={t("Search services...")}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     style={{

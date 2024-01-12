@@ -7,6 +7,7 @@ import { useAuth } from '../../AuthContext';
 import { useTheme } from '../../themeContext';
 import { useNavigate } from "react-router-dom";
 import CachedIcon from '@mui/icons-material/Cached';
+import { useSettings } from '../../SettingsContext';
 
 const ArrowBox = () => (
     <Box style={{ textAlign: 'center', marginBottom: '20px' }}>
@@ -14,9 +15,8 @@ const ArrowBox = () => (
     </Box>
 );
 
-// ...
-
 const ReviewChooseArea = ({ triggerData, reactionData, reset }) => {
+    const { t } = useSettings();
     const { mainTheme } = useTheme();
     const [validateHover, setValidateHover] = useState(false);
     const [cancelHover, setCancelHover] = useState(false);
@@ -64,7 +64,7 @@ const ReviewChooseArea = ({ triggerData, reactionData, reset }) => {
 
     return (
         <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100vh' }}>
-            <PageTitle title={`Review your trigger -> reaction`} />
+            <PageTitle title={t("Review your trigger -> reaction")} />
             <Box style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
 
                 <SummaryCard reloadCheckOauth={checkOauth} serviceId={triggerData.service_id} title={triggerData.name} fields={Object.entries(triggerData.fields).map(([key, { id, name }]) => ({ id, name }))} values={Object.entries(triggerData.formValues).map(([key, value]) => ({ id: key, name: key, value }))} connect={OauthService[0]} />
@@ -72,7 +72,7 @@ const ReviewChooseArea = ({ triggerData, reactionData, reset }) => {
                 <SummaryCard reloadCheckOauth={checkOauth} serviceId={reactionData.service_id} title={reactionData.name} fields={Object.entries(reactionData.fields).map(([key, { id, name }]) => ({ id, name }))} values={Object.entries(reactionData.formValues).map(([key, value]) => ({ id: key, name: key, value }))} connect={OauthService[1]} />
 
                 <TextField
-                    label="Automation name"
+                    label={t("Automation name")}
                     variant="outlined"
                     value={automationName}
                     onChange={(e) => setAutomationName(e.target.value)}
@@ -105,7 +105,7 @@ const ReviewChooseArea = ({ triggerData, reactionData, reset }) => {
                             onMouseEnter={() => setValidateHover(true)}
                             onMouseLeave={() => setValidateHover(false)}
                         >
-                            {loading ? <CircularProgress size={20} color="inherit" /> : "Validate"}
+                            {loading ? <CircularProgress size={20} color="inherit" /> : t("Validate")}
                         </Button>
                     )}
 
@@ -121,7 +121,7 @@ const ReviewChooseArea = ({ triggerData, reactionData, reset }) => {
                         onMouseEnter={() => setCancelHover(true)}
                         onMouseLeave={() => setCancelHover(false)}
                     >
-                        Cancel
+                        {t("Cancel")}
                     </Button>
 
                     <Button variant="contained" color="primary" onClick={checkOauth} disabled={loading}>
