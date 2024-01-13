@@ -12,6 +12,7 @@ const ICONS = {
   'settings.png': require('../../assets/icons/settings.png'),
   'settings-outline.png': require('../../assets/icons/settings-outline.png'),
   'list.png': require('../../assets/icons/list.png'),
+  'check.png': require('../../assets/icons/check.png'),
 };
 
 export default function Icon({ name, size, color = 'black', style = {} }) {

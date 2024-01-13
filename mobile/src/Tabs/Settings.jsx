@@ -17,9 +17,12 @@ import {
 } from "@react-navigation/native";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useSettings } from "../Contexts/Settings";
+import OptionSelect from "../Components/OptionSelect";
 
 export default function Settings() {
   const navigation = useNavigation();
+  const { settings, setSettings, t } = useSettings();
   const { colors } = useTheme();
 
   const navigateToLogin = () => {
@@ -34,13 +37,17 @@ export default function Settings() {
     navigateToLogin();
   };
 
+  const setSelectedLanguage = (index) => setSettings({ ...settings, language: (index === 0 ? 'en' : 'fr') });
+
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={{ color: "#fff", textAlign: "center", fontSize: 32, fontWeight: "bold" }}>Settings</Text>
-      <View style={{ flex: 1 }}/>
-      <Button title="Help" onPress={() => navigation.navigate("Help")} />
-      <TouchableOpacity onPress={() => handleLogoutPress()} style={styles.logoutButton}>
-        <Text style={ styles.textBtn }>Logout</Text>
+      <Text style={{ color: colors.text, textAlign: "center", fontSize: 32, fontWeight: "bold" }}>{t("Settings")}</Text>
+      <OptionSelect title={t("Language")} list={["English", "Français"]} selected={settings.language === 'en' ? 0 : 1} setSelected={setSelectedLanguage} />
+      <TouchableOpacity onPress={() => navigation.navigate("ModifyAccount")} style={[styles.button, { backgroundColor: colors.primary }]}>
+        <Text style={styles.textBtn}>{t("Account")}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => handleLogoutPress()} style={[styles.button, { backgroundColor: colors.notification }]}>
+        <Text style={styles.textBtn}>{t("Logout")}</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -50,9 +57,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "column",
+    padding: 10,
   },
-  logoutButton: {
-    backgroundColor: "#EC6041",
+  button: {
     borderRadius: 10,
     padding: 10,
     margin: 20,

@@ -10,6 +10,7 @@ import {
   SafeAreaView,
   Dimensions,
   ImageBackground,
+  ScrollView,
 } from "react-native";
 
 import {
@@ -19,17 +20,27 @@ import {
 
 import Logo from '../Components/Logo'
 
-import { getNbAutos, getNbServices } from "../Core/ServerCalls";
+import { getNbAutos, getNbServices, getUserInfos } from "../Core/ServerCalls";
 
-import SettingsContext from "../Contexts/Settings";
+import { useSettings } from "../Contexts/Settings";
 
 const screenWidth = Dimensions.get('window').width;
 
+function Card({ title, value, color }) {
+  return (
+    <View style={{ backgroundColor: color, borderRadius: 10, marginTop: 20, padding: 20, width: '100%', }}>
+      <Text style={{ color: "#000", fontSize: 20, fontWeight: "bold" }}>{title}</Text>
+      <Text style={{ color: "#000", fontSize: 15 }}>{value}</Text>
+    </View>
+  )
+}
+
 export default function Home() {
   const { colors } = useTheme();
-  const { settings } = useContext(SettingsContext);
+  const { settings, t } = useSettings();
   const [nbServices, setNbServices] = useState(0);
   const [nbAutos, setNbAutos] = useState(0);
+  const [userName, setUserName] = useState("");
 
   const handleLogoutPress = () => {
     navigateToLogin();
@@ -37,31 +48,37 @@ export default function Home() {
 
   useEffect(() => {
     const fetchNbServicesAutos = async () => {
-      const data = await getNbServices(settings.apiLocation);
-      const autos = await getNbAutos(settings.apiLocation);
+      const data = await getNbServices(settings.apiBaseUrl);
+      const autos = await getNbAutos(settings.apiBaseUrl);
       setNbServices(data);
       setNbAutos(autos);
     };
 
     fetchNbServicesAutos();
 
+    const fetchUserName = async () => {
+      const user = await getUserInfos(settings.apiBaseUrl);
+      setUserName(user.firstname);
+    };
+
+    fetchUserName();
+
   }, []);
 
   return (
-    <ImageBackground blurRadius={15} source={require("../../assets/back.png")} resizeMode="cover" style={{ flex: 1 }}>
     <SafeAreaView style={styles.container}>
-      <Logo/>
-      <Text style={{ color: "#fff", textAlign: "center", fontSize: 32, fontWeight: "bold" }}>HarmonieWeb</Text>
-      <View style={ styles.cardLeft}>
-      <Text style={{ color: "#fff", textAlign: "right", fontSize: 112 }}>{nbAutos}</Text>
-      <Text style={{ color: "#fff", textAlign: "right", fontSize: 22, marginTop: 10 }}>🤖 Automation{(nbAutos > 1 ? "s" : "")}</Text>
+      <View style={{ alignItems: "center", marginTop: 20 }}>
+        <Logo />
       </View>
-      <View style={ styles.cardRight}>
-      <Text style={{ color: "#fff", textAlign: "left", fontSize: 112 }}>{nbServices}</Text>
-      <Text style={{ color: "#fff", textAlign: "left", fontSize: 22, marginTop: 10 }}>Service{(nbServices > 1 ? "s" : "")} ⚙️</Text>
-      </View>
+      <Text style={{ color: colors.text, textAlign: "center", fontSize: 32, fontWeight: "bold" }}>Dashboard</Text>
+      <Text style={{ color: colors.text, fontSize: 22, marginHorizontal: 20, marginTop: 10, fontWeight: "bold" }}>{t("Welcome, ") + userName}</Text>
+      <ScrollView>
+        <Card title={t("Total active automations")} value={nbAutos} color={"#cdb4db"} />
+        <Card title={t("Total connected services")} value={0} color={"#ffc8dd"} />
+        <Card title={t("Total comments")} value={0} color={"#bde0fe"} />
+        <Card title={t("Total likes")} value={0} color={"#a2d2ff"} />
+      </ScrollView>
     </SafeAreaView>
-    </ImageBackground>
   );
 }
 
@@ -71,7 +88,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-  cardLeft : {
+  cardLeft: {
     backgroundColor: 'rgba(55, 155, 255, 0.3)',
     borderRadius: 15,
     marginTop: 50,
@@ -83,10 +100,10 @@ const styles = StyleSheet.create({
     ],
   },
 
-  cardRight : {
+  cardRight: {
     backgroundColor: 'rgba(0, 255, 55, 0.3)',
     borderRadius: 15,
-    marginTop: 50,
+    marginTop: 20,
     padding: 20,
     paddingLeft: 40,
     width: '100%',

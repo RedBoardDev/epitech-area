@@ -1,5 +1,3 @@
-// Login.js
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
@@ -7,9 +5,11 @@ import { Link } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import HeaderComponent from './Header';
 import backgroundImage from '../img/BgTop.png';
 import GitHubIcon from '@mui/icons-material/GitHub';
+import { useSettings } from '../SettingsContext';
+import { useTheme } from '../themeContext';
+import Alert from '@mui/material/Alert';
 
 export const LoginGithubCallback = () => {
     const navigate = useNavigate();
@@ -34,10 +34,13 @@ export const LoginGithubCallback = () => {
 };
 
 const Login = () => {
-    const [username, setUsername] = useState('test@thomasott.com');
-    const [password, setPassword] = useState('test123/');
+    const { t } = useSettings();
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
     const { login, logout, verifyToken } = useAuth();
+    const { mainTheme } = useTheme();
     const navigate = useNavigate();
+    const [error, setError] = useState("");
 
     useEffect(() => {
         const checkToken = async () => {
@@ -53,6 +56,7 @@ const Login = () => {
             await login(username, password);
             navigate('/');
         } catch (error) {
+            setError(t("Invalid username or password"));
             logout();
             console.error('Login failed:', error);
         }
@@ -74,7 +78,6 @@ const Login = () => {
         <div style={{
             backgroundImage: 'linear-gradient(to right, #f3f3f3, #dcdcdc)',
         }}>
-            <HeaderComponent isLoggedIn={false} />
             <div
                 style={{
                     display: 'flex',
@@ -85,6 +88,7 @@ const Login = () => {
                     height: '100vh',
                     backgroundImage: `url(${backgroundImage})`,
                     backgroundRepeat: 'no-repeat',
+                    backgroundColor: mainTheme.palette.mainBackground.main,
                     backgroundPosition: 'right bottom',
                     backgroundSize: '60% 100%',
                 }}
@@ -100,11 +104,12 @@ const Login = () => {
                         padding: '0 5%',
                     }}
                 >
-                    <Typography variant="h4" sx={{ color: '#544d4d', marginBottom: '2rem' }}>
-                        Connexion
+                    <Typography variant="h4" sx={{ color: mainTheme.palette.SwitchStyle.main, marginBottom: '2rem' }}>
+                        {t("Login")}
                     </Typography>
+                    {error ? <Alert severity="warning">{error}</Alert> : ""}
                     <TextField
-                        label="Email"
+                        label={t("Email")}
                         variant="outlined"
                         margin="normal"
                         fullWidth
@@ -113,7 +118,7 @@ const Login = () => {
                         sx={{ marginBottom: '1rem' }}
                     />
                     <TextField
-                        label="Mot de passe"
+                        label={t("Password")}
                         variant="outlined"
                         margin="normal"
                         type="password"
@@ -127,9 +132,9 @@ const Login = () => {
                         color="primary"
                         size="large"
                         onClick={handleLogin}
-                        sx={{ width: '200px' }}
+                        sx={{ width: '30%', minHeight: '45px', minWidth: '120px' }}
                     >
-                        Se Connecter
+                        {t("Login")}
                     </Button>
                     <Button
                         variant="contained"
@@ -137,9 +142,9 @@ const Login = () => {
                         size="large"
                         startIcon={<GitHubIcon />}
                         onClick={handleLoginGithub}
-                        sx={{ width: '200px', marginTop: '1rem' }}
+                        sx={{ width: '30%', minHeight: '45px', minWidth: '120px', marginTop: '1rem' }}
                     >
-                        Se Connecter avec GitHub
+                        {t("Login with Github")}
                     </Button>
                     <Typography
                         component={Link}
@@ -147,9 +152,9 @@ const Login = () => {
                         color="primary"
                         size="large"
                         align='center'
-                        sx={{ width: '200px', marginTop: '1rem' }}
+                        sx={{ marginTop: '1rem' }}
                     >
-                        Register
+                        {t("Don't have an account?")}
                     </Typography>
                 </div>
                 <div

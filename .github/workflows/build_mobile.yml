@@ -1,0 +1,22 @@
+name: CI/CD - Mobile
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+  push:
+    branches:
+      - CI/CD
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '20'
+    - name: Install dependencies
+      run: npm ci
+      continue-on-error: false
+      working-directory: mobile

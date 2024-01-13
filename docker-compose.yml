@@ -1,8 +1,8 @@
 version: "3"
 
 services:
-  db:
-    container_name: "area-db"
+  database:
+    container_name: "area-database"
     build:
       context: ./backend
       dockerfile: Dockerfile-db
@@ -14,21 +14,27 @@ services:
       MYSQL_PASSWORD: $MYSQL_PASSWORD
       MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
     volumes:
-      - $PWD/area-database:/var/lib/mysql
+      - area_database:/var/lib/mysql
     networks:
       areaNetwork:
         ipv4_address: $MYSQL_HOST
     restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
-  backend:
-    container_name: "area-backend"
+  server:
+    container_name: "area-server"
     build:
       context: ./backend
       dockerfile: Dockerfile-api
     env_file:
       - .env
     depends_on:
-      - db
+      database:
+        condition: service_healthy
     networks:
       areaNetwork:
         ipv4_address: $API_HOST_NAME
@@ -36,19 +42,40 @@ services:
       - "$API_PORT:$API_PORT"
     restart: always
 
-  webapp:
-    container_name: "area-webapp"
+  client_mobile:
+    container_name: "area-client_mobile"
+    build:
+      context: ./mobile
+      dockerfile: Dockerfile
+      args:
+        - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
+        - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
+    env_file:
+      - .env
+    volumes:
+      - area_client:/output
+
+  client_web:
+    container_name: "area-client_web"
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        - REACT_APP_API_URL=${REACT_APP_API_URL}
+        - REACT_APP_GITHUB_CLIENT_ID=${REACT_APP_GITHUB_CLIENT_ID}
+        - REACT_APP_PUBLIC_URL=${REACT_APP_PUBLIC_URL}
     env_file:
       - .env
+    volumes:
+      - area_client:/output
     depends_on:
-      - db
-      - backend
+      - server
+      - client_mobile
     networks:
       areaNetwork:
         ipv4_address: $WEBAPP_HOST_NAME
+    ports:
+      - "8081:80"
     restart: on-failure
 
 networks:
@@ -60,4 +87,5 @@ networks:
           gateway: "192.168.50.1"
 
 volumes:
-  area-db-data:
+  area_client:
+  area_database:

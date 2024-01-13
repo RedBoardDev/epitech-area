@@ -1,12 +1,13 @@
 import React from 'react';
-import HeaderComponent from './Header';
 import backgroundImage from '../img/BgTop.png';
 import Button from '@mui/material/Button';
+import { useSettings } from '../SettingsContext';
 
 const Lost = () => {
+    const { t } = useSettings();
+
     return (
         <div>
-            <HeaderComponent isLoggedIn={false} />
             <div style={{ marginTop: '0px', background: 'linear-gradient(to right, #000000, #4b4b4b)' }}>
                 <div
                     style={{
@@ -37,10 +38,10 @@ const Lost = () => {
                             HarmonieWeb 404
                         </h1>
                         <p style={{ fontSize: '1.6rem', fontWeight: 400, marginBottom: '2rem', textShadow: '0px 4px 4px rgba(0, 0, 0, 0.85)', color: '#fff' }}>
-                            Are you lost ?
+                            {t("There is nothing here.")}
                         </p>
                         <Button size="large" variant="outlined" color="primary" sx={{ marginLeft: '64px', width: '220px', height: '6.5vh', backgroundColor: '#6b73ce', border: 'none', borderRadius: '10px', cursor: 'pointer', fontSize: '1.2rem', fontWeight: '600', color: '#ffffff', textDecoration: 'none', textAlign: 'center', padding: '0.5rem 1rem', boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)' }}>
-                            <a href="/" style={{ textDecoration: 'none', color: '#fff' }}>Go back home</a>
+                            <a href="/" style={{ textDecoration: 'none', color: '#fff' }}>{t("Go back home")}</a>
                         </Button>
                     </div>
                     <div

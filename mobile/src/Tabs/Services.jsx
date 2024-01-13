@@ -23,7 +23,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getImgByServiceId, getServices, getConnected, updateServiceToken, serviceOauth, deleteServiceConnexion } from '../Core/ServerCalls'
 
 import LinearGradient from 'react-native-linear-gradient';
-import SettingsContext from "../Contexts/Settings";
+import { useSettings } from "../Contexts/Settings";
 
 const defaultImage = require("../../assets/logo.png");
 
@@ -32,10 +32,10 @@ export default function Services() {
   const [imageUrls, setImageUrls] = useState({});
   const [services, setServices] = useState({ k: {} });
   const [connected, setConnected] = useState({ k: "" });
-  const { settings } = useContext(SettingsContext);
+  const { settings, t } = useSettings();
 
   const fetchServices = async () => {
-    const data = await getServices(settings.apiLocation);
+    const data = await getServices(settings.apiBaseUrl);
     setServices(data);
   };
 
@@ -64,7 +64,6 @@ export default function Services() {
           Alert.alert(JSON.stringify(result))
         })
       } else {
-        console.log("InAppBrowser is not available.")
         Linking.openURL(url)
       }
     } catch (error) {
@@ -74,7 +73,7 @@ export default function Services() {
 
   const connectToService = async (service_id) => {
     try {
-      const response = await serviceOauth(settings.apiLocation, service_id);
+      const response = await serviceOauth(settings.apiBaseUrl, service_id);
       await Linking.openURL(response.url);
     } catch (error) {
       console.error('Service error:', error);
@@ -86,10 +85,9 @@ export default function Services() {
       let newCon = {};
       for (let service of services) {
         try {
-          const con = await getConnected(settings.apiLocation, service.id);
+          const con = await getConnected(settings.apiBaseUrl, service.id);
           newCon[service.id] = con;
         } catch (error) {
-          console.log('Error fetching service:', error);
           newCon[service.id] = false;
         }
       }
@@ -104,7 +102,7 @@ export default function Services() {
         let newImageUrls = {};
         for (let serv of services) {
           try {
-            const imageUrl = await getImgByServiceId(settings.apiLocation, serv.id);
+            const imageUrl = await getImgByServiceId(settings.apiBaseUrl, serv.id);
             newImageUrls[serv.id] = imageUrl;
           } catch (error) {
             console.error('Error fetching image:', error);
@@ -146,7 +144,7 @@ export default function Services() {
   }
 
   const rmService = async (id) => {
-    updateServiceToken(settings.apiLocation, id, "/");
+    updateServiceToken(settings.apiBaseUrl, id, "/");
     fetchServices();
   }
 
@@ -156,9 +154,9 @@ export default function Services() {
         text: 'Cancel',
         style: 'cancel',
       },
-      {text: 'Yes', onPress: () => deleteServiceConnexion(settings.apiLocation, id)},
+      { text: 'Yes', onPress: () => { deleteServiceConnexion(settings.apiBaseUrl, id); fetchServices(); } },
     ]);
-    fetchServices();
+
   };
 
   const addService = async (id) => {
@@ -167,52 +165,43 @@ export default function Services() {
   };
 
   return (
-    <ImageBackground
-      source={require('../../assets/background_dot.png')}
-      resizeMode="repeat"
-      style={styles.background}
-      imageStyle={{ opacity: 0.3 }}
-    >
-      <SafeAreaView style={styles.container}>
-        <ScrollView style={{ flexDirection: "columns" }}>
-          {Array.isArray(services) && services.map(service => (
-            <View key={service.id} style={{ flexDirection: "row" }}>
-              <TouchableOpacity style={{ flex: 1 }}>
-                <LinearGradient useAngle={true} angle={170} colors={getBackgroundGradient(service.color)} style={styles.card}>
-                  <Text style={styles.title}>{service.name}</Text>
-                  <View style={{ width: "100%", flexDirection: 'row', alignItems: 'center' }}>
-                    <View style={{ flex: 1, marginTop: 15 }}>
-                      <View style={styles.header}>
-                        <Text style={styles.content}>{service.description}</Text>
-                      </View>
-                      {getSConnected(service.id) ?
-                        <LinearGradient key={service.id} useAngle={true} angle={170} colors={["#fff", "#76EC8B"]} style={styles.header}>
-                          <Text style={{}}>Connected</Text>
-                        </LinearGradient> :
-                        <LinearGradient key={service.id} useAngle={true} angle={170} colors={["#fff", "#F16A37"]} style={styles.header}>
-                          <Text style={{}}>Not Connected</Text>
-                        </LinearGradient>}
-                    </View>
-                    <View style={styles.minServiceImgView}><Image
-                      source={getImageSource(service.id)}
-                      style={styles.minServiceImg}
-                    />
-                    </View>
+    <SafeAreaView style={styles.container}>
+      <ScrollView style={{ flexDirection: "columns" }}>
+        {Array.isArray(services) && services.map(service => (
+          <View key={service.id} style={{ flexDirection: "row" }}>
+            <TouchableOpacity style={[styles.card, { backgroundColor: colors.card }]}>
+              <Text style={styles.title}>{service.name}</Text>
+              <View style={{ width: "100%", flexDirection: 'row', alignItems: 'center' }}>
+                <View style={{ flex: 1, marginTop: 7 }}>
+                  <View style={styles.header}>
+                    <Text style={styles.content}>{service.description}</Text>
                   </View>
-                </LinearGradient>
-              </TouchableOpacity>
-              {getSConnected(service.id) ?
+                  {getSConnected(service.id) ?
+                    <View key={service.id} style={[styles.header, { backgroundColor: "#76EC8B" }]}>
+                      <Text style={{}}>{t("Connected")}</Text>
+                    </View> :
+                    <View key={service.id} style={[styles.header, { backgroundColor: "#F16A37" }]}>
+                      <Text style={{}}>{t("Not connected")}</Text>
+                    </View>}
+                </View>
+                <View style={styles.minServiceImgView}><Image
+                  source={getImageSource(service.id)}
+                  style={styles.minServiceImg}
+                />
+                </View>
+              </View>
+            </TouchableOpacity>
+            {getSConnected(service.id) ?
               <TouchableOpacity key={service.id} style={styles.disconnectBtn} onPress={() => removeService(service.id, service.name)}>
-                <Image source={require("../../assets/disconnect.png")} style={{ width: 40, height: 40}} />
+                <Image source={require("../../assets/disconnect.png")} style={{ width: 40, height: 40 }} />
               </TouchableOpacity> :
               <TouchableOpacity key={service.id} style={styles.connectBtn} onPress={() => addService(service.id)}>
                 <Image source={require("../../assets/login.png")} style={{ width: 40, height: 40 }} />
               </TouchableOpacity>}
-            </View>
-          ))}
-        </ScrollView>
-      </SafeAreaView>
-    </ImageBackground>
+          </View>
+        ))}
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
@@ -221,6 +210,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   card: {
+    flex: 1,
     borderRadius: 10,
     padding: 15,
     shadowColor: '#000',
@@ -229,9 +219,6 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
     margin: 10,
-    borderColor: '#fff',
-    borderWidth: 1,
-    backgroundColor: '#fff',
   },
   header: {
     flexDirection: 'row',

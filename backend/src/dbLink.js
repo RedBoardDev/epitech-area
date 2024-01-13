@@ -69,9 +69,15 @@ class DbManager {
         return this.executeQuery(query, values);
     }
 
-    updateUser(id, lastname, firstname) {
-        const query = `UPDATE user SET lastname = ?, firstname = ? WHERE id = ?;`;
-        const values = [lastname, firstname, id];
+    updateUser(id, lastname, firstname, email, passwordHash) {
+        const query = `UPDATE user SET lastname = ?, firstname = ?, email = ?, password = ? WHERE id = ?;`;
+        const values = [lastname, firstname, email, passwordHash, id];
+        return this.executeQuery(query, values);
+    }
+
+    partialUpdateUser(id, lastname, firstname, email) {
+        const query = `UPDATE user SET lastname = ?, firstname = ?, email = ? WHERE id = ?;`;
+        const values = [lastname, firstname, email, id];
         return this.executeQuery(query, values);
     }
 
@@ -87,15 +93,57 @@ class DbManager {
         return this.executeQuery(query, values);
     }
 
-    insertAutomation(userId, triggerServiceId, triggerId, triggerParams, reactionServiceId, reactionId, reactionParams) {
-        const query = `INSERT INTO automation(user_id, trigger_service_id, trigger_id, trigger_params, reaction_service_id, reaction_id, reaction_params) VALUES (?, ?, ?, ?, ?, ?, ?);`;
-        const values = [userId, triggerServiceId, triggerId, triggerParams, reactionServiceId, reactionId, reactionParams];
+    getAutomationsById(automationId) {
+        const query = `SELECT * FROM automation WHERE id = ?;`;
+        const values = [automationId];
+        return this.executeQuery(query, values);
+    }
+
+    getAutomationsByFav(userId) {
+        const query = `SELECT * FROM automation WHERE user_id = ? AND favorite = 1;`;
+        const values = [userId];
+        return this.executeQuery(query, values);
+    }
+
+    getAutomationsByActive(userId) {
+        const query = `SELECT * FROM automation WHERE user_id = ? AND active = 1;`;
+        const values = [userId];
+        return this.executeQuery(query, values);
+    }
+
+    getServiceByActive(userId) {
+        const query = `SELECT * FROM service_oauth WHERE user_id = ?;`;
+        const values = [userId];
+        return this.executeQuery(query, values);
+    }
+
+    insertAutomation(userId, triggerServiceId, triggerId, triggerParams, reactionServiceId, reactionId, reactionParams, automationName) {
+        const query = `INSERT INTO automation(user_id, trigger_service_id, trigger_id, trigger_params, reaction_service_id, reaction_id, reaction_params, automation_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?);`;
+        const values = [userId, triggerServiceId, triggerId, triggerParams, reactionServiceId, reactionId, reactionParams, automationName];
         return this.executeQuery(query, values);
     }
 
     updateAutomation(userId, automationId, updateQueryString) {
         const query = `UPDATE automation SET ${updateQueryString} WHERE user_id = ? AND id = ?;`;
         const values = [userId, automationId];
+        return this.executeQuery(query, values);
+    }
+
+    updateAutomationById(id, reaction_params, trigger_params, automation_name) {
+        const query = `UPDATE automation SET reaction_params = ?, trigger_params = ?, automation_name = ? WHERE id = ?;`;
+        const values = [reaction_params, trigger_params, automation_name, id];
+        return this.executeQuery(query, values);
+    }
+
+    updateFavorite(id, fav) {
+        const query = `UPDATE automation SET favorite = ? WHERE id = ?;`;
+        const values = [fav, id];
+        return this.executeQuery(query, values);
+    }
+
+    updateActive(id, active) {
+        const query = `UPDATE automation SET active = ? WHERE id = ?;`;
+        const values = [active, id];
         return this.executeQuery(query, values);
     }
 

@@ -23,11 +23,12 @@ import { ScrollView } from "react-native-gesture-handler";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getServices } from '../Core/ServerCalls';
 import { useContext } from 'react';
-import SettingsContext from '../Contexts/Settings';
+import { useSettings } from '../Contexts/Settings';
 import TextInput from "../Components/TextInput";
+import { ServiceCard, TriggerReactionCard } from "../Components/ServiceCard";
 
 export function NewAutomation_Reactions1({ route }) {
-  const { settings } = useContext(SettingsContext);
+  const { settings } = useSettings();
   const { colors } = useTheme();
   const navigation = useNavigation();
   const { serviceData, triggerServiceId, triggerId, triggerParams } = route.params;
@@ -39,23 +40,18 @@ export function NewAutomation_Reactions1({ route }) {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
-        {serviceData && serviceData.map(service => (
-          <TouchableOpacity style={[styles.card, styles.cardService]} key={service.id} onPress={() => { navigateToReactions2(service.id) }}>
-            <Image style={styles.image} source={{ uri: `${settings.apiLocation}/${service.icon}` }} />
-            <View style={styles.infoContainer}>
-              <View style={styles.header}>
-                <Text style={styles.title}>{service.name}</Text>
-              </View>
-              <Text style={styles.content}>{service.description}</Text>
-            </View>
-          </TouchableOpacity>
-        ))}
+        <View style={styles.cardContainer}>
+          {serviceData && serviceData.map(service => (
+            <ServiceCard key={service.id} service={service} onPress={() => { navigateToReactions2(service.id) }} />
+          ))}
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
 }
 
 export function NewAutomation_Reactions2({ route }) {
+  const { t } = useSettings();
   const { colors } = useTheme();
   const navigation = useNavigation();
   const { serviceData, triggerServiceId, triggerId, triggerParams, reactionServiceId } = route.params;
@@ -93,31 +89,26 @@ export function NewAutomation_Reactions2({ route }) {
   return (
     <View style={styles.container}>
       <Modal animationType="slide" transparent={false} visible={modalVisible} style={styles.modal}>
-      <SafeAreaView style={styles.container}>
-
-        <KeyboardAwareScrollView style={{ padding: 20 }}>
-          <Text style={{ fontSize: 30, marginBottom: 30 }}>Parameters</Text>
-          {selectedReaction && selectedReaction.fields.map(field => {
-            if (field.type === 'text') {
-              return RenderTextInput(field);
-            } else {
-              return null;
-            }
-          })}
-          <Button title="OK" onPress={() => { navigateToSubmit(selectedReaction.id); }} />
-        </KeyboardAwareScrollView>
+        <SafeAreaView style={styles.container}>
+          <KeyboardAwareScrollView style={{ padding: 20 }}>
+            <Text style={{ fontSize: 30, marginBottom: 30 }}>{t("Parameters")}</Text>
+            {selectedReaction && selectedReaction.fields.map(field => {
+              if (field.type === 'text') {
+                return RenderTextInput(field);
+              } else {
+                return null;
+              }
+            })}
+            <Button title="OK" onPress={() => { navigateToSubmit(selectedReaction.id); }} />
+          </KeyboardAwareScrollView>
         </SafeAreaView>
       </Modal>
-      <Text>Chose a reaction</Text>
       <ScrollView>
-        {serviceData && serviceData.find(service => service.id === reactionServiceId).reactions.map(reaction => (
-          <TouchableOpacity style={styles.card} key={reaction.id} onPress={() => { openModal(reaction.id) }}>
-            <View style={styles.header}>
-              <Text style={styles.title}>{reaction.name}</Text>
-            </View>
-            <Text style={styles.content}>{reaction.description}</Text>
-          </TouchableOpacity>
-        ))}
+        <View style={styles.cardContainer}>
+          {serviceData && serviceData.find(service => service.id === reactionServiceId).reactions.map(reaction => (
+            <TriggerReactionCard key={reaction.id} elem={reaction} onPress={() => { openModal(reaction.id) }} />
+          ))}
+        </View>
       </ScrollView>
     </View>
   );
@@ -130,53 +121,23 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
 
-  card: {
-    borderRadius: 10,
-    backgroundColor: "#fff",
-    marginBottom: 20,
-    marginLeft: "2%",
-    width: "96%",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-
-    elevation: 5,
+  cardContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingHorizontal: 10,
+    justifyContent: 'space-between',
   },
 
-  cardService: {
-    flexDirection: "row",
-    padding: 10,
-  },
-
-  image: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-  },
-
-  infoContainer: {
-    marginLeft: 10,
+  modal: {
     flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 
-  header: {
-    padding: 20,
-    borderBottomColor: "#eee",
-    borderBottomWidth: 1,
-  },
-
-  title: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-
-  content: {
-    padding: 10,
-    fontSize: 15,
+  input: {
+    height: 48,
+    borderRadius: 5,
+    overflow: 'hidden',
+    backgroundColor: 'white',
   },
 });

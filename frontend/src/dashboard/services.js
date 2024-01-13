@@ -1,18 +1,20 @@
 import React, { useEffect } from 'react';
-import SideBar from './components/SideBar';
-import TopBar from './components/TopBar';
-import Grid from '@mui/material/Grid';
 import ServicesList from './components/AutomationsList';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
+import { useTheme } from '../themeContext';
+import PageTitle from './components/PageTitle';
+import { useSettings } from '../SettingsContext';
 
 export default function ServicesDash() {
     const navigate = useNavigate();
+    const { t } = useSettings();
     const { verifyToken } = useAuth();
+    const { mainTheme } = useTheme();
 
     useEffect(() => {
         const checkToken = async () => {
-            if (!await verifyToken()) {
+            if (!(await verifyToken())) {
                 navigate('/login');
             }
         };
@@ -20,22 +22,11 @@ export default function ServicesDash() {
     }, [verifyToken, navigate]);
 
     return (
-        <Grid container style={{overflow: 'hidden'}}>
-            <Grid item xs={2}>
-                <SideBar />
-            </Grid>
-            <Grid item xs={10} style={{overflow: 'hidden'}}>
-                <Grid container direction="column" style={{overflow: 'hidden'}}>
-                    <Grid item>
-                        <TopBar />
-                    </Grid>
-                    <Grid item xs={12} style={{overflow: 'hidden'}}>
-                        <div style={{backgroundColor: 'white', height: '93.5%', top: '6.5%', left: '15%', position: 'absolute', width: '85%', zIndex: '-1', overflow: 'auto', padding: '2%'}}>
-                            <ServicesList />
-                        </div>
-                    </Grid>
-                </Grid>
-            </Grid>
-        </Grid>
+        <div style={{ backgroundColor: mainTheme.palette.mode, height: '100%', width:'100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <PageTitle title={t("Automations Dashboard")} />
+            <div style={{ width: '85%', overflow: 'auto', paddingTop: '10px' }}>
+                <ServicesList />
+            </div>
+        </div>
     );
 }

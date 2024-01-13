@@ -15,7 +15,7 @@ CREATE TABLE `user` (
 CREATE TABLE `service_oauth` (
   `user_id` INT UNSIGNED NOT NULL,
   `service_id` VARCHAR(100) NOT NULL,
-  `token` varchar(1024) NOT NULL,
+  `token` varchar(4096) NOT NULL,
   PRIMARY KEY (`user_id`, `service_id`)
 );
 
@@ -29,7 +29,9 @@ CREATE TABLE `automation` (
   `trigger_check_data` TEXT DEFAULT '{}',
   `reaction_service_id` VARCHAR(100) NOT NULL,
   `reaction_id` INT UNSIGNED NOT NULL,
-  `reaction_params` TEXT DEFAULT '{}'
+  `reaction_params` TEXT DEFAULT '{}',
+  `automation_name` VARCHAR(100) DEFAULT '',
+  `favorite` BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 ALTER TABLE `automation` ADD FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);

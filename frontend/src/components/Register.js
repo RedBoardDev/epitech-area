@@ -5,9 +5,10 @@ import { Link } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import HeaderComponent from './Header';
 import backgroundImage from '../img/BgTop.png';
 import GitHubIcon from '@mui/icons-material/GitHub';
+import { useSettings } from '../SettingsContext';
+import { useTheme } from '../themeContext';
 
 export const RegisterGithubCallback = () => {
     const navigate = useNavigate();
@@ -32,11 +33,13 @@ export const RegisterGithubCallback = () => {
 };
 
 const Register = () => {
-    const [username, setUsername] = useState('test@thomasott.com');
-    const [password, setPassword] = useState('test123/');
-    const [lastname, setLastname] = useState('Binder');
-    const [firstname, setFirstname] = useState('Lucas');
+    const { t } = useSettings();
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [lastname, setLastname] = useState('');
+    const [firstname, setFirstname] = useState('');
     const { register, logout, verifyToken } = useAuth();
+    const { mainTheme } = useTheme();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -74,7 +77,6 @@ const Register = () => {
         <div style={{
             backgroundImage: 'linear-gradient(to right, #f3f3f3, #dcdcdc)',
         }}>
-            <HeaderComponent isLoggedIn={false} />
             <div
                 style={{
                     display: 'flex',
@@ -84,6 +86,7 @@ const Register = () => {
                     width: '100%',
                     height: '100vh',
                     backgroundImage: `url(${backgroundImage})`,
+                    backgroundColor: mainTheme.palette.mainBackground.main,
                     backgroundRepeat: 'no-repeat',
                     backgroundPosition: 'right bottom',
                     backgroundSize: '60% 100%',
@@ -100,11 +103,11 @@ const Register = () => {
                         padding: '0 5%',
                     }}
                 >
-                    <Typography variant="h4" sx={{ color: '#544d4d', marginBottom: '2rem' }}>
-                        S'inscire
+                    <Typography variant="h4" sx={{ color: mainTheme.palette.SwitchStyle.main, marginBottom: '2rem' }}>
+                        {t("Register")}
                     </Typography>
                     <TextField
-                        label="Email"
+                        label={t("Email")}
                         variant="outlined"
                         margin="normal"
                         fullWidth
@@ -113,7 +116,7 @@ const Register = () => {
                         sx={{ marginBottom: '1rem' }}
                     />
                     <TextField
-                        label="Lastname"
+                        label={t("Lastname")}
                         variant="outlined"
                         margin="normal"
                         fullWidth
@@ -122,7 +125,7 @@ const Register = () => {
                         sx={{ marginBottom: '1rem' }}
                     />
                     <TextField
-                        label="Firstname"
+                        label={t("Firstname")}
                         variant="outlined"
                         margin="normal"
                         fullWidth
@@ -131,7 +134,7 @@ const Register = () => {
                         sx={{ marginBottom: '1rem' }}
                     />
                     <TextField
-                        label="Mot de passe"
+                        label={t("Password")}
                         variant="outlined"
                         margin="normal"
                         type="password"
@@ -145,9 +148,9 @@ const Register = () => {
                         color="primary"
                         size="large"
                         onClick={handleRegister}
-                        sx={{ width: '200px' }}
+                        sx={{ width: '30%', minHeight: '45px', minWidth: '120px' }}
                     >
-                        S'inscire
+                        {t("Register")}
                     </Button>
                     <Button
                         variant="contained"
@@ -155,9 +158,9 @@ const Register = () => {
                         size="large"
                         startIcon={<GitHubIcon />}
                         onClick={handleRegisterGithub}
-                        sx={{ width: '200px', marginTop: '1rem' }}
+                        sx={{ width: '30%', minHeight: '45px', minWidth: '120px', marginTop: '1rem' }}
                     >
-                        S'inscrire avec GitHub
+                        {("Register with Github")}
                     </Button>
                     <Typography
                         component={Link}
@@ -165,9 +168,9 @@ const Register = () => {
                         color="primary"
                         size="large"
                         align='center'
-                        sx={{ width: '200px', marginTop: '1rem' }}
+                        sx={{ marginTop: '1rem' }}
                     >
-                        Login
+                        {t("Already have an account?")}
                     </Typography>
                 </div>
                 <div
