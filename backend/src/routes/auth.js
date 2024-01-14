@@ -5,12 +5,11 @@ import { db, encryptString } from "../global.js";
 import { getGithubToken, getGithubEmail, getGithubInfos } from "./authGithubUtils.js";
 
 function checkEmail(email) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
 function checkPassword(password) {
-    return true;
-    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/.test(password)
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*\/])(?=.{8,})/.test(password);
 }
 
 const router = express.Router();

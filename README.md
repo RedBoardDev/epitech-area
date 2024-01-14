@@ -17,9 +17,9 @@ The project is publicly available [here](https://area.mazettt.fr/). You can crea
 
 ## Documentation
 
-A documentation is available [here](https://github.com/RedBoardDev/epitech-area/wiki).
+A documentation of the entire project is available in the [github wiki](https://github.com/RedBoardDev/epitech-area/wiki).
 
-<!-- TODO -->
+You can also find the documentation of the API [here](https://area.mazettt.fr/docs).
 
 ## Self-hosting
 
@@ -48,3 +48,16 @@ Then edit the .env file and fill the variables with your own values.
 ```bash
 docker compose up
 ```
+
+## Contributing
+
+Contributions are always welcome! You can find the contribution guidelines in the [CONTRIBUTING.md](CONTRIBUTING.md) file.
+
+## Authors
+
+- [Thomas Ott](https://github.com/RedBoardDev)
+- [Martin D'Herouville](https://github.com/Mazettt)
+- [Lucas Binder](https://github.com/LucasB9)
+- [Younes Boufrioua](https://github.com/TourreTV)
+- [Leo Baldachino](https://github.com/LeoBaldachino)
+- [Jonathan Bantzhaffen](https://github.com/jobntz)
