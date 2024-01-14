@@ -17,9 +17,9 @@ The project is publicly available [here](https://area.mazettt.fr/). You can crea
 
 ## Documentation
 
-A documentation is available [here](https://github.com/RedBoardDev/epitech-area/wiki).
+A documentation of the entire projetct is available in the [github wiki](https://github.com/RedBoardDev/epitech-area/wiki).
 
-<!-- TODO -->
+You can also find the documentation on the API [here](https://area.mazettt.fr/docs).
 
 ## Self-hosting
 
