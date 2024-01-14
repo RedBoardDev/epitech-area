@@ -83,8 +83,8 @@ networks:
     driver: bridge
     ipam:
       config:
-        - subnet: "192.168.50.0/24"
-          gateway: "192.168.50.1"
+        - subnet: ${CONFIG_SUBNET}
+          gateway: ${CONFIG_GATEWAY}
 
 volumes:
   area_client:
